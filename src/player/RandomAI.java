@@ -24,7 +24,7 @@ public class RandomAI implements Player {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		int r = Consts.row_num, c = Consts.col_num;
+		int r = Constants.ROW_NUM, c = Constants.COL_NUM;
 		int i, j;
 		while (true) {
 			i = rand.nextInt(r);

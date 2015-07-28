@@ -1,7 +1,6 @@
 package player;
 
 import game.Game;
-import game.GamePanel;
 
 public class Human implements Player{
 

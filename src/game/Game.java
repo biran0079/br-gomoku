@@ -3,45 +3,47 @@ package game;
 import java.util.Stack;
 
 import player.*;
+import view.ControlPanel;
+import view.GameFrame;
+import view.GamePanel;
 
 public class Game {
 	private Turn whosTurn;
 	private Square[][] chessBoard;
 	private static Game instance = null;
-	private GameFrame gameUI = null;
 	private Player player1 = null, player2 = null;
 	private boolean restart;
 	private boolean readyToStart;
 	private Stack<Position> history;
 
 	private Game() {
-		readyToStart=true;
-		gameUI = GameFrame.getInstance();
+		readyToStart = true;
 		history = new Stack<Position>();
-		chessBoard = new Square[Consts.row_num][Consts.col_num];
+		chessBoard = new Square[Constants.ROW_NUM][Constants.COL_NUM];
+		GameFrame.getInstance();
 	}
 
 	public static boolean validPosition(int i, int j) {
-		return i >= 0 && i < Consts.row_num && j >= 0 && j < Consts.col_num;
+		return i >= 0 && i < Constants.ROW_NUM && j >= 0 && j < Constants.COL_NUM;
 	}
-	void setReadyToStart(boolean a){
+	public void setReadyToStart(boolean a){
 		readyToStart=a;
 	}
 	private void initializeGame() {
 		whosTurn = Turn.BLACK;
 		restart = false;
 		history.clear();
-		for (int i = 0; i < Consts.row_num; i++)
-			for (int j = 0; j < Consts.col_num; j++) {
+		for (int i = 0; i < Constants.ROW_NUM; i++)
+			for (int j = 0; j < Constants.COL_NUM; j++) {
 				chessBoard[i][j] = Square.NOTHING;
 			}
 		GamePanel.clearBoard();
-		player1=ControlPanel.getInstance().getPlayer1Instance();
+		player1= ControlPanel.getInstance().getPlayer1Instance();
 		player2=ControlPanel.getInstance().getPlayer2Instance();
 	}
 
 	public static boolean playerWins(Square[][] chessBoard, Square curPiece) {
-		int r = Consts.row_num, c = Consts.col_num;
+		int r = Constants.ROW_NUM, c = Constants.COL_NUM;
 		int[][] d = { { 0, 1 }, { 1, 1 }, { 1, 0 }, { 1, -1 } };
 		for (int i = 0; i < r; i++)
 			for (int j = 0; j < c; j++) {
@@ -64,6 +66,7 @@ public class Game {
 	public boolean gameRestarted(){
 		return restart;
 	}
+
 	public void humanRestard() {
 		this.restart = true;
 	}
@@ -138,8 +141,8 @@ public class Game {
 		else
 			k = 1;
 		for (; k > 0 && !getHistory().isEmpty(); k--) {
-			i = Game.getHistory().peek().i;
-			j = Game.getHistory().peek().j;
+			i = Game.getHistory().peek().getRowIndex();
+			j = Game.getHistory().peek().getColumnIndex();
 			Game.getHistory().pop();
 			Game.removePieceOn(i, j);
 		}
@@ -151,7 +154,7 @@ public class Game {
 	}
 
 	public static void putPieceOn(int i, int j) {
-		Game.getHistory().add(new Position(i, j));
+		Game.getHistory().add(Position.create(i, j));
 		switch (Game.getWhosTurn()) {
 		case BLACK:
 			getInstance().chessBoard[i][j] = Square.BLACK_PIECE;
@@ -181,9 +184,5 @@ public class Game {
 			setReadyToStart(false);
 			if(restart)readyToStart=true;	//Press "New Game" Button
 		}
-	}
-
-	public static void main(String[] args) {
-		Game.getInstance().play();
 	}
 }
