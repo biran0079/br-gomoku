@@ -11,15 +11,12 @@ import view.*;
 public class Game {
 
 	private GameBoard gameBoard;
-	private Square[][] chessBoard;
-	private static Game instance = null;
 	private Player player1 = null, player2 = null;
 	private final Stack<Position> history;
 	private final UI ui;
 
-	private Game() {
+	public Game() {
 		this.history = new Stack<Position>();
-		this.chessBoard = new Square[Constants.ROW_NUM][Constants.COL_NUM];
 		this.gameBoard = new GameBoardImpl();
 		this.ui = new UI();
 		ui.addUndoActionListener(new ActionListener() {
@@ -43,10 +40,7 @@ public class Game {
 	private void initializeGame() {
 		ui.clearBoard();
 		history.clear();
-		for (int i = 0; i < Constants.ROW_NUM; i++)
-			for (int j = 0; j < Constants.COL_NUM; j++) {
-				chessBoard[i][j] = Square.NOTHING;
-			}
+		gameBoard.initialize();
 		PlayerType[] types = ui.getSelectedPlayerTypes();
 		player1 = createPlayer(types[0], "player1", Square.BLACK_PIECE);
 		player2 = createPlayer(types[1], "player2", Square.WHITE_PIECE);
@@ -100,17 +94,6 @@ public class Game {
 		return false;
 	}
 
-	public static Square[][] getBoard() {
-		return getInstance().chessBoard;
-	}
-
-	public static Game getInstance() {
-		if (instance == null) {
-			instance = new Game();
-		}
-		return instance;
-	}
-
 	public void undo() {
 		for (int k = 2; k > 0 && !history.isEmpty(); k--) {
 			removePieceOn(history.pop());
@@ -119,12 +102,12 @@ public class Game {
 
 	public void removePieceOn(Position position) {
 		ui.removePieceOn(position);
-		chessBoard[position.getRowIndex()][position.getColumnIndex()] = Square.NOTHING;
+		gameBoard.set(position, Square.NOTHING);
 	}
 
 	public void putPieceOn(final Position position, final Square piece) {
 		history.add(position);
-		chessBoard[position.getRowIndex()][position.getColumnIndex()] = piece;
+		gameBoard.set(position, piece);
 		ui.putPieceOn(position, piece);
 	}
 
@@ -167,7 +150,7 @@ public class Game {
 				sessionSopped = true;
 				return;
 			}
-			if (playerWins(chessBoard, player.getStoneType())) {
+			if (playerWins(gameBoard.toArray(), player.getStoneType())) {
 				ui.win(player, new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {

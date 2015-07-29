@@ -7,7 +7,6 @@ import java.util.Queue;
 
 public class AlphaBetaSearch implements Player {
 
-  Square[][] board;
   private int maxDepth = 1;
   private int paddingDis = 1;
   private String name;
@@ -25,7 +24,7 @@ public class AlphaBetaSearch implements Player {
 
   @Override
   public Position makeMove(GameBoard gameBoard) {
-    board = Game.getBoard();
+    Square[][] board = gameBoard.toArray();
     Node res;
     if (stoneType == Square.BLACK_PIECE) {
       res = maxValue(board, -10000000, 10000000, 0);
