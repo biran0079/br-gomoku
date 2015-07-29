@@ -9,44 +9,22 @@ import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
 import game.Game;
+import game.Square;
 import player.AlphaBetaSearch;
 import player.Human;
 import player.Player;
 
 public class ControlPanel extends JPanel {
 
-	private JButton newGame, undo;
-	private JComboBox player1, player2;
-	private static ControlPanel instance;
+	private final JButton newGame, undo;
+	private final JComboBox<PlayerType> player1, player2;
 
-	public static ControlPanel getInstance() {
-		if (instance == null) {
-			instance = new ControlPanel();
-		}
-		return instance;
-	}
-
-	private ControlPanel() {
+	public ControlPanel() {
 		newGame = new JButton("new game");
-		newGame.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				Game.getInstance().humanRestard();
-			}
-		});
 		undo = new JButton("undo");
-		undo.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (Game.getCurrentPlayer() instanceof Human) {
-					Game.undo();
-				}
-			}
-		});
-		String[] strs = { "Human", "AI" };
-		player1 = new JComboBox(strs);
-		player2 = new JComboBox(strs);
+		PlayerType[] types = { PlayerType.HUMAN, PlayerType.AI };
+		player1 = new JComboBox(types);
+		player2 = new JComboBox(types);
 		this.setLayout(new FlowLayout());
 		this.add(newGame);
 		this.add(undo);
@@ -54,35 +32,18 @@ public class ControlPanel extends JPanel {
 		this.add(player2);
 	}
 
-	public Player getPlayer1Instance() {
-		if (player1.getSelectedItem().equals("Human")) {
-			return new Human("Human");
-		} else if (player1.getSelectedItem().equals("AI")) {
-			return new AlphaBetaSearch("AI");
-		}
-		try {
-			throw new Exception("Ivalid Player: "
-					+ player1.getSelectedItem().toString());
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
+	public PlayerType[] getPlayerTypes() {
+		return new PlayerType[]{
+				(PlayerType) player1.getSelectedItem(),
+				(PlayerType) player2.getSelectedItem()
+		};
 	}
 
-	public Player getPlayer2Instance() {
-		if (player2.getSelectedItem().equals("Human")) {
-			return new Human("Human");
-		} else if (player2.getSelectedItem().equals("AI")) {
-			return new AlphaBetaSearch("AI");
-		}
-		try {
-			throw new Exception("Ivalid Player: "
-					+ player2.getSelectedItem().toString());
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
+	void addUndoActionListener(ActionListener actionListener) {
+		undo.addActionListener(actionListener);
+	}
+
+	void addNewGameActionListener(ActionListener actionListener) {
+		newGame.addActionListener(actionListener);
 	}
 }

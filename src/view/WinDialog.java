@@ -1,27 +1,19 @@
 package view;
 
-import game.Game;
-import view.GameFrame;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
+import javax.swing.*;
 
-public class WinDialog extends JDialog implements ActionListener {
+public class WinDialog extends JDialog {
 
-	JLabel msg;
-	JButton ok;
-
-	WinDialog(String name) {
-
+	WinDialog(JFrame parent, String name, ActionListener clickListener) {
 		String s = "<html><h2>" + name + " Wins!</h2><br>"
 				+ "<pre> like to try again?</pre></html>";
-		msg = new JLabel(s);
-		ok = new JButton("ok");
+		JLabel msg = new JLabel(s);
+		JButton ok = new JButton("ok");
 		this.setVisible(true);
 		this.setLayout(null);
 		this.setPreferredSize(new Dimension(200, 200));
@@ -31,13 +23,14 @@ public class WinDialog extends JDialog implements ActionListener {
 		this.add(msg);
 		this.add(ok);
 		this.setResizable(false);
-		this.setLocation(GameFrame.getInstance().getX(),GameFrame.getInstance().getY());
-		ok.addActionListener(this);
-	}
+		this.setLocation(parent.getX(), parent.getY());
+		ok.addActionListener(clickListener);
+		ok.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+			}
+		});
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		Game.getInstance().setReadyToStart(true);
-		this.dispose();
 	}
 }

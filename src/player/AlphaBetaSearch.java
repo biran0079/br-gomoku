@@ -11,8 +11,11 @@ public class AlphaBetaSearch implements Player {
   private int maxDepth = 1;
   private int paddingDis = 1;
   private String name;
-  public AlphaBetaSearch(String s) {
+  private final Square stoneType;
+
+  public AlphaBetaSearch(String s, Square stoneType) {
     this.name = s;
+    this.stoneType = stoneType;
   }
 
   @Override
@@ -21,15 +24,20 @@ public class AlphaBetaSearch implements Player {
   }
 
   @Override
-  public void makeMove() {
+  public Position makeMove(GameBoard gameBoard) {
     board = Game.getBoard();
     Node res;
-    if (Game.getWhosTurn() == Turn.BLACK) {
+    if (stoneType == Square.BLACK_PIECE) {
       res = maxValue(board, -10000000, 10000000, 0);
     } else {
       res = minValue(board, -10000000, 10000000, 0);
     }
-    Game.putPieceOn(res.p.getRowIndex(), res.p.getColumnIndex());
+    return res.p;
+  }
+
+  @Override
+  public Square getStoneType() {
+    return stoneType;
   }
 
   private int eval(Square[][] board) {
