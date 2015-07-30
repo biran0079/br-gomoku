@@ -1,4 +1,4 @@
-package view;
+package common;
 
 public enum PlayerType {
   HUMAN("Human"),

@@ -1,11 +1,17 @@
 package game;
 
+import controller.GameControllers;
+
 /**
  * Main class of the game.
  */
-public class Main {
+class Main {
 
   public static void main(String[] args) {
-    new Game().startGame();
+    GameControllers.createGameController().startGame();
+  }
+
+  private Main() {
+
   }
 }

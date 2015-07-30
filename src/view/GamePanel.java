@@ -1,6 +1,6 @@
 package view;
-import game.Constants;
-import game.Square;
+import common.Constants;
+import common.Square;
 
 import java.awt.Dimension;
 import java.awt.GridLayout;

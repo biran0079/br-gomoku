@@ -1,18 +1,22 @@
 package player;
 
-import game.*;
+import common.Constants;
+import common.Square;
+import common.Utils;
+import model.GameBoard;
+import model.Position;
 
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class AlphaBetaSearch implements Player {
+class AlphaBetaSearch implements Player {
 
   private int maxDepth = 1;
   private int paddingDis = 1;
   private String name;
   private final Square stoneType;
 
-  public AlphaBetaSearch(String s, Square stoneType) {
+  AlphaBetaSearch(String s, Square stoneType) {
     this.name = s;
     this.stoneType = stoneType;
   }
@@ -57,7 +61,7 @@ public class AlphaBetaSearch implements Player {
     for (int i = 1; i < R - 1; i++)
       for (int j = 1; j < C - 1; j++) {
         for (int k = 0; k < 4; k++) {
-          if (Game.validPosition(i + n * d[k][0], j + n
+          if (Utils.validPosition(i + n * d[k][0], j + n
               * d[k][1])) {
             deadEnd = 2;
             if (board[i - d[k][0]][j - d[k][1]] != Square.NOTHING) deadEnd--;
@@ -75,7 +79,7 @@ public class AlphaBetaSearch implements Player {
     return res;
   }
 
-  private void bfs(Square[][] board, int[][] dis) {
+  private void bfs(int[][] dis) {
     int R = Constants.ROW_NUM, C = Constants.COL_NUM;
     int[][] d = {{1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0},
         {-1, -1}, {0, -1}, {1, -1}};
@@ -91,7 +95,7 @@ public class AlphaBetaSearch implements Player {
       for (int k = 0; k < 8; k++) {
         i = t.getRowIndex() + d[k][0];
         j = t.getColumnIndex() + d[k][1];
-        if (Game.validPosition(i, j) && dis[i][j] == -1) {
+        if (Utils.validPosition(i, j) && dis[i][j] == -1) {
           dis[i][j] = dis[t.getRowIndex()][t.getColumnIndex()] + 1;
           if (dis[i][j] < paddingDis)
             q.add(Position.create(i, j));
@@ -100,26 +104,10 @@ public class AlphaBetaSearch implements Player {
     }
   }
 
-  private void printBoard(Square[][] board) {
-    int R = Constants.ROW_NUM, C = Constants.COL_NUM;
-    for (int i = 0; i < R; i++) {
-      for (int j = 0; j < C; j++) {
-        if (board[i][j] == Square.NOTHING)
-          System.out.print("__");
-        else if (board[i][j] == Square.BLACK_PIECE)
-          System.out.print("*_");
-        else
-          System.out.print("o_");
-      }
-      System.out.println();
-    }
-    System.out.println();
-  }
-
   private Node maxValue(Square[][] board, int a, int b, int dep) {
-    if (Game.playerWins(board, Square.BLACK_PIECE)) {
+    if (Utils.playerWins(board, Square.BLACK_PIECE)) {
       return new Node(null, 100000);
-    } else if (Game.playerWins(board, Square.WHITE_PIECE)) {
+    } else if (Utils.playerWins(board, Square.WHITE_PIECE)) {
       return new Node(null, -100000);
     } else if (dep > maxDepth) {
       return new Node(null, eval(board));
@@ -129,7 +117,7 @@ public class AlphaBetaSearch implements Player {
     for (int i = 0; i < R; i++)
       for (int j = 0; j < C; j++)
         dis[i][j] = board[i][j] == Square.NOTHING ? -1 : 0;
-    bfs(board, dis);
+    bfs(dis);
     int f = -10000000, t;
     int pi = -1, pj = -1;
     for (int i = 0; i < R; i++)
@@ -153,9 +141,9 @@ public class AlphaBetaSearch implements Player {
   }
 
   private Node minValue(Square[][] board, int a, int b, int dep) {
-    if (Game.playerWins(board, Square.BLACK_PIECE)) {
+    if (Utils.playerWins(board, Square.BLACK_PIECE)) {
       return new Node(null, 100000);
-    } else if (Game.playerWins(board, Square.WHITE_PIECE)) {
+    } else if (Utils.playerWins(board, Square.WHITE_PIECE)) {
       return new Node(null, -100000);
     } else if (dep > maxDepth) {
       return new Node(null, eval(board));
@@ -165,7 +153,7 @@ public class AlphaBetaSearch implements Player {
     for (int i = 0; i < R; i++)
       for (int j = 0; j < C; j++)
         dis[i][j] = board[i][j] == Square.NOTHING ? -1 : 0;
-    bfs(board, dis);
+    bfs(dis);
     int f = 10000000, t;
     int pi = -1, pj = -1;
     for (int i = 0; i < R; i++)

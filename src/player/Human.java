@@ -1,19 +1,23 @@
 package player;
 
-import game.GameBoard;
-import game.Position;
-import game.Square;
+import model.GameBoard;
+import model.Position;
+import common.Square;
+import view.ClickCallback;
+import view.ClickCallbackManager;
 
 public class Human implements Player {
 
 	private final String name;
 	private final Square stoneType;
+  private final ClickCallbackManager clickCallbackManager;
 
 	private Position move;
 
-	public Human(String name, Square stoneType) {
+	public Human(String name, Square stoneType, ClickCallbackManager clickCallbackManager) {
 		this.name = name;
 		this.stoneType = stoneType;
+    this.clickCallbackManager = clickCallbackManager;
 	}
 
 	@Override
@@ -21,14 +25,23 @@ public class Human implements Player {
 		return name;
 	}
 	
-	public synchronized void humanMove(int i, int j){
+	private synchronized void humanMove(int i, int j){
 		this.move = Position.create(i, j);
 		notify();
 	}
 
-	protected void beforeMove() {}
+  private void beforeMove() {
+    clickCallbackManager.setClickCallback(new ClickCallback() {
+      @Override
+      public void click(Position position) {
+        humanMove(position.getRowIndex(), position.getColumnIndex());
+      }
+    });
+  }
 
-	protected void afterMove() {}
+	private void afterMove() {
+    clickCallbackManager.setClickCallback(null);
+  }
 
 	@Override
 	public synchronized Position makeMove(GameBoard gameBoard) throws InterruptedException {

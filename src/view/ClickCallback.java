@@ -1,6 +1,6 @@
 package view;
 
-import game.Position;
+import model.Position;
 
 public interface ClickCallback {
 

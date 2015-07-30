@@ -1,4 +1,7 @@
-package game;
+package model;
+
+import common.Square;
+import model.Position;
 
 /**
  * Abstraction of game board.

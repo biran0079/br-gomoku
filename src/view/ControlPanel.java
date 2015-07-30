@@ -1,18 +1,13 @@
 package view;
 
+import common.PlayerType;
+
 import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
-
-import game.Game;
-import game.Square;
-import player.AlphaBetaSearch;
-import player.Human;
-import player.Player;
 
 public class ControlPanel extends JPanel {
 

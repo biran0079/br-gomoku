@@ -1,9 +1,12 @@
-package game;
+package model;
+
+import common.Constants;
+import common.Square;
 
 /**
  * Implementation of game board.
  */
-public class GameBoardImpl implements GameBoard {
+class GameBoardImpl implements GameBoard {
 
   private final Square[][] board;
 

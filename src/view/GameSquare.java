@@ -3,9 +3,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
 
-import game.Game;
-import game.Position;
-import game.Square;
+import model.Position;
+import common.Square;
 
 public class GameSquare extends JButton implements ActionListener {
 

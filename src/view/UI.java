@@ -1,13 +1,14 @@
 package view;
 
-import game.Position;
-import game.Square;
+import common.PlayerType;
+import model.Position;
+import common.Square;
 import player.Player;
 
 import javax.swing.*;
 import java.awt.event.ActionListener;
 
-public class UI {
+public class UI implements ClickCallbackManager {
   private final GameFrame gameFrame;
   private final GamePanel gamePanel;
   private final ControlPanel controlPanel;
