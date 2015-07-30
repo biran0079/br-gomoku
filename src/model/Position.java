@@ -2,6 +2,9 @@ package model;
 
 import common.Constants;
 import common.InvalidPositionException;
+import javafx.geometry.Pos;
+
+import java.util.Objects;
 
 public class Position {
 
@@ -31,4 +34,23 @@ public class Position {
 	public int getColumnIndex() {
 		return j;
 	}
+
+  @Override
+  public String toString() {
+    return "[" + i + ", " + j + "]";
+  }
+
+  @Override
+  public int hashCode() {
+    return i * Constants.COL_NUM + j;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (!(o instanceof Position)) {
+      return false;
+    }
+    Position p = (Position) o;
+    return p.i == i && p.j == j;
+  }
 }

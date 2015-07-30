@@ -6,15 +6,14 @@ import common.Utils;
 import model.GameBoard;
 import model.Position;
 
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
 
 class AlphaBetaSearch implements Player {
 
-  private int maxDepth = 1;
-  private int paddingDis = 1;
+  private int maxDepth = 2;
   private String name;
   private final Square stoneType;
+  private int evalCount;
 
   AlphaBetaSearch(String s, Square stoneType) {
     this.name = s;
@@ -28,13 +27,15 @@ class AlphaBetaSearch implements Player {
 
   @Override
   public Position makeMove(GameBoard gameBoard) {
+    evalCount = 0;
     Square[][] board = gameBoard.toArray();
     Node res;
     if (stoneType == Square.BLACK_PIECE) {
-      res = maxValue(board, -10000000, 10000000, 0);
+      res = minMaxSearch(board, Integer.MIN_VALUE, Integer.MAX_VALUE, maxDepth, MinMax.MAX);
     } else {
-      res = minValue(board, -10000000, 10000000, 0);
+      res = minMaxSearch(board, Integer.MIN_VALUE, Integer.MAX_VALUE, maxDepth, MinMax.MIN);
     }
+    System.err.println("eval called " + evalCount + " times.");
     return res.p;
   }
 
@@ -44,18 +45,18 @@ class AlphaBetaSearch implements Player {
   }
 
   private int eval(Square[][] board) {
-    double Ba2 = numOfActive(board, Square.BLACK_PIECE, 2), Wa2 = numOfActive(
-        board, Square.WHITE_PIECE, 2), Ba3 = numOfActive(board,
+    evalCount++;
+    double Ba3 = numOfActive(board,
         Square.BLACK_PIECE, 3), Wa3 = numOfActive(board,
         Square.WHITE_PIECE, 3), Ba4 = numOfActive(board,
         Square.BLACK_PIECE, 4), Wa4 = numOfActive(board,
         Square.WHITE_PIECE, 4);
-    return (int) (10 * (Ba2 - Wa2) + 100 * (Ba3 - Wa3) + 400 * (Ba4 - Wa4));
+    return (int) (10 * (Ba3 - Wa3) + 40 * (Ba4 - Wa4));
   }
 
-  private double numOfActive(Square[][] board, Square piece, int n) {
+  private int numOfActive(Square[][] board, Square piece, int n) {
     int R = Constants.ROW_NUM, C = Constants.COL_NUM;
-    double res = 0;
+    int res = 0;
     int deadEnd, l;
     int[][] d = {{0, 1}, {1, 1}, {1, 0}, {1, -1}};
     for (int i = 1; i < R - 1; i++)
@@ -71,7 +72,7 @@ class AlphaBetaSearch implements Player {
               if (board[i + l * d[k][0]][j + l * d[k][1]] != piece)
                 break;
             if (l == n) {
-              res += deadEnd == 0 ? 1 : 0.4;
+              res += deadEnd == 0 ? 2 : 1;
             }
           }
         }
@@ -79,106 +80,103 @@ class AlphaBetaSearch implements Player {
     return res;
   }
 
-  private void bfs(int[][] dis) {
-    int R = Constants.ROW_NUM, C = Constants.COL_NUM;
+  private Iterable<Position> getCandidateMoves(Square[][] board, Square stoneType) {
     int[][] d = {{1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0},
         {-1, -1}, {0, -1}, {1, -1}};
-    Queue<Position> q = new LinkedList<Position>();
-    for (int i = 0; i < R; i++)
-      for (int j = 0; j < C; j++)
-        if (dis[i][j] == 0)
-          q.add(Position.create(i, j));
-    if (q.isEmpty()) dis[R / 2][C / 2] = 1;
-    while (!q.isEmpty()) {
-      Position t = q.poll();
-      int i, j;
-      for (int k = 0; k < 8; k++) {
-        i = t.getRowIndex() + d[k][0];
-        j = t.getColumnIndex() + d[k][1];
-        if (Utils.validPosition(i, j) && dis[i][j] == -1) {
-          dis[i][j] = dis[t.getRowIndex()][t.getColumnIndex()] + 1;
-          if (dis[i][j] < paddingDis)
-            q.add(Position.create(i, j));
+    Set<Position> result = new HashSet<Position>();
+    for (int i = 0; i < Constants.ROW_NUM; i++) {
+      for (int j = 0; j < Constants.COL_NUM; j++) {
+        if (board[i][j] != Square.NOTHING) {
+          for (int k = 0; k < d.length; k++) {
+            int ti = i + d[k][0], tj = j + d[k][1];
+            if (Utils.validPosition(ti, tj) && board[ti][tj] == Square.NOTHING) {
+              Position pos = Position.create(ti, tj);
+              result.add(pos);
+            }
+          }
         }
       }
     }
+    if (result.isEmpty()) {
+      result.add(Position.create(Constants.ROW_NUM / 2, Constants.COL_NUM / 2));
+    }
+    return result;
   }
 
-  private Node maxValue(Square[][] board, int a, int b, int dep) {
-    if (Utils.playerWins(board, Square.BLACK_PIECE)) {
-      return new Node(null, 100000);
-    } else if (Utils.playerWins(board, Square.WHITE_PIECE)) {
-      return new Node(null, -100000);
-    } else if (dep > maxDepth) {
+  private enum MinMax {
+    MIN(Square.WHITE_PIECE),
+    MAX(Square.BLACK_PIECE);
+
+    private final Square stoneType;
+
+    MinMax(Square stoneType) {
+      this.stoneType = stoneType;
+    }
+
+    public Node update(Node current, Position position, int f) {
+      if (current == null) {
+        return new Node(position, f);
+      }
+      switch (this) {
+        case MAX:
+          if (f > current.f) {
+            return new Node(position, f);
+          }
+          return current;
+        case MIN:
+          if (f < current.f) {
+            return new Node(position, f);
+          }
+          return current;
+        default:
+          throw new IllegalArgumentException();
+      }
+    }
+
+    public Square getStoneType() {
+      return stoneType;
+    }
+  }
+
+  private Node minMaxSearch(Square[][] board, int alpha, int beta, int depth, MinMax minMax) {
+    if (Utils.playerWins(board, MinMax.MAX.getStoneType())) {
+      return new Node(null, Integer.MAX_VALUE);
+    } else if (Utils.playerWins(board, MinMax.MIN.getStoneType())) {
+      return new Node(null, Integer.MIN_VALUE);
+    } else if (depth == 0) {
       return new Node(null, eval(board));
     }
-    int R = Constants.ROW_NUM, C = Constants.COL_NUM;
-    int[][] dis = new int[R][C];
-    for (int i = 0; i < R; i++)
-      for (int j = 0; j < C; j++)
-        dis[i][j] = board[i][j] == Square.NOTHING ? -1 : 0;
-    bfs(dis);
-    int f = -10000000, t;
-    int pi = -1, pj = -1;
-    for (int i = 0; i < R; i++)
-      for (int j = 0; j < C; j++) {
-        if (dis[i][j] > 0) {
-          board[i][j] = Square.BLACK_PIECE;
-          t = minValue(board, a, b, dep + 1).f;
-          if (t > f) {
-            f = t;
-            pi = i;
-            pj = j;
-          }
-          board[i][j] = Square.NOTHING;
-          if (f >= b) {
-            return new Node(Position.create(pi, pj), f);
-          }
-          a = Math.max(a, f);
-        }
-      }
-    return new Node(Position.create(pi, pj), f);
-  }
 
-  private Node minValue(Square[][] board, int a, int b, int dep) {
-    if (Utils.playerWins(board, Square.BLACK_PIECE)) {
-      return new Node(null, 100000);
-    } else if (Utils.playerWins(board, Square.WHITE_PIECE)) {
-      return new Node(null, -100000);
-    } else if (dep > maxDepth) {
-      return new Node(null, eval(board));
+    Node res = null;
+    for (Position position : getCandidateMoves(board, minMax.getStoneType())) {
+      int i = position.getRowIndex(), j = position.getColumnIndex();
+      try {
+        board[i][j] = minMax.getStoneType();
+        if (minMax == MinMax.MAX) {
+          int curMax = res == null ? alpha : res.f;
+          int v = minMaxSearch(board, curMax, beta, depth - 1, MinMax.MIN).f;
+          res = minMax.update(res, position, v);
+          if (res.f >= beta) {
+            return res;
+          }
+        } else {
+          int curMin = res == null ? beta : res.f;
+          res = minMax.update(res,
+              position, minMaxSearch(board, alpha, curMin, depth - 1, MinMax.MAX).f);
+          if (res.f <= alpha) {
+            return res;
+          }
+        }
+      } finally {
+        board[i][j] = Square.NOTHING;
+      }
     }
-    int R = Constants.ROW_NUM, C = Constants.COL_NUM;
-    int[][] dis = new int[R][C];
-    for (int i = 0; i < R; i++)
-      for (int j = 0; j < C; j++)
-        dis[i][j] = board[i][j] == Square.NOTHING ? -1 : 0;
-    bfs(dis);
-    int f = 10000000, t;
-    int pi = -1, pj = -1;
-    for (int i = 0; i < R; i++)
-      for (int j = 0; j < C; j++) {
-        if (dis[i][j] > 0) {
-          board[i][j] = Square.WHITE_PIECE;
-          t = maxValue(board, a, b, dep + 1).f;
-          if (t < f) {
-            f = t;
-            pi = i;
-            pj = j;
-          }
-          board[i][j] = Square.NOTHING;
-          if (f <= a) {
-            return new Node(Position.create(pi, pj), f);
-          }
-          b = Math.min(b, f);
-        }
-      }
-    return new Node(Position.create(pi, pj), f);
+    return res;
   }
 
-  class Node {
-    Position p;
-    int f;
+  private static class Node {
+    private final Position p;
+    private final int f;
 
     Node(Position p, int f) {
       this.p = p;
