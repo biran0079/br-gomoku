@@ -17,7 +17,7 @@ public class Utils {
     for (int i = 0; i < r; i++)
       for (int j = 0; j < c; j++) {
         for (int k = 0; k < 4; k++) {
-          if (validPosition(i + 4 * d[k][0], j + 4 * d[k][1])) {
+          if (isValidPosition(i + 4 * d[k][0], j + 4 * d[k][1])) {
             int l;
             for (l = 0; l < 5; l++) {
               if (chessBoard[i + l * d[k][0]][j + l * d[k][1]] != curPiece) {
@@ -32,7 +32,7 @@ public class Utils {
     return false;
   }
 
-  public static boolean validPosition(int i, int j) {
+  public static boolean isValidPosition(int i, int j) {
     return i >= 0 && i < Constants.ROW_NUM && j >= 0 && j < Constants.COL_NUM;
   }
 

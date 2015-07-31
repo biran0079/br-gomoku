@@ -1,8 +1,8 @@
 package player;
 
+import common.Square;
 import model.GameBoard;
 import model.Position;
-import common.Square;
 
 public interface Player {
 

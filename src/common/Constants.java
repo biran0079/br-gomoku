@@ -1,5 +1,4 @@
 package common;
-import javax.swing.ImageIcon;
 
 public class Constants {
 

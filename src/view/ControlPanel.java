@@ -2,18 +2,17 @@ package view;
 
 import common.PlayerType;
 
-import java.awt.FlowLayout;
+import javax.inject.Inject;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionListener;
-
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JPanel;
 
 public class ControlPanel extends JPanel {
 
 	private final JButton newGame, undo;
 	private final JComboBox<PlayerType> player1, player2;
 
+  @Inject
 	public ControlPanel() {
 		newGame = new JButton("new game");
 		undo = new JButton("undo");

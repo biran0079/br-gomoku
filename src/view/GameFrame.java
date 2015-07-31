@@ -1,14 +1,13 @@
 package view;
-import java.awt.BorderLayout;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-
-import player.*;
+import javax.inject.Inject;
+import javax.swing.*;
+import java.awt.*;
 
 
 public class GameFrame extends JFrame{
 
+  @Inject
 	public  GameFrame(GamePanel gamePanel, ControlPanel controlPanel){
 		this.setLayout(new BorderLayout());
 		this.setVisible(true);

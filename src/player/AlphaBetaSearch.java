@@ -6,7 +6,8 @@ import common.Utils;
 import model.GameBoard;
 import model.Position;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 class AlphaBetaSearch implements Player {
 
@@ -62,7 +63,7 @@ class AlphaBetaSearch implements Player {
     for (int i = 1; i < R - 1; i++)
       for (int j = 1; j < C - 1; j++) {
         for (int k = 0; k < 4; k++) {
-          if (Utils.validPosition(i + n * d[k][0], j + n
+          if (Utils.isValidPosition(i + n * d[k][0], j + n
               * d[k][1])) {
             deadEnd = 2;
             if (board[i - d[k][0]][j - d[k][1]] != Square.NOTHING) deadEnd--;
@@ -89,7 +90,7 @@ class AlphaBetaSearch implements Player {
         if (board[i][j] != Square.NOTHING) {
           for (int k = 0; k < d.length; k++) {
             int ti = i + d[k][0], tj = j + d[k][1];
-            if (Utils.validPosition(ti, tj) && board[ti][tj] == Square.NOTHING) {
+            if (Utils.isValidPosition(ti, tj) && board[ti][tj] == Square.NOTHING) {
               Position pos = Position.create(ti, tj);
               result.add(pos);
             }

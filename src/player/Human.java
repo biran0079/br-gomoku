@@ -1,10 +1,12 @@
 package player;
 
+import common.Square;
 import model.GameBoard;
 import model.Position;
-import common.Square;
 import view.ClickCallback;
 import view.ClickCallbackManager;
+
+import javax.inject.Inject;
 
 public class Human implements Player {
 
@@ -14,6 +16,7 @@ public class Human implements Player {
 
 	private Position move;
 
+  @Inject
 	public Human(String name, Square stoneType, ClickCallbackManager clickCallbackManager) {
 		this.name = name;
 		this.stoneType = stoneType;
@@ -31,16 +34,12 @@ public class Human implements Player {
 	}
 
   private void beforeMove() {
-    clickCallbackManager.setClickCallback(new ClickCallback() {
-      @Override
-      public void click(Position position) {
-        humanMove(position.getRowIndex(), position.getColumnIndex());
-      }
-    });
+    clickCallbackManager.setClickCallback(
+        (position) -> humanMove(position.getRowIndex(), position.getColumnIndex()));
   }
 
 	private void afterMove() {
-    clickCallbackManager.setClickCallback(null);
+    clickCallbackManager.disableClickCallbacl();
   }
 
 	@Override

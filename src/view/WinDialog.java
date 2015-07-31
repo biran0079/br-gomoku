@@ -1,11 +1,10 @@
 package view;
 
 
-import java.awt.Dimension;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import javax.swing.*;
 
 public class WinDialog extends JDialog {
 

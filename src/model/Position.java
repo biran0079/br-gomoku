@@ -2,9 +2,7 @@ package model;
 
 import common.Constants;
 import common.InvalidPositionException;
-import javafx.geometry.Pos;
-
-import java.util.Objects;
+import common.Utils;
 
 public class Position {
 
@@ -17,14 +15,10 @@ public class Position {
 	}
 
 	public static Position create(int i, int j) throws InvalidPositionException {
-		if (!isPositionValid(i, j)) {
+		if (!Utils.isValidPosition(i, j)) {
 			throw new InvalidPositionException();
 		}
 		return new Position(i, j);
-	}
-
-	private static boolean isPositionValid(int i, int j) {
-		return i >= 0 && i < Constants.ROW_NUM && j >= 0 && j < Constants.COL_NUM;
 	}
 
 	public int getRowIndex() {

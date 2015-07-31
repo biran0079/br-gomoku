@@ -1,10 +1,11 @@
 package view;
+
+import common.Square;
+import model.Position;
+
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.JButton;
-
-import model.Position;
-import common.Square;
 
 public class GameSquare extends JButton implements ActionListener {
 

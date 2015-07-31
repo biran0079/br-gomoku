@@ -3,6 +3,8 @@ package model;
 import common.Constants;
 import common.Square;
 
+import javax.inject.Inject;
+
 /**
  * Implementation of game board.
  */
@@ -10,6 +12,7 @@ class GameBoardImpl implements GameBoard {
 
   private final Square[][] board;
 
+  @Inject
   GameBoardImpl() {
     board = new Square[Constants.ROW_NUM][Constants.COL_NUM];
   }

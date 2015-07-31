@@ -4,6 +4,8 @@ import common.Utils;
 import model.Position;
 import player.Player;
 
+import javax.inject.Inject;
+
 /**
  * Represents session of a single game.
  */
@@ -12,6 +14,7 @@ class GameSessoin {
   private final GameController gameController;
   private boolean sessionSopped = false;
 
+  @Inject
   GameSessoin(GameController gameController) {
     this.gameController = gameController;
   }
