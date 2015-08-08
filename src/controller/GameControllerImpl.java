@@ -66,7 +66,11 @@ class GameControllerImpl implements GameController {
 
   @Override
   public void gameOver(Player winner) {
-    ui.win(winner, (e) -> startGame());
+    if (winner != null) {
+      ui.win(winner, (e) -> startGame());
+    } else {
+      ui.draw((e) -> startGame());
+    }
   }
 
   @Override

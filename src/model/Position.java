@@ -1,24 +1,29 @@
 package model;
 
 import common.Constants;
-import common.InvalidPositionException;
-import common.Utils;
 
 public class Position {
 
 	private final int i;
 	private final int j;
 
+  private static final Position[][] cached;
+
+  static {
+    cached = new Position[Constants.BOARD_SIZE][Constants.BOARD_SIZE];
+    for (int i = 0; i < Constants.BOARD_SIZE; i++)
+      for (int j = 0; j < Constants.BOARD_SIZE; j++) {
+        cached[i][j] = new Position(i, j);
+      }
+  }
+
 	private Position(int i, int j) {
 		this.i = i;
 		this.j = j;
 	}
 
-	public static Position create(int i, int j) throws InvalidPositionException {
-		if (!Utils.isValidPosition(i, j)) {
-			throw new InvalidPositionException();
-		}
-		return new Position(i, j);
+	public static Position create(int i, int j) {
+		return cached[i][j];
 	}
 
 	public int getRowIndex() {
@@ -36,7 +41,7 @@ public class Position {
 
   @Override
   public int hashCode() {
-    return i * Constants.COL_NUM + j;
+    return i * Constants.BOARD_SIZE + j;
   }
 
   @Override

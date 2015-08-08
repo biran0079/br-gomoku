@@ -8,7 +8,7 @@ import view.ClickCallbackManager;
 
 import javax.inject.Inject;
 
-public class Human implements Player {
+class Human implements Player {
 
 	private final String name;
 	private final Square stoneType;
@@ -16,8 +16,7 @@ public class Human implements Player {
 
 	private Position move;
 
-  @Inject
-	public Human(String name, Square stoneType, ClickCallbackManager clickCallbackManager) {
+  Human(String name, Square stoneType, ClickCallbackManager clickCallbackManager) {
 		this.name = name;
 		this.stoneType = stoneType;
     this.clickCallbackManager = clickCallbackManager;

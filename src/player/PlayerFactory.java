@@ -1,6 +1,7 @@
 package player;
 
 import common.Square;
+import player.minmax.AlphaBetaSearch;
 import view.ClickCallbackManager;
 
 import javax.inject.Inject;

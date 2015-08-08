@@ -12,7 +12,7 @@ public class Utils {
   }
 
   public static boolean playerWins(Square[][] chessBoard, Square curPiece) {
-    int r = Constants.ROW_NUM, c = Constants.COL_NUM;
+    int r = Constants.BOARD_SIZE, c = Constants.BOARD_SIZE;
     int[][] d = { { 0, 1 }, { 1, 1 }, { 1, 0 }, { 1, -1 } };
     for (int i = 0; i < r; i++)
       for (int j = 0; j < c; j++) {
@@ -33,11 +33,11 @@ public class Utils {
   }
 
   public static boolean isValidPosition(int i, int j) {
-    return i >= 0 && i < Constants.ROW_NUM && j >= 0 && j < Constants.COL_NUM;
+    return i >= 0 && i < Constants.BOARD_SIZE && j >= 0 && j < Constants.BOARD_SIZE;
   }
 
   public static void printBoard(Square[][] board) {
-    int R = Constants.ROW_NUM, C = Constants.COL_NUM;
+    int R = Constants.BOARD_SIZE, C = Constants.BOARD_SIZE;
     for (int i = 0; i < R; i++) {
       for (int j = 0; j < C; j++) {
         if (board[i][j] == Square.NOTHING)

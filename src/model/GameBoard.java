@@ -14,4 +14,6 @@ public interface GameBoard {
   Square[][] toArray();
 
   void initialize();
+
+  boolean isFull();
 }

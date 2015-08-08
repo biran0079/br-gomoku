@@ -21,7 +21,7 @@ public class UI {
     this.gameFrame = gameFrame;
   }
 
-  public void win(final Player p, final ActionListener actionListener){
+  public void win(final Player p, ActionListener actionListener){
     SwingUtilities.invokeLater(() -> new WinDialog(gameFrame, p.toString(), actionListener));
   }
 
@@ -49,5 +49,9 @@ public class UI {
 
   public void addNewGameActionListener(ActionListener actionListener) {
     controlPanel.addNewGameActionListener(actionListener);
+  }
+
+  public void draw(ActionListener actionListener) {
+    SwingUtilities.invokeLater(() -> new WinDialog(gameFrame, "Nobody", actionListener));
   }
 }

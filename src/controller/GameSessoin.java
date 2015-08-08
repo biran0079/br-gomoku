@@ -38,6 +38,9 @@ class GameSessoin {
     if (Utils.playerWins(gameController.getGameBoard(), player.getStoneType())) {
       gameController.gameOver(player);
       sessionSopped = true;
+    } else if (gameController.getGameBoard().isFull()) {
+      gameController.gameOver(null);
+      sessionSopped = true;
     }
   }
 }
