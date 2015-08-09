@@ -1,5 +1,7 @@
 package player.minmax;
 
+import common.Constants;
+
 import static common.Constants.BOARD_SIZE;
 
 import static player.minmax.IndexTransformer.*;
@@ -16,12 +18,14 @@ public enum PositionTransformer {
   CLOCK_90_M(GET_C_I, GET_J, BOARD_SIZE),
   CLOCK_180(GET_C_I, GET_C_J, BOARD_SIZE),
   CLOCK_180_M(GET_C_J, GET_I, BOARD_SIZE),
-  CLOCK_720(GET_C_J, GET_I, BOARD_SIZE),
-  CLOCK_720_M(GET_I, GET_C_J, BOARD_SIZE),
-
+  CLOCK_270(GET_C_J, GET_I, BOARD_SIZE),
+  CLOCK_270_M(GET_I, GET_C_J, BOARD_SIZE),
 
   RIGHT_DIAGONAL(SUM_I_J, GET_J, BOARD_SIZE + BOARD_SIZE - 1),
-  LEFT_DIAGONAL(SUM_I_C_J, GET_I, BOARD_SIZE + BOARD_SIZE - 1);
+  RIGHT_DIAGONAL_REVERSE((i, j) -> i - j, (i, j) -> j, BOARD_SIZE + BOARD_SIZE - 1),
+
+  LEFT_DIAGONAL(SUM_I_C_J, GET_I, BOARD_SIZE + BOARD_SIZE - 1),
+  LEFT_DIAGONAL_REVERSE((i, j) -> j, (i, j) -> j - i + Constants.BOARD_SIZE - 1, BOARD_SIZE + BOARD_SIZE - 1);
 
   private final IndexTransformer rowTransformer;
   private final IndexTransformer colTransformer;
@@ -39,11 +43,11 @@ public enum PositionTransformer {
     return boardRowNumber;
   }
 
-  int getI(int i, int j) {
+  public int getI(int i, int j) {
     return rowTransformer.get(i, j);
   }
 
-  int getJ(int i, int j) {
+  public int getJ(int i, int j) {
     return colTransformer.get(i, j);
   }
 }

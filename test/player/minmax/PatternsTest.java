@@ -257,7 +257,7 @@ public class PatternsTest {
   private List<Pattern> getMatcching(BoardClass boardClass, ImmutableList<Pattern> candidates) {
     List<Pattern> result = new ArrayList<>();
     for (Pattern p : candidates) {
-      if (boardClass.match(p)) {
+      if (boardClass.matches(p)) {
         result.add(p);
       }
     }

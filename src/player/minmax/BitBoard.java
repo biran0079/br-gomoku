@@ -14,13 +14,25 @@ public class BitBoard {
 
   private static final int EMPTY_BITS = 0;
   private static final int BLACK_BITS = 1;
-  private static final int WHILTE_BITS = 2;
+  private static final int WHITE_BITS = 2;
   private static final int MASK_BITS = 3;
 
   private final int[] board;
 
   BitBoard(int rowNumver) {
     board = new int[rowNumver];
+  }
+
+  private BitBoard(GameBoard gameBoard, PositionTransformer transformer) {
+    this(transformer.getBoardRowNumber());
+    for (int i = 0; i < Constants.BOARD_SIZE; i++) {
+      for (int j = 0; j < Constants.BOARD_SIZE; j++) {
+        Square square = gameBoard.get(Position.create(i, j));
+        if (square != Square.NOTHING) {
+          setBits(board, transformer.getI(i, j), transformer.getJ(i, j), square);
+        }
+      }
+    }
   }
 
   private BitBoard(BitBoard bitBoard) {
@@ -32,7 +44,7 @@ public class BitBoard {
       case BLACK_PIECE:
         return BLACK_BITS;
       case WHITE_PIECE:
-        return WHILTE_BITS;
+        return WHITE_BITS;
       case NOTHING:
         return 0;
       default:
@@ -42,7 +54,7 @@ public class BitBoard {
 
   BitBoard set(int i, int j, Square stoneType) {
     BitBoard result = new BitBoard(this);
-    result.board[i] |= getBits(stoneType) << (j * 2);
+    setBits(result.board, i, j, stoneType);
     return result;
   }
 
@@ -51,7 +63,7 @@ public class BitBoard {
     switch (bits) {
       case BLACK_BITS:
         return Square.BLACK_PIECE;
-      case WHILTE_BITS:
+      case WHITE_BITS:
         return Square.WHITE_PIECE;
       case EMPTY_BITS:
         return Square.NOTHING;
@@ -64,17 +76,8 @@ public class BitBoard {
     return board[i];
   }
 
-  static BitBoard fromGameBoard(GameBoard gameBoard) {
-    BitBoard bitBoard = new BitBoard(Constants.BOARD_SIZE);
-    for (int i = 0; i < Constants.BOARD_SIZE; i++) {
-      for (int j = 0; j < Constants.BOARD_SIZE; j++) {
-        Square square = gameBoard.get(Position.create(i, j));
-        if (square != Square.NOTHING) {
-          bitBoard.set(i, j, square);
-        }
-      }
-    }
-    return bitBoard;
+  static BitBoard fromGameBoard(GameBoard gameBoard, PositionTransformer transformer) {
+    return new BitBoard(gameBoard, transformer);
   }
 
   @Override
@@ -115,5 +118,12 @@ public class BitBoard {
       return false;
     }
     return Arrays.equals(board, ((BitBoard) o).board);
+  }
+
+  static void setBits(int[] board, int i, int j, Square stoneType) {
+    if (((board[i] >> (j * 2)) & 3) != 0) {
+      System.err.println("!!");
+    }
+    board[i] |= (getBits(stoneType) << (j * 2));
   }
 }

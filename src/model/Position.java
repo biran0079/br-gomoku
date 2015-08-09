@@ -1,6 +1,7 @@
 package model;
 
 import common.Constants;
+import player.minmax.PositionTransformer;
 
 public class Position {
 
@@ -10,8 +11,9 @@ public class Position {
   private static final Position[][] cached;
 
   static {
-    cached = new Position[Constants.BOARD_SIZE][Constants.BOARD_SIZE];
-    for (int i = 0; i < Constants.BOARD_SIZE; i++)
+    // row index can be up to 2 * board size - 1 because we sometimes rotate board by 45 degree.
+    cached = new Position[2 * Constants.BOARD_SIZE - 1][Constants.BOARD_SIZE];
+    for (int i = 0; i < 2 * Constants.BOARD_SIZE - 1; i++)
       for (int j = 0; j < Constants.BOARD_SIZE; j++) {
         cached[i][j] = new Position(i, j);
       }
@@ -25,6 +27,13 @@ public class Position {
 	public static Position create(int i, int j) {
 		return cached[i][j];
 	}
+
+  public Position transform(PositionTransformer transformer) {
+    if (transformer == PositionTransformer.IDENTITY) {
+      return this;
+    }
+    return create(transformer.getI(i, j), transformer.getJ(i, j));
+  }
 
 	public int getRowIndex() {
 		return i;

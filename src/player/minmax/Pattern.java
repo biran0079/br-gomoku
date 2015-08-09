@@ -1,7 +1,10 @@
 package player.minmax;
 
+import com.google.common.collect.ImmutableList;
 import common.Square;
+import model.Position;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -13,17 +16,24 @@ public class Pattern {
   private final int mask;
   private final PositionTransformer transformer;
   private final Square stoneType;
+  private final List<Position> defensiveMoves;
 
   Pattern(int rowIndex,
           int pattern,
           int mask,
           PositionTransformer transformer,
-          Square stoneType) {
+          Square stoneType,
+          List<Position> defensiveMoves) {
     this.rowIndex = rowIndex;
     this.pattern = pattern;
     this.mask = mask;
     this.transformer = transformer;
     this.stoneType = stoneType;
+    this.defensiveMoves = defensiveMoves;
+  }
+
+  public List<Position> getDefensiveMoves() {
+    return defensiveMoves;
   }
 
   public int getRowIndex() {
@@ -61,5 +71,19 @@ public class Pattern {
         && pattern == p.pattern
         && mask == p.mask
         && transformer == p.transformer;
+  }
+
+  @Override
+  public String toString() {
+    return new StringBuilder()
+        .append("transformer: ")
+        .append(transformer)
+        .append(", row: ")
+        .append(rowIndex)
+        .append(", mask: ")
+        .append(mask)
+        .append(", pattern: ")
+        .append(pattern)
+        .toString();
   }
 }

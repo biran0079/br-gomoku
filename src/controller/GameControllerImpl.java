@@ -44,7 +44,12 @@ class GameControllerImpl implements GameController {
   @Override
   public void startGame() {
     currentGameSessionFuture = gameSessionExecutor.submit(() -> {
-      gameSessoinProvider.get().newGameStart(initializeGame());
+      try {
+        gameSessoinProvider.get().newGameStart(initializeGame());
+      } catch (Throwable e) {
+        e.printStackTrace();
+        throw e;
+      }
     });
   }
 
