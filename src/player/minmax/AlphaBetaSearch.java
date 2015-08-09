@@ -1,19 +1,16 @@
 package player.minmax;
 
-import static player.minmax.PositionTransformer.*;
-
 import com.google.common.collect.Iterables;
-import common.Constants;
 import common.Square;
-import common.Utils;
 import model.GameBoard;
 import model.Position;
 import player.Player;
 
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
+
+import static player.minmax.PositionTransformer.*;
 
 public class AlphaBetaSearch implements Player {
 
@@ -21,6 +18,7 @@ public class AlphaBetaSearch implements Player {
   private final String name;
   private final Square stoneType;
   private final Map<BitBoard, Node> transitionTable = new HashMap<>();
+  private final CandidateMovesSelector candidateMovesSelector = new CandidateMovesSelector();
 
   private int evalCount;
   private int cacheHit;
@@ -40,11 +38,10 @@ public class AlphaBetaSearch implements Player {
     evalCount = 0;
     cacheHit = 0;
     transitionTable.clear();
-    if (Utils.playerWins(gameBoard, Square.BLACK_PIECE)
-       || Utils.playerWins(gameBoard, Square.WHITE_PIECE)) {
-      throw new IllegalStateException("already won");
-    }
     BoardClass boardClass = BoardClass.fromGameBoard(gameBoard);
+    if (boardClass.matchesAny(Iterables.concat(Patterns.BLACK_GOALS, Patterns.WHITE_GOALS))) {
+      throw new IllegalStateException("Already won.");
+    }
     MinMax minMax = stoneType == Square.BLACK_PIECE ? MinMax.MAX : MinMax.MIN;
     Node res = null;
     try {
@@ -88,35 +85,6 @@ public class AlphaBetaSearch implements Player {
     }
   }
 
-  Iterable<Position> getCandidateMoves(BoardClass boardClass, Square stoneType) {
-    Set<Position> result = new HashSet<>();
-    Square opponent = stoneType == Square.WHITE_PIECE ? Square.BLACK_PIECE : Square.WHITE_PIECE;
-    for (Pattern p : boardClass.filterMatchedPatterns(Patterns.getThreatPatterns(opponent))) {
-      result.addAll(p.getDefensiveMoves());
-    }
-    if (!result.isEmpty()) {
-      return result;
-    }
-    BitBoard board = boardClass.getBoard(PositionTransformer.IDENTITY);
-    int[][] d = {{1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1}, {0, -1}, {1, -1}};
-    for (int i = 0; i < Constants.BOARD_SIZE; i++) {
-      for (int j = 0; j < Constants.BOARD_SIZE; j++) {
-        if (board.get(i, j) != Square.NOTHING) {
-          for (int k = 0; k < d.length; k++) {
-            int ti = i + d[k][0], tj = j + d[k][1];
-            if (Utils.isValidPosition(ti, tj) && board.get(ti, tj) == Square.NOTHING) {
-              Position pos = Position.create(ti, tj);
-              result.add(pos);
-            }
-          }
-        }
-      }
-    }
-    if (result.isEmpty()) {
-      result.add(Position.create(Constants.BOARD_SIZE / 2, Constants.BOARD_SIZE / 2));
-    }
-    return result;
-  }
 
   private enum MinMax {
     MIN(Square.WHITE_PIECE),
@@ -170,7 +138,9 @@ public class AlphaBetaSearch implements Player {
     }
 
     Node res = null;
-    for (Position position : getCandidateMoves(boardClass, minMax.getStoneType())) {
+    Collection<Position> candidateMoves =
+        candidateMovesSelector.getCandidateMoves(boardClass, minMax.getStoneType());
+    for (Position position : candidateMoves) {
       int i = position.getRowIndex(), j = position.getColumnIndex();
       BoardClass newBoardClass = boardClass.set(i, j, minMax.getStoneType());
       if (minMax == MinMax.MAX) {

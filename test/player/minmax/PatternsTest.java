@@ -1,22 +1,21 @@
 package player.minmax;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import common.Square;
+import model.Position;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
+import static player.minmax.BoardClassUtil.*;
 
 /**
  * Unit tests for Patterns class.
  */
 public class PatternsTest {
-
-  private static final Square E = Square.NOTHING;
-  private static final Square W = Square.WHITE_PIECE;
-  private static final Square B = Square.BLACK_PIECE;
 
   @Test
   public void testGoalNumber() {
@@ -243,6 +242,22 @@ public class PatternsTest {
         Patterns.WHITE_THREE);
   }
 
+  @Test
+  public void testDefensiveMove() {
+    List<Position> temp = new ArrayList<>();
+    for (Pattern p :
+        Iterables.concat(
+            Patterns.BLACK_THREE,
+            Patterns.WHITE_THREE,
+            Patterns.BLACK_STRAIT_FOUR,
+            Patterns.WHITE_STRAIT_FOUR,
+            Patterns.BLACK_OPEN_FOUR,
+            Patterns.WHITE_OPEN_FOUR)) {
+      // make sure all defensive moves are valid positions.
+      temp.addAll(p.getDefensiveMoves());
+    }
+  }
+
   private void testSinglePattern(Square[][] board,
                                  PositionTransformer orientation,
                                  Square stoneType,
@@ -262,17 +277,5 @@ public class PatternsTest {
       }
     }
     return result;
-  }
-
-  private BoardClass createBoard(Square[][] board) {
-    BoardClass boardClass = BoardClass.emptyBoardClass();
-    for (int i = 0; i < board.length; i++) {
-      for (int j = 0; j < board[i].length; j++) {
-        if (board[i][j] != Square.NOTHING) {
-          boardClass = boardClass.set(i, j, board[i][j]);
-        }
-      }
-    }
-    return boardClass;
   }
 }

@@ -25,6 +25,9 @@ public class Position {
 	}
 
 	public static Position create(int i, int j) {
+    if (i < 0 || j < 0) {
+      throw new IllegalArgumentException("Cannot have negative position index.");
+    }
 		return cached[i][j];
 	}
 

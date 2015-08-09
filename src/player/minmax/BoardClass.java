@@ -83,4 +83,8 @@ public class BoardClass {
   Iterable<Pattern> filterMatchedPatterns(Iterable<Pattern> patterns) {
     return Iterables.filter(patterns, (p) -> matches(p));
   }
+
+  boolean isEmpty() {
+    return getBoard(IDENTITY).isEmpty();
+  }
 }

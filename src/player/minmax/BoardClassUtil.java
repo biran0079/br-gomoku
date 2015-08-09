@@ -1,40 +1,19 @@
 package player.minmax;
 
-import com.google.common.collect.Lists;
 import common.Square;
 import model.GameBoard;
 import model.Position;
-import org.junit.Test;
-
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
- * Created by biran on 8/8/2015.
+ * Created by biran on 8/9/2015.
  */
-public class AlphaBetaSearchTest {
+public class BoardClassUtil {
 
-  AlphaBetaSearch alphaBetaSearch = new AlphaBetaSearch("AI", Square.WHITE_PIECE);
+  public static final Square E = Square.NOTHING;
+  public static final Square W = Square.WHITE_PIECE;
+  public static final Square B = Square.BLACK_PIECE;
 
-  @Test
-  public void getCandidateMoves() {
-    List<Position> pos = Lists.newArrayList(alphaBetaSearch.getCandidateMoves(
-        createBoard(
-            new Square[][]{
-                {},
-                {W},
-                {W},
-                {W},
-                {W},
-            }), Square.BLACK_PIECE));
-    assertEquals(2, pos.size());
-    assertTrue(pos.contains(Position.create(0, 0)));
-    assertTrue(pos.contains(Position.create(5, 0)));
-  }
-
-  GameBoard parse(String s) {
+  public static GameBoard parseGameBoard(String s) {
     final String[] b = s.split("\n");
     return new GameBoard() {
       @Override
@@ -71,11 +50,7 @@ public class AlphaBetaSearchTest {
     };
   }
 
-  private static final Square E = Square.NOTHING;
-  private static final Square W = Square.WHITE_PIECE;
-  private static final Square B = Square.BLACK_PIECE;
-
-  private BoardClass createBoard(Square[][] board) {
+  public static BoardClass createBoard(Square[][] board) {
     BoardClass boardClass = BoardClass.emptyBoardClass();
     for (int i = 0; i < board.length; i++) {
       for (int j = 0; j < board[i].length; j++) {

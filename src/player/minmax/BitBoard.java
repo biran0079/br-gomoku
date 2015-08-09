@@ -46,7 +46,7 @@ public class BitBoard {
       case WHITE_PIECE:
         return WHITE_BITS;
       case NOTHING:
-        return 0;
+        return EMPTY_BITS;
       default:
         throw new IllegalArgumentException();
     }
@@ -122,8 +122,17 @@ public class BitBoard {
 
   static void setBits(int[] board, int i, int j, Square stoneType) {
     if (((board[i] >> (j * 2)) & 3) != 0) {
-      System.err.println("!!");
+      throw new IllegalArgumentException("Cannot set an non-empty position on board!");
     }
     board[i] |= (getBits(stoneType) << (j * 2));
+  }
+
+  public boolean isEmpty() {
+    for (int row : board) {
+      if (row != 0) {
+        return false;
+      }
+    }
+    return true;
   }
 }
