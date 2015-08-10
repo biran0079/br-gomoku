@@ -1,7 +1,7 @@
 package controller;
 
 import common.PlayerType;
-import common.Square;
+import common.StoneType;
 import model.GameBoard;
 import model.History;
 import model.Position;
@@ -58,12 +58,12 @@ class GameControllerImpl implements GameController {
 		for (int k = 2; k > 0 && history.hasMore(); k--) {
 			Position position = history.getLastMove().getPosition();
       ui.removePieceOn(position);
-      gameBoard.set(position, Square.NOTHING);
+      gameBoard.set(position, StoneType.NOTHING);
 		}
 	}
 
   @Override
-	public void putPieceOn(final Position position, final Square piece) {
+	public void putPieceOn(final Position position, final StoneType piece) {
     history.recordMove(position, piece);
 		gameBoard.set(position, piece);
 		ui.putPieceOn(position, piece);
@@ -89,12 +89,12 @@ class GameControllerImpl implements GameController {
     gameBoard.initialize();
     PlayerType[] types = ui.getSelectedPlayerTypes();
     return new Player[] {
-        createPlayer(types[0], "player1", Square.BLACK_PIECE),
-        createPlayer(types[1], "player2", Square.WHITE_PIECE)
+        createPlayer(types[0], "player1", StoneType.BLACK),
+        createPlayer(types[1], "player2", StoneType.WHITE)
     };
   }
 
-  private Player createPlayer(PlayerType type, String name, Square stoneType) {
+  private Player createPlayer(PlayerType type, String name, StoneType stoneType) {
     switch (type) {
       case HUMAN:
         return playerFactory.createHumanPlayer("Human-" + name, stoneType);

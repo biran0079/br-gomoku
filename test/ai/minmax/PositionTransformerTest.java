@@ -1,5 +1,6 @@
-package player.minmax;
+package ai.minmax;
 
+import common.PositionTransformer;
 import common.Constants;
 import model.Position;
 import org.junit.Test;

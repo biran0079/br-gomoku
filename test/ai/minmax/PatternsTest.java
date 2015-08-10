@@ -1,8 +1,9 @@
-package player.minmax;
+package ai.minmax;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
-import common.Square;
+import com.google.common.collect.Lists;
+import common.*;
 import model.Position;
 import org.junit.Test;
 
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
-import static player.minmax.BoardClassUtil.*;
+import static common.BoardClassUtil.*;
 
 /**
  * Unit tests for Patterns class.
@@ -26,27 +27,27 @@ public class PatternsTest {
   @Test
   public void testHorizontalGoalMatch() {
     testSinglePattern(
-        new Square[][]{
+        new StoneType[][]{
             {B, B, B, B, B},
         },
         PositionTransformer.IDENTITY,
-        Square.BLACK_PIECE,
+        StoneType.BLACK,
         Patterns.BLACK_GOALS);
 
     testSinglePattern(
-        new Square[][]{
+        new StoneType[][]{
             {B, B, W, B, B},
             {E, E, W, W, W, W, W},
         },
         PositionTransformer.IDENTITY,
-        Square.WHITE_PIECE,
+        StoneType.WHITE,
         Patterns.WHITE_GOALS);
   }
 
   @Test
   public void testVerticalGoalMatch() {
     testSinglePattern(
-        new Square[][]{
+        new StoneType[][]{
             {B},
             {B},
             {B},
@@ -54,11 +55,11 @@ public class PatternsTest {
             {B},
         },
         PositionTransformer.CLOCK_90,
-        Square.BLACK_PIECE,
+        StoneType.BLACK,
         Patterns.BLACK_GOALS);
 
     testSinglePattern(
-        new Square[][]{
+        new StoneType[][]{
             {},
             {},
             {E, W},
@@ -68,14 +69,14 @@ public class PatternsTest {
             {E, W},
         },
         PositionTransformer.CLOCK_90,
-        Square.WHITE_PIECE,
+        StoneType.WHITE,
         Patterns.WHITE_GOALS);
   }
 
   @Test
   public void testDiagonalGoalMatch() {
     testSinglePattern(
-        new Square[][]{
+        new StoneType[][]{
             {B},
             {E, B},
             {E, E, B},
@@ -83,11 +84,11 @@ public class PatternsTest {
             {E, E, E, E, B},
         },
         PositionTransformer.LEFT_DIAGONAL,
-        Square.BLACK_PIECE,
+        StoneType.BLACK,
         Patterns.BLACK_GOALS);
 
     testSinglePattern(
-        new Square[][]{
+        new StoneType[][]{
             {E, E, E, E, W},
             {E, E, E, W},
             {E, E, W},
@@ -95,70 +96,70 @@ public class PatternsTest {
             {W},
         },
         PositionTransformer.RIGHT_DIAGONAL,
-        Square.WHITE_PIECE,
+        StoneType.WHITE,
         Patterns.WHITE_GOALS);
   }
 
   @Test
   public void testHorizontalStraitFourMatch() {
     testSinglePattern(
-        new Square[][]{
+        new StoneType[][]{
             {B, B, B, B, E},
         },
         PositionTransformer.IDENTITY,
-        Square.BLACK_PIECE,
+        StoneType.BLACK,
         Patterns.BLACK_STRAIT_FOUR);
 
     testSinglePattern(
-        new Square[][]{
+        new StoneType[][]{
             {B, B, W, B, B},
             {E, E, E, W, W, W, W, B},
         },
         PositionTransformer.IDENTITY,
-        Square.WHITE_PIECE,
+        StoneType.WHITE,
         Patterns.WHITE_STRAIT_FOUR);
   }
 
   @Test
   public void testVerticalStraitFourMatch() {
     testSinglePattern(
-        new Square[][]{
+        new StoneType[][]{
             {B},
             {B},
             {B},
             {B},
         },
         PositionTransformer.CLOCK_90,
-        Square.BLACK_PIECE,
+        StoneType.BLACK,
         Patterns.BLACK_STRAIT_FOUR);
 
     testSinglePattern(
-        new Square[][]{
+        new StoneType[][]{
             {E, W},
             {E, W},
             {E, W},
             {E, W},
         },
         PositionTransformer.CLOCK_90,
-        Square.WHITE_PIECE,
+        StoneType.WHITE,
         Patterns.WHITE_STRAIT_FOUR);
   }
 
   @Test
   public void testDiagonalStraitFourMatch() {
     testSinglePattern(
-        new Square[][]{
+        new StoneType[][]{
             {B},
             {E, B},
             {E, E, B},
             {E, E, E, B},
         },
         PositionTransformer.LEFT_DIAGONAL,
-        Square.BLACK_PIECE,
+        StoneType.BLACK,
         Patterns.BLACK_STRAIT_FOUR);
 
     testSinglePattern(
-        new Square[][]{
+        new StoneType[][]{
             {E, E, E, E, W},
             {E, E, E, W},
             {E, E, W},
@@ -166,70 +167,70 @@ public class PatternsTest {
             {E},
         },
         PositionTransformer.RIGHT_DIAGONAL,
-        Square.WHITE_PIECE,
+        StoneType.WHITE,
         Patterns.WHITE_STRAIT_FOUR);
   }
 
   @Test
   public void testHorizontalThreeMatch() {
     testSinglePattern(
-        new Square[][]{
+        new StoneType[][]{
             {E, B, B, B, E, E},
         },
         PositionTransformer.IDENTITY,
-        Square.BLACK_PIECE,
+        StoneType.BLACK,
         Patterns.BLACK_THREE);
 
     testSinglePattern(
-        new Square[][]{
+        new StoneType[][]{
             {B, B, W, B, B},
             {E, E, E, W, W, W, E, B},
         },
         PositionTransformer.IDENTITY,
-        Square.WHITE_PIECE,
+        StoneType.WHITE,
         Patterns.WHITE_THREE);
   }
 
   @Test
   public void testVerticalThreeMatch() {
     testSinglePattern(
-        new Square[][]{
+        new StoneType[][]{
             {E},
             {B},
             {B},
             {B},
         },
         PositionTransformer.CLOCK_90,
-        Square.BLACK_PIECE,
+        StoneType.BLACK,
         Patterns.BLACK_THREE);
 
     testSinglePattern(
-        new Square[][]{
+        new StoneType[][]{
             {},
             {E, W},
             {E, W},
             {E, W},
         },
         PositionTransformer.CLOCK_90,
-        Square.WHITE_PIECE,
+        StoneType.WHITE,
         Patterns.WHITE_THREE);
   }
 
   @Test
   public void testDiagonalThreeMatch() {
     testSinglePattern(
-        new Square[][]{
+        new StoneType[][]{
             {E},
             {E, B},
             {E, E, B},
             {E, E, E, B},
         },
         PositionTransformer.LEFT_DIAGONAL,
-        Square.BLACK_PIECE,
+        StoneType.BLACK,
         Patterns.BLACK_THREE);
 
     testSinglePattern(
-        new Square[][]{
+        new StoneType[][]{
             {},
             {},
             {E, E, E, W},
@@ -238,7 +239,7 @@ public class PatternsTest {
             {E},
         },
         PositionTransformer.RIGHT_DIAGONAL,
-        Square.WHITE_PIECE,
+        StoneType.WHITE,
         Patterns.WHITE_THREE);
   }
 
@@ -258,24 +259,14 @@ public class PatternsTest {
     }
   }
 
-  private void testSinglePattern(Square[][] board,
+  private void testSinglePattern(StoneType[][] board,
                                  PositionTransformer orientation,
-                                 Square stoneType,
+                                 StoneType stoneType,
                                  ImmutableList<Pattern> candidates) {
     BoardClass boardClass = createBoard(board);
-    List<Pattern> patterns = getMatcching(boardClass, candidates);
+    List<Pattern> patterns = Lists.newArrayList(boardClass.filterMatchedPatterns(candidates));
     assertEquals(1, patterns.size());
     assertEquals(orientation, patterns.get(0).getTransformer());
     assertEquals(stoneType, patterns.get(0).getStoneType());
-  }
-
-  private List<Pattern> getMatcching(BoardClass boardClass, ImmutableList<Pattern> candidates) {
-    List<Pattern> result = new ArrayList<>();
-    for (Pattern p : candidates) {
-      if (boardClass.matches(p)) {
-        result.add(p);
-      }
-    }
-    return result;
   }
 }

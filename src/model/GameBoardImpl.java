@@ -1,7 +1,8 @@
 package model;
 
+import common.BoardClass;
 import common.Constants;
-import common.Square;
+import common.StoneType;
 
 import javax.inject.Inject;
 
@@ -10,26 +11,26 @@ import javax.inject.Inject;
  */
 class GameBoardImpl implements GameBoard {
 
-  private final Square[][] board;
+  private final StoneType[][] board;
 
   @Inject
   GameBoardImpl() {
-    board = new Square[Constants.BOARD_SIZE][Constants.BOARD_SIZE];
+    board = new StoneType[Constants.BOARD_SIZE][Constants.BOARD_SIZE];
   }
 
   @Override
-  public Square get(Position position) {
-    return board[position.getRowIndex()][position.getColumnIndex()];
+  public StoneType get(int i, int j) {
+    return board[i][j];
   }
 
   @Override
-  public void set(Position position, Square square) {
-    board[position.getRowIndex()][position.getColumnIndex()] = square;
+  public void set(Position position, StoneType stoneType) {
+    board[position.getRowIndex()][position.getColumnIndex()] = stoneType;
   }
 
   @Override
-  public Square[][] toArray() {
-    Square[][] res = new Square[Constants.BOARD_SIZE][Constants.BOARD_SIZE];
+  public StoneType[][] toArray() {
+    StoneType[][] res = new StoneType[Constants.BOARD_SIZE][Constants.BOARD_SIZE];
     for (int i = 0; i < Constants.BOARD_SIZE; i++)
       for (int j = 0; j < Constants.BOARD_SIZE; j++)
         res[i][j] = board[i][j];
@@ -40,19 +41,36 @@ class GameBoardImpl implements GameBoard {
   public void initialize() {
     for (int i = 0; i < Constants.BOARD_SIZE; i++)
       for (int j = 0; j < Constants.BOARD_SIZE; j++) {
-        board[i][j] = Square.NOTHING;
+        board[i][j] = StoneType.NOTHING;
       }
   }
 
   @Override
   public boolean isFull() {
-    for (Square[] row : board) {
-      for (Square square : row) {
-        if (square == Square.NOTHING) {
+    for (StoneType[] row : board) {
+      for (StoneType stoneType : row) {
+        if (stoneType == StoneType.NOTHING) {
           return false;
         }
       }
     }
     return true;
+  }
+
+  @Override
+  public boolean isEmpty() {
+    for (StoneType[] row : board) {
+      for (StoneType stoneType : row) {
+        if (stoneType != StoneType.NOTHING) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  @Override
+  public String toString() {
+    return BoardClass.fromGameBoard(this).toString();
   }
 }

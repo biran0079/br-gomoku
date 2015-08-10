@@ -1,41 +1,36 @@
-package player.minmax;
+package common;
 
-import static player.minmax.MoveType.*;
+import static common.MoveType.*;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import common.Constants;
-import common.Square;
 import model.Position;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static player.minmax.PositionTransformer.*;
 
 /**
  * Predefined patterns.
  */
 public class Patterns {
 
-  public static final ImmutableList<Pattern> BLACK_GOALS = createGoalPatterns(Square.BLACK_PIECE);
-  public static final ImmutableList<Pattern> WHITE_GOALS = createGoalPatterns(Square.WHITE_PIECE);
-  public static final ImmutableList<Pattern> BLACK_STRAIT_FOUR = createStraitFourPatterns(Square.BLACK_PIECE);
-  public static final ImmutableList<Pattern> WHITE_STRAIT_FOUR = createStraitFourPatterns(Square.WHITE_PIECE);
-  public static final ImmutableList<Pattern> BLACK_OPEN_FOUR = createStraitOpenPatterns(Square.BLACK_PIECE);
-  public static final ImmutableList<Pattern> WHITE_OPEN_FOUR = createStraitOpenPatterns(Square.WHITE_PIECE);
-  public static final ImmutableList<Pattern> BLACK_THREE = createThreePatterns(Square.BLACK_PIECE);
-  public static final ImmutableList<Pattern> WHITE_THREE = createThreePatterns(Square.WHITE_PIECE);
+  public static final ImmutableList<Pattern> BLACK_GOALS = createGoalPatterns(StoneType.BLACK);
+  public static final ImmutableList<Pattern> WHITE_GOALS = createGoalPatterns(StoneType.WHITE);
+  public static final ImmutableList<Pattern> BLACK_STRAIT_FOUR = createStraitFourPatterns(StoneType.BLACK);
+  public static final ImmutableList<Pattern> WHITE_STRAIT_FOUR = createStraitFourPatterns(StoneType.WHITE);
+  public static final ImmutableList<Pattern> BLACK_OPEN_FOUR = createStraitOpenPatterns(StoneType.BLACK);
+  public static final ImmutableList<Pattern> WHITE_OPEN_FOUR = createStraitOpenPatterns(StoneType.WHITE);
+  public static final ImmutableList<Pattern> BLACK_THREE = createThreePatterns(StoneType.BLACK);
+  public static final ImmutableList<Pattern> WHITE_THREE = createThreePatterns(StoneType.WHITE);
 
 
-  private static ImmutableList<Pattern> createStraitOpenPatterns(Square stoneType) {
+  private static ImmutableList<Pattern> createStraitOpenPatterns(StoneType stoneType) {
     ImmutableList.Builder<Pattern> result = ImmutableList.builder();
     result.addAll(createPatterns(stoneType, new MoveType[] {D1, X, X, X, X, D1}));
     return result.build();
   }
 
-  private static ImmutableList<Pattern> createThreePatterns(Square stoneType) {
+  private static ImmutableList<Pattern> createThreePatterns(StoneType stoneType) {
     ImmutableList.Builder<Pattern> result = ImmutableList.builder();
     result.addAll(createPatterns(stoneType, new MoveType[] {D2, X, X, D1, X, D2}));
     result.addAll(createPatterns(stoneType, new MoveType[] {D2, X, D1, X, X, D2}));
@@ -44,7 +39,7 @@ public class Patterns {
     return result.build();
   }
 
-  private static ImmutableList<Pattern> createStraitFourPatterns(Square stoneType) {
+  private static ImmutableList<Pattern> createStraitFourPatterns(StoneType stoneType) {
     ImmutableList.Builder<Pattern> result = ImmutableList.builder();
     result.addAll(createPatterns(stoneType, new MoveType[] {D1, X, X, X, X}));
     result.addAll(createPatterns(stoneType, new MoveType[] {X, D1, X, X, X}));
@@ -54,7 +49,7 @@ public class Patterns {
     return result.build();
   }
 
-  private static ImmutableList<Pattern> createGoalPatterns(Square stoneType) {
+  private static ImmutableList<Pattern> createGoalPatterns(StoneType stoneType) {
     return createPatterns(stoneType, new MoveType[]{X, X, X, X, X});
   }
 
@@ -71,7 +66,7 @@ public class Patterns {
   }
 
   private static ImmutableList<Pattern> createPatterns(
-      Square stoneType,
+      StoneType stoneType,
       MoveType[] movePattern) {
     int originalPattern = generatePattern(movePattern, BitBoard.getBits(stoneType));
     int patternLength = movePattern.length;
@@ -81,9 +76,9 @@ public class Patterns {
       int pattern = originalPattern;
       for (int j = 0; j <= Constants.BOARD_SIZE - patternLength; j++) {
         List<Position> emptyPos = getDefensiveMoves(i, j, movePattern);
-        result.add(new Pattern(i, pattern, mask, IDENTITY, stoneType, emptyPos));
-        result.add(new Pattern(i, pattern, mask, CLOCK_90, stoneType,
-            Lists.transform(emptyPos, (p) -> p.transform(CLOCK_270))));
+        result.add(new Pattern(i, pattern, mask, PositionTransformer.IDENTITY, stoneType, emptyPos));
+        result.add(new Pattern(i, pattern, mask, PositionTransformer.CLOCK_90, stoneType,
+            Lists.transform(emptyPos, (p) -> p.transform(PositionTransformer.CLOCK_270))));
         mask <<= 2;
         pattern <<= 2;
       }
@@ -95,10 +90,10 @@ public class Patterns {
       int mask = ((1 << (2 * patternLength)) - 1) << (2 * start);
       for (int j = start; j <= maxCol - patternLength; j++) {
         List<Position> emptyPos = getDefensiveMoves(i, j, movePattern);
-        result.add(new Pattern(i, pattern, mask, RIGHT_DIAGONAL, stoneType,
-            Lists.transform(emptyPos, (p) -> p.transform(RIGHT_DIAGONAL_REVERSE))));
-        result.add(new Pattern(i, pattern, mask, LEFT_DIAGONAL, stoneType,
-            Lists.transform(emptyPos, (p) -> p.transform(LEFT_DIAGONAL_REVERSE))));
+        result.add(new Pattern(i, pattern, mask, PositionTransformer.RIGHT_DIAGONAL, stoneType,
+            Lists.transform(emptyPos, (p) -> p.transform(PositionTransformer.RIGHT_DIAGONAL_REVERSE))));
+        result.add(new Pattern(i, pattern, mask, PositionTransformer.LEFT_DIAGONAL, stoneType,
+            Lists.transform(emptyPos, (p) -> p.transform(PositionTransformer.LEFT_DIAGONAL_REVERSE))));
         mask <<= 2;
         pattern <<= 2;
       }
@@ -118,29 +113,36 @@ public class Patterns {
     return pattern;
   }
 
-  public static Iterable<Pattern> getThree(Square stoneType) {
+  public static Iterable<Pattern> getThree(StoneType stoneType) {
     switch (stoneType) {
-      case WHITE_PIECE:
+      case WHITE:
         return WHITE_THREE;
-      case BLACK_PIECE:
+      case BLACK:
         return BLACK_THREE;
       default:
         throw new IllegalArgumentException("Invalid stone type: " + stoneType);
     }
   }
 
-  public static Iterable<Pattern> getStraitFour(Square stoneType) {
+  public static Iterable<Pattern> getStraitFour(StoneType stoneType) {
     switch (stoneType) {
-      case WHITE_PIECE:
+      case WHITE:
         return WHITE_STRAIT_FOUR;
-      case BLACK_PIECE:
+      case BLACK:
         return BLACK_STRAIT_FOUR;
       default:
         throw new IllegalArgumentException("Invalid stone type: " + stoneType);
     }
   }
 
-  public static Iterable<Pattern> getThreatPatterns(Square stoneType) {
-    return Iterables.concat(getThree(stoneType), getStraitFour(stoneType));
+  public static Iterable<Pattern> getGoalPatterns(StoneType stoneType) {
+    switch (stoneType) {
+      case WHITE:
+        return WHITE_GOALS;
+      case BLACK:
+        return BLACK_GOALS;
+      default:
+        throw new IllegalArgumentException("Invalid stone type: " + stoneType);
+    }
   }
 }

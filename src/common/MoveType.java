@@ -1,4 +1,4 @@
-package player.minmax;
+package common;
 
 /**
  * Different types of stones in a pattern.

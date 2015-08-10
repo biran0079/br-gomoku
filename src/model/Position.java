@@ -1,7 +1,7 @@
 package model;
 
 import common.Constants;
-import player.minmax.PositionTransformer;
+import common.PositionTransformer;
 
 public class Position {
 

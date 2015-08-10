@@ -1,11 +1,8 @@
-package player.minmax;
+package common;
 
-import com.google.common.collect.ImmutableList;
-import common.Square;
 import model.Position;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Defines a BitBoard pattern.
@@ -15,14 +12,14 @@ public class Pattern {
   private final int pattern;
   private final int mask;
   private final PositionTransformer transformer;
-  private final Square stoneType;
+  private final StoneType stoneType;
   private final List<Position> defensiveMoves;
 
   Pattern(int rowIndex,
           int pattern,
           int mask,
           PositionTransformer transformer,
-          Square stoneType,
+          StoneType stoneType,
           List<Position> defensiveMoves) {
     this.rowIndex = rowIndex;
     this.pattern = pattern;
@@ -52,7 +49,7 @@ public class Pattern {
     return transformer;
   }
 
-  public Square getStoneType() {
+  public StoneType getStoneType() {
     return stoneType;
   }
 

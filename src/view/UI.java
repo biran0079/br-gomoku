@@ -1,7 +1,7 @@
 package view;
 
 import common.PlayerType;
-import common.Square;
+import common.StoneType;
 import model.Position;
 import player.Player;
 
@@ -38,7 +38,7 @@ public class UI {
         () -> gamePanel.removePieceOn(position.getRowIndex(), position.getColumnIndex()));
   }
 
-  public void putPieceOn(final Position position, final Square stoneType) {
+  public void putPieceOn(final Position position, final StoneType stoneType) {
     SwingUtilities.invokeLater(() ->
         gamePanel.putPieceOn(position.getRowIndex(), position.getColumnIndex(), stoneType));
   }

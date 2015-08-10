@@ -1,6 +1,6 @@
 package view;
 
-import common.Square;
+import common.StoneType;
 import model.Position;
 
 import javax.swing.*;
@@ -31,12 +31,12 @@ public class GameSquare extends JButton implements ActionListener {
 		this.setEnabled(true);
 	}
 
-	public void putPiece(Square square){
-		switch (square) {
-			case BLACK_PIECE:
+	public void putPiece(StoneType stoneType){
+		switch (stoneType) {
+			case BLACK:
 				this.setDisabledIcon(UIConstants.BLACK_ICON);
 				break;
-			case WHITE_PIECE:
+			case WHITE:
 				this.setDisabledIcon(UIConstants.WHITE_ICON);
 				break;
 			default:

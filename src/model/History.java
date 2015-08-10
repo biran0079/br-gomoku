@@ -1,13 +1,13 @@
 package model;
 
-import common.Square;
+import common.StoneType;
 
 /**
  * History of the game played.
  */
 public interface History {
 
-  void recordMove(Position position, Square stoneType);
+  void recordMove(Position position, StoneType stoneType);
 
   HistoryEntry getLastMove();
 

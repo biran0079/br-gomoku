@@ -1,9 +1,6 @@
-package player.minmax;
+package common;
 
-import common.Constants;
-import common.Square;
-import model.GameBoard;
-import model.Position;
+import model.ReadOnlyGameBoard;
 
 import java.util.Arrays;
 
@@ -19,17 +16,17 @@ public class BitBoard {
 
   private final int[] board;
 
-  BitBoard(int rowNumver) {
-    board = new int[rowNumver];
+  private BitBoard(int rowNumber) {
+    board = new int[rowNumber];
   }
 
-  private BitBoard(GameBoard gameBoard, PositionTransformer transformer) {
+  private BitBoard(ReadOnlyGameBoard gameBoard, PositionTransformer transformer) {
     this(transformer.getBoardRowNumber());
     for (int i = 0; i < Constants.BOARD_SIZE; i++) {
       for (int j = 0; j < Constants.BOARD_SIZE; j++) {
-        Square square = gameBoard.get(Position.create(i, j));
-        if (square != Square.NOTHING) {
-          setBits(board, transformer.getI(i, j), transformer.getJ(i, j), square);
+        StoneType stoneType = gameBoard.get(i, j);
+        if (stoneType != StoneType.NOTHING) {
+          setBits(board, transformer.getI(i, j), transformer.getJ(i, j), stoneType);
         }
       }
     }
@@ -39,11 +36,15 @@ public class BitBoard {
     board = Arrays.copyOf(bitBoard.board, bitBoard.board.length);
   }
 
-  static int getBits(Square square) {
-    switch (square) {
-      case BLACK_PIECE:
+  public static BitBoard fromGameBoard(ReadOnlyGameBoard gameBoard, PositionTransformer transformer) {
+    return new BitBoard(gameBoard, transformer);
+  }
+
+  public static int getBits(StoneType stoneType) {
+    switch (stoneType) {
+      case BLACK:
         return BLACK_BITS;
-      case WHITE_PIECE:
+      case WHITE:
         return WHITE_BITS;
       case NOTHING:
         return EMPTY_BITS;
@@ -52,32 +53,28 @@ public class BitBoard {
     }
   }
 
-  BitBoard set(int i, int j, Square stoneType) {
+  public BitBoard set(int i, int j, StoneType stoneType) {
     BitBoard result = new BitBoard(this);
     setBits(result.board, i, j, stoneType);
     return result;
   }
 
-  Square get(int i, int j) {
+  public StoneType get(int i, int j) {
     int bits = (board[i] >> (j * 2)) & MASK_BITS;
     switch (bits) {
       case BLACK_BITS:
-        return Square.BLACK_PIECE;
+        return StoneType.BLACK;
       case WHITE_BITS:
-        return Square.WHITE_PIECE;
+        return StoneType.WHITE;
       case EMPTY_BITS:
-        return Square.NOTHING;
+        return StoneType.NOTHING;
       default:
         throw new IllegalStateException("Invalid game board.");
     }
   }
 
-  int getRow(int i) {
+  public int getRow(int i) {
     return board[i];
-  }
-
-  static BitBoard fromGameBoard(GameBoard gameBoard, PositionTransformer transformer) {
-    return new BitBoard(gameBoard, transformer);
   }
 
   @Override
@@ -86,10 +83,10 @@ public class BitBoard {
     for (int i = 0; i < board.length; i++) {
       for (int j = 0; j < Constants.BOARD_SIZE; j++) {
         switch (get(i, j)) {
-          case BLACK_PIECE:
+          case BLACK:
             sb.append("O");
             break;
-          case WHITE_PIECE:
+          case WHITE:
             sb.append("X");
             break;
           default:
@@ -120,7 +117,7 @@ public class BitBoard {
     return Arrays.equals(board, ((BitBoard) o).board);
   }
 
-  static void setBits(int[] board, int i, int j, Square stoneType) {
+  static void setBits(int[] board, int i, int j, StoneType stoneType) {
     if (((board[i] >> (j * 2)) & 3) != 0) {
       throw new IllegalArgumentException("Cannot set an non-empty position on board!");
     }

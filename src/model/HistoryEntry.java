@@ -1,7 +1,6 @@
 package model;
 
-import common.Square;
-import javafx.geometry.Pos;
+import common.StoneType;
 
 /**
  * Entry for a move stored in game history.
@@ -9,9 +8,9 @@ import javafx.geometry.Pos;
 public class HistoryEntry {
 
   private final Position position;
-  private final Square stoneType;
+  private final StoneType stoneType;
 
-  HistoryEntry(Position position, Square stoneType) {
+  HistoryEntry(Position position, StoneType stoneType) {
     this.position = position;
     this.stoneType = stoneType;
   }
@@ -20,7 +19,7 @@ public class HistoryEntry {
     return position;
   }
 
-  public Square getStoneType() {
+  public StoneType getStoneType() {
     return stoneType;
   }
 }

@@ -1,7 +1,6 @@
 package player;
 
-import common.Square;
-import player.minmax.AlphaBetaSearch;
+import common.StoneType;
 import view.ClickCallbackManager;
 
 import javax.inject.Inject;
@@ -18,11 +17,11 @@ public class PlayerFactory {
     this.clickCallbackManager = clickCallbackManager;
   }
 
-  public Player createHumanPlayer(String name, Square stoneType) {
+  public Player createHumanPlayer(String name, StoneType stoneType) {
     return new Human(name, stoneType, clickCallbackManager);
   }
 
-  public Player createAlphaBetaSearchPlayer(String name, Square stoneType) {
-    return new AlphaBetaSearch(name, stoneType);
+  public Player createAlphaBetaSearchPlayer(String name, StoneType stoneType) {
+    return new MinMaxSearchPlayer(name, stoneType);
   }
 }

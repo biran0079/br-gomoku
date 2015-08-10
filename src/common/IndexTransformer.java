@@ -1,6 +1,4 @@
-package player.minmax;
-
-import common.Constants;
+package common;
 
 /**
  * Transforms board index into a different value.

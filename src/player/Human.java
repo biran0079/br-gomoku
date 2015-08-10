@@ -1,22 +1,19 @@
 package player;
 
-import common.Square;
+import common.StoneType;
 import model.GameBoard;
 import model.Position;
-import view.ClickCallback;
 import view.ClickCallbackManager;
-
-import javax.inject.Inject;
 
 class Human implements Player {
 
 	private final String name;
-	private final Square stoneType;
+	private final StoneType stoneType;
   private final ClickCallbackManager clickCallbackManager;
 
 	private Position move;
 
-  Human(String name, Square stoneType, ClickCallbackManager clickCallbackManager) {
+  Human(String name, StoneType stoneType, ClickCallbackManager clickCallbackManager) {
 		this.name = name;
 		this.stoneType = stoneType;
     this.clickCallbackManager = clickCallbackManager;
@@ -53,7 +50,7 @@ class Human implements Player {
 	}
 
 	@Override
-	public Square getStoneType() {
+	public StoneType getStoneType() {
 		return stoneType;
 	}
 }

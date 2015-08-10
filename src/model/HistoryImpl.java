@@ -1,6 +1,6 @@
 package model;
 
-import common.Square;
+import common.StoneType;
 
 import javax.inject.Inject;
 import java.util.Stack;
@@ -16,7 +16,7 @@ public class HistoryImpl implements History {
   HistoryImpl() {}
 
   @Override
-  public void recordMove(Position position, Square stoneType) {
+  public void recordMove(Position position, StoneType stoneType) {
     historyEntries.add(new HistoryEntry(position, stoneType));
   }
 

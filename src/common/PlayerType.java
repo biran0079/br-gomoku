@@ -10,16 +10,8 @@ public enum PlayerType {
     this.name = name;
   }
 
-  public String getName() {
+  @Override
+  public String toString() {
     return name;
-  }
-
-  static PlayerType fromName(String text) {
-    for (PlayerType type : PlayerType.values()) {
-      if (type.getName().equals(text)) {
-        return type;
-      }
-    }
-    throw new RuntimeException();
   }
 }

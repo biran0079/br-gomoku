@@ -1,6 +1,6 @@
 package controller;
 
-import common.Square;
+import common.StoneType;
 import model.GameBoard;
 import model.Position;
 import player.Player;
@@ -10,7 +10,7 @@ import player.Player;
  */
 public interface GameController {
 
-  void putPieceOn(final Position position, final Square piece);
+  void putPieceOn(final Position position, final StoneType piece);
 
   void undo();
 

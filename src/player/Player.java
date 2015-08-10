@@ -1,6 +1,6 @@
 package player;
 
-import common.Square;
+import common.StoneType;
 import model.GameBoard;
 import model.Position;
 
@@ -8,5 +8,5 @@ public interface Player {
 
 	Position makeMove(GameBoard gameBoard) throws InterruptedException;
 
-	Square getStoneType();
+	StoneType getStoneType();
 }

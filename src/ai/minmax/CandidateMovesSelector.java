@@ -1,10 +1,9 @@
-package player.minmax;
+package ai.minmax;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import common.Constants;
-import common.Square;
-import common.Utils;
+import common.*;
+import javafx.geometry.Pos;
 import model.Position;
 
 import java.util.*;
@@ -14,18 +13,33 @@ import java.util.*;
  */
 public class CandidateMovesSelector {
 
-  private Optional<Collection<Position>> immediateDefensiveMoves(BoardClass boardClass, Square stoneType) {
-    Square opponent = stoneType == Square.WHITE_PIECE ? Square.BLACK_PIECE : Square.WHITE_PIECE;
-    for (Pattern p : boardClass.filterMatchedPatterns(Patterns.getStraitFour(opponent))) {
+  private final int randomSampleBranchCandidate;
+
+  CandidateMovesSelector(int randomSampleBranchCandidate) {
+    this.randomSampleBranchCandidate = randomSampleBranchCandidate;
+  }
+
+  public Collection<Position> getCandidateMoves(BoardClass boardClass, StoneType stoneType) {
+    if (boardClass.isEmpty()) {
+      return Collections.singleton(Position.create(Constants.BOARD_SIZE / 2, Constants.BOARD_SIZE / 2));
+    }
+    return immediateOffensiveMoves(boardClass, stoneType)
+        .orElseGet(() -> immediateDefensiveMoves(boardClass, stoneType)
+            .orElseGet(() -> regularOffensiveMoves(boardClass, stoneType)
+                .orElseGet(() -> regularDefensiveMoves(boardClass, stoneType)
+                    .orElseGet(() -> getNeighboringMoves(boardClass)))));
+  }
+
+  private Optional<Collection<Position>> immediateDefensiveMoves(BoardClass boardClass, StoneType stoneType) {
+    for (Pattern p : boardClass.filterMatchedPatterns(Patterns.getStraitFour(stoneType.getOpponent()))) {
       return Optional.of(Collections.singleton(p.getDefensiveMoves().get(0)));
     }
     return Optional.empty();
   }
 
-  private Optional<Collection<Position>> regularDefensiveMoves(BoardClass boardClass, Square stoneType) {
-    Square opponent = stoneType == Square.WHITE_PIECE ? Square.BLACK_PIECE : Square.WHITE_PIECE;
+  private Optional<Collection<Position>> regularDefensiveMoves(BoardClass boardClass, StoneType stoneType) {
     List<Pattern> threateningPattern = Lists.newArrayList(
-        boardClass.filterMatchedPatterns(Patterns.getThree(opponent)));
+        boardClass.filterMatchedPatterns(Patterns.getThree(stoneType.getOpponent())));
     if (!threateningPattern.isEmpty()) {
       Set<Position> union = null;
       for (Pattern p : threateningPattern) {
@@ -42,14 +56,14 @@ public class CandidateMovesSelector {
     return Optional.empty();
   }
 
-  private Optional<Collection<Position>> immediateOffensiveMoves(BoardClass boardClass, Square stoneType) {
+  private Optional<Collection<Position>> immediateOffensiveMoves(BoardClass boardClass, StoneType stoneType) {
     for (Pattern p : boardClass.filterMatchedPatterns(Patterns.getStraitFour(stoneType))) {
       return Optional.of(Collections.singleton(p.getDefensiveMoves().get(0)));
     }
     return Optional.empty();
   }
 
-  private Optional<Collection<Position>> regularOffensiveMoves(BoardClass boardClass, Square stoneType) {
+  private Optional<Collection<Position>> regularOffensiveMoves(BoardClass boardClass, StoneType stoneType) {
     Set<Position> result = new HashSet<>();
     for (Pattern p : boardClass.filterMatchedPatterns(Patterns.getThree(stoneType))) {
       result.addAll(p.getDefensiveMoves());
@@ -66,10 +80,10 @@ public class CandidateMovesSelector {
     int[][] d = {{1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1}, {0, -1}, {1, -1}};
     for (int i = 0; i < Constants.BOARD_SIZE; i++) {
       for (int j = 0; j < Constants.BOARD_SIZE; j++) {
-        if (board.get(i, j) != Square.NOTHING) {
+        if (board.get(i, j) != StoneType.NOTHING) {
           for (int k = 0; k < d.length; k++) {
             int ti = i + d[k][0], tj = j + d[k][1];
-            if (Utils.isValidPosition(ti, tj) && board.get(ti, tj) == Square.NOTHING) {
+            if (Utils.isValidPosition(ti, tj) && board.get(ti, tj) == StoneType.NOTHING) {
               Position pos = Position.create(ti, tj);
               result.add(pos);
             }
@@ -77,17 +91,11 @@ public class CandidateMovesSelector {
         }
       }
     }
-    return result;
-  }
-
-  Collection<Position> getCandidateMoves(BoardClass boardClass, Square stoneType) {
-    if (boardClass.isEmpty()) {
-      return Collections.singleton(Position.create(Constants.BOARD_SIZE / 2, Constants.BOARD_SIZE / 2));
+    if (randomSampleBranchCandidate > 0) {
+      List<Position> sample = new ArrayList<>(result);
+      Collections.shuffle(sample);
+      return sample.subList(0, Math.min(sample.size(), randomSampleBranchCandidate));
     }
-    return immediateOffensiveMoves(boardClass, stoneType)
-        .orElseGet(() -> immediateDefensiveMoves(boardClass, stoneType)
-            .orElseGet(() -> regularOffensiveMoves(boardClass, stoneType)
-                .orElseGet(() -> regularDefensiveMoves(boardClass, stoneType)
-                    .orElseGet(() -> getNeighboringMoves(boardClass)))));
+    return result;
   }
 }

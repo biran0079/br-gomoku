@@ -1,19 +1,15 @@
 package model;
 
-import common.Square;
+import common.StoneType;
 
 /**
  * Abstraction of game board.
  */
-public interface GameBoard {
+public interface GameBoard extends ReadOnlyGameBoard {
 
-  Square get(Position position);
+  void set(Position position, StoneType stoneType);
 
-  void set(Position position, Square square);
-
-  Square[][] toArray();
+  StoneType[][] toArray();
 
   void initialize();
-
-  boolean isFull();
 }

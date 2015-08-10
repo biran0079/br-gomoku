@@ -1,7 +1,7 @@
 package view;
 
 import common.Constants;
-import common.Square;
+import common.StoneType;
 
 import javax.inject.Inject;
 import javax.swing.*;
@@ -25,7 +25,7 @@ public class GamePanel extends JPanel {
 			}
 	}
 
-	public void putPieceOn(int i,int j, Square type){
+	public void putPieceOn(int i,int j, StoneType type){
 		square[i][j].putPiece(type);
 	}
 
