@@ -30,4 +30,9 @@ public class MinMaxSearchPlayer implements Player {
   public StoneType getStoneType() {
     return stoneType;
   }
+
+  @Override
+  public boolean isHuman() {
+    return false;
+  }
 }

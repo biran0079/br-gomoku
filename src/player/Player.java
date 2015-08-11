@@ -9,4 +9,6 @@ public interface Player {
 	Position makeMove(GameBoard gameBoard) throws InterruptedException;
 
 	StoneType getStoneType();
+
+  boolean isHuman();
 }

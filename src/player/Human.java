@@ -53,4 +53,9 @@ class Human implements Player {
 	public StoneType getStoneType() {
 		return stoneType;
 	}
+
+  @Override
+  public boolean isHuman() {
+    return true;
+  }
 }

@@ -31,6 +31,10 @@ public class Position {
 		return cached[i][j];
 	}
 
+  public static boolean isValid(int i, int j) {
+    return i >= 0 && i < Constants.BOARD_SIZE && j >= 0 && j < Constants.BOARD_SIZE;
+  }
+
   public Position transform(PositionTransformer transformer) {
     if (transformer == PositionTransformer.IDENTITY) {
       return this;

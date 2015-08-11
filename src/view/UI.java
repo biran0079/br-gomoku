@@ -21,10 +21,6 @@ public class UI {
     this.gameFrame = gameFrame;
   }
 
-  public void win(final Player p, ActionListener actionListener){
-    SwingUtilities.invokeLater(() -> new WinDialog(gameFrame, p.toString(), actionListener));
-  }
-
   public void clearBoard() {
     SwingUtilities.invokeLater(() -> gamePanel.clearBoard());
   }
@@ -51,7 +47,29 @@ public class UI {
     controlPanel.addNewGameActionListener(actionListener);
   }
 
-  public void draw(ActionListener actionListener) {
-    SwingUtilities.invokeLater(() -> new WinDialog(gameFrame, "Nobody", actionListener));
+  public void draw(Runnable restart) {
+    String title = "Draw!";
+    String message = "Do you want to start a new game?";
+    SwingUtilities.invokeLater(() -> newDialog(title, message, restart));
+  }
+
+  public void win(final Player p, Runnable restart){
+    String title = p.toString() + "wins!";
+    String message = "Do you want to start a new game?";
+    SwingUtilities.invokeLater(() -> newDialog(title, message, restart));
+  }
+
+  private void newDialog(String title, String message, Runnable okCallback) {
+    int n = JOptionPane.showOptionDialog(
+        gameFrame,
+        message,
+        title,
+        JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
+        null, // icon
+        null, // options
+        null); //initialValue
+    if(n == JOptionPane.OK_OPTION){
+      okCallback.run();
+    }
   }
 }

@@ -1,6 +1,6 @@
 package common;
 
-import model.ReadOnlyGameBoard;
+import model.GameBoard;
 
 /**
  * Utility method that parses game boards.
@@ -13,7 +13,7 @@ public class BoardClassUtil {
 
   public static BoardClass fromString(String s) {
     final String[] b = s.split("\n");
-    return BoardClass.fromGameBoard(new AbstractReadOnlyGameBoard() {
+    return BoardClass.fromGameBoard(new AbstractGameBoard() {
 
       @Override
       public StoneType get(int i, int j) {
@@ -29,9 +29,8 @@ public class BoardClassUtil {
     });
   }
 
-  public static ReadOnlyGameBoard fromString(StoneType[][] board) {
-
-    return new AbstractReadOnlyGameBoard() {
+  public static GameBoard fromString(StoneType[][] board) {
+    return new AbstractGameBoard() {
 
       @Override
       public StoneType get(int i, int j) {
@@ -47,7 +46,7 @@ public class BoardClassUtil {
     return BoardClass.fromGameBoard(fromString(board));
   }
 
-  private abstract static class AbstractReadOnlyGameBoard implements ReadOnlyGameBoard {
+  private abstract static class AbstractGameBoard implements GameBoard {
 
     @Override
     public boolean isFull() {
@@ -56,6 +55,16 @@ public class BoardClassUtil {
 
     @Override
     public boolean isEmpty() {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public GameBoard withPositionSet(int i, int j, StoneType stoneType) {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean wins(StoneType stoneType) {
       throw new UnsupportedOperationException();
     }
   }

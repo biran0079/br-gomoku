@@ -1,6 +1,5 @@
 package controller;
 
-import common.Utils;
 import model.Position;
 import player.Player;
 
@@ -13,6 +12,7 @@ class GameSessoin {
 
   private final GameController gameController;
   private boolean sessionSopped = false;
+  private boolean waitingForHumanMove = false;
 
   @Inject
   GameSessoin(GameController gameController) {
@@ -27,15 +27,25 @@ class GameSessoin {
     }
   }
 
+  public boolean isWaitingForHumanMove() {
+    return waitingForHumanMove;
+  }
+
   private void makeMove(Player player) {
     try {
+      if (player.isHuman()) {
+        waitingForHumanMove = true;
+      }
       Position position = player.makeMove(gameController.getGameBoard());
+      if (player.isHuman()) {
+        waitingForHumanMove = false;
+      }
       gameController.putPieceOn(position, player.getStoneType());
     } catch (InterruptedException e) {
       sessionSopped = true;
       return;
     }
-    if (Utils.playerWins(gameController.getGameBoard(), player.getStoneType())) {
+    if (gameController.getGameBoard().wins(player.getStoneType())) {
       gameController.gameOver(player);
       sessionSopped = true;
     } else if (gameController.getGameBoard().isFull()) {

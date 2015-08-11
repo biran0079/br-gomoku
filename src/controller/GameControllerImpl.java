@@ -4,6 +4,7 @@ import common.PlayerType;
 import common.StoneType;
 import model.GameBoard;
 import model.History;
+import model.HistoryEntry;
 import model.Position;
 import player.Player;
 import player.PlayerFactory;
@@ -17,23 +18,25 @@ import java.util.concurrent.Future;
 
 class GameControllerImpl implements GameController {
 
-	private final GameBoard gameBoard;
 	private final History history;
 	private final UI ui;
   private final Provider<GameSessoin> gameSessoinProvider;
   private final ExecutorService gameSessionExecutor = Executors.newSingleThreadExecutor();
   private final PlayerFactory playerFactory;
+  private final GameBoard.Factory gameBoardFactory;
+
+  private GameBoard gameBoard;
 
   private volatile Future<?> currentGameSessionFuture;
 
   @Inject
 	GameControllerImpl(History history,
-                     GameBoard gameBoard,
+                     GameBoard.Factory gameBoardFactory,
                      UI ui,
                      Provider<GameSessoin> gameSessoinProvider,
                      PlayerFactory playerFactory) {
 		this.history = history;
-		this.gameBoard = gameBoard;
+		this.gameBoardFactory = gameBoardFactory;
     this.ui = ui;
     this.gameSessoinProvider = gameSessoinProvider;
     this.playerFactory = playerFactory;
@@ -55,26 +58,32 @@ class GameControllerImpl implements GameController {
 
   @Override
   public void undo() {
-		for (int k = 2; k > 0 && history.hasMore(); k--) {
-			Position position = history.getLastMove().getPosition();
-      ui.removePieceOn(position);
-      gameBoard.set(position, StoneType.NOTHING);
-		}
+    if (history.size() < 2
+        || !gameSessoinProvider.get().isWaitingForHumanMove()) {
+      return;
+    }
+    HistoryEntry historyEntry;
+    historyEntry = history.popLastEntry();
+    ui.removePieceOn(historyEntry.getLastMove());
+    historyEntry = history.popLastEntry();
+    ui.removePieceOn(historyEntry.getLastMove());
+    gameBoard = historyEntry.getGameBoard();
 	}
 
   @Override
 	public void putPieceOn(final Position position, final StoneType piece) {
-    history.recordMove(position, piece);
-		gameBoard.set(position, piece);
+    history.recordMove(gameBoard, position, piece);
+    gameBoard = gameBoard.withPositionSet(
+        position.getRowIndex(), position.getColumnIndex(), piece);
 		ui.putPieceOn(position, piece);
 	}
 
   @Override
   public void gameOver(Player winner) {
     if (winner != null) {
-      ui.win(winner, (e) -> startGame());
+      ui.win(winner, () -> startGame());
     } else {
-      ui.draw((e) -> startGame());
+      ui.draw(() -> startGame());
     }
   }
 
@@ -86,7 +95,7 @@ class GameControllerImpl implements GameController {
   private Player[] initializeGame() {
     ui.clearBoard();
     history.clear();
-    gameBoard.initialize();
+    gameBoard = gameBoardFactory.newEmptyBoard();
     PlayerType[] types = ui.getSelectedPlayerTypes();
     return new Player[] {
         createPlayer(types[0], "player1", StoneType.BLACK),

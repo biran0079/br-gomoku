@@ -82,7 +82,7 @@ public class CandidateMovesSelector {
         if (board.get(i, j) != StoneType.NOTHING) {
           for (int k = 0; k < d.length; k++) {
             int ti = i + d[k][0], tj = j + d[k][1];
-            if (Utils.isValidPosition(ti, tj) && board.get(ti, tj) == StoneType.NOTHING) {
+            if (Position.isValid(ti, tj) && board.get(ti, tj) == StoneType.NOTHING) {
               Position pos = Position.create(ti, tj);
               result.add(pos);
             }

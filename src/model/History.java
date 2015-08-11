@@ -7,11 +7,11 @@ import common.StoneType;
  */
 public interface History {
 
-  void recordMove(Position position, StoneType stoneType);
+  void recordMove(GameBoard preState, Position position, StoneType stoneType);
 
-  HistoryEntry getLastMove();
+  HistoryEntry popLastEntry();
 
-  boolean hasMore();
+  int size();
 
   void clear();
 }

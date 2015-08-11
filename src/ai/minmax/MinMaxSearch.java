@@ -3,8 +3,8 @@ package ai.minmax;
 import ai.AI;
 import com.google.common.collect.Iterables;
 import common.*;
+import model.GameBoard;
 import model.Position;
-import model.ReadOnlyGameBoard;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -47,7 +47,7 @@ public class MinMaxSearch implements AI {
   }
 
   @Override
-  public Position nextMove(ReadOnlyGameBoard gameBoard, StoneType stoneType) {
+  public Position nextMove(GameBoard gameBoard, StoneType stoneType) {
     evalCount = 0;
     cacheHit = 0;
     transitionTable.clear();

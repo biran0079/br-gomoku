@@ -5,9 +5,20 @@ import common.StoneType;
 /**
  * Abstraction of game board.
  */
-public interface GameBoard extends ReadOnlyGameBoard {
+public interface GameBoard {
 
-  void set(Position position, StoneType stoneType);
+  StoneType get(int i, int j);
 
-  void initialize();
+  boolean isFull();
+
+  boolean isEmpty();
+
+  GameBoard withPositionSet(int i, int j, StoneType stoneType);
+
+  boolean wins(StoneType stoneType);
+
+  interface Factory {
+
+    GameBoard newEmptyBoard();
+  }
 }

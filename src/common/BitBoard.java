@@ -1,13 +1,28 @@
 package common;
 
-import model.ReadOnlyGameBoard;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+import model.GameBoard;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Implement board efficiently with bit wise operations.
  */
 public class BitBoard {
+
+  private static final LoadingCache<Integer, BitBoard> EMPTY_BOARD_CACHE =
+      CacheBuilder.newBuilder()
+          .build(new CacheLoader<Integer, BitBoard>() {
+            @Override
+            public BitBoard load(Integer boardRowNumber) throws Exception {
+              return new BitBoard(boardRowNumber);
+            }
+          });
 
   private static final int EMPTY_BITS = 0;
   private static final int BLACK_BITS = 1;
@@ -20,7 +35,7 @@ public class BitBoard {
     board = new int[rowNumber];
   }
 
-  private BitBoard(ReadOnlyGameBoard gameBoard, PositionTransformer transformer) {
+  private BitBoard(GameBoard gameBoard, PositionTransformer transformer) {
     this(transformer.getBoardRowNumber());
     for (int i = 0; i < Constants.BOARD_SIZE; i++) {
       for (int j = 0; j < Constants.BOARD_SIZE; j++) {
@@ -36,8 +51,16 @@ public class BitBoard {
     board = Arrays.copyOf(bitBoard.board, bitBoard.board.length);
   }
 
-  public static BitBoard fromGameBoard(ReadOnlyGameBoard gameBoard, PositionTransformer transformer) {
+  public static BitBoard fromGameBoard(GameBoard gameBoard, PositionTransformer transformer) {
     return new BitBoard(gameBoard, transformer);
+  }
+
+  public static BitBoard emptyBoard(int boardRowNumber) {
+    try {
+      return EMPTY_BOARD_CACHE.get(boardRowNumber);
+    } catch (ExecutionException e) {
+      throw new RuntimeException("should never happen", e);
+    }
   }
 
   public static int getBits(StoneType stoneType) {
@@ -118,7 +141,7 @@ public class BitBoard {
   }
 
   static void setBits(int[] board, int i, int j, StoneType stoneType) {
-    if (((board[i] >> (j * 2)) & 3) != 0) {
+    if (Constants.DEBUG && ((board[i] >> (j * 2)) & 3) != 0) {
       throw new IllegalArgumentException("Cannot set an non-empty position on board!");
     }
     board[i] |= (getBits(stoneType) << (j * 2));

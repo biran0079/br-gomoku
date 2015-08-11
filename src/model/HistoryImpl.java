@@ -16,18 +16,18 @@ public class HistoryImpl implements History {
   HistoryImpl() {}
 
   @Override
-  public void recordMove(Position position, StoneType stoneType) {
-    historyEntries.add(new HistoryEntry(position, stoneType));
+  public void recordMove(GameBoard preState, Position lastMove, StoneType stoneType) {
+    historyEntries.add(new HistoryEntry(preState, lastMove, stoneType));
   }
 
   @Override
-  public HistoryEntry getLastMove() {
+  public HistoryEntry popLastEntry() {
     return historyEntries.pop();
   }
 
   @Override
-  public boolean hasMore() {
-    return !historyEntries.isEmpty();
+  public int size() {
+    return historyEntries.size();
   }
 
   @Override

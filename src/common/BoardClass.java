@@ -1,9 +1,9 @@
 package common;
 
 import com.google.common.collect.Iterables;
-import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
-import model.ReadOnlyGameBoard;
+import model.GameBoard;
 
+import javax.inject.Inject;
 import java.util.EnumMap;
 
 import static common.PositionTransformer.*;
@@ -11,7 +11,7 @@ import static common.PositionTransformer.*;
 /**
  * Class of bit boards by PositionTransformer operation.
  */
-public class BoardClass implements ReadOnlyGameBoard {
+public class BoardClass implements GameBoard {
 
   private final EnumMap<PositionTransformer, BitBoard> map;
 
@@ -29,6 +29,15 @@ public class BoardClass implements ReadOnlyGameBoard {
           LEFT_DIAGONAL,
       };
 
+  private static final BoardClass EMPTY_BOARD = new BoardClass();
+
+  private BoardClass() {
+    map = new EnumMap(PositionTransformer.class);
+    for (PositionTransformer transformer : TRACKING_TRANSFORMERS) {
+      map.put(transformer, BitBoard.emptyBoard(transformer.getBoardRowNumber()));
+    }
+  }
+
   private BoardClass(BoardClass boardClass, int i, int j, StoneType stoneType) {
     map = new EnumMap(PositionTransformer.class);
     for (PositionTransformer transformer : TRACKING_TRANSFORMERS) {
@@ -38,17 +47,19 @@ public class BoardClass implements ReadOnlyGameBoard {
     }
   }
 
-  private BoardClass(ReadOnlyGameBoard gameBoard) {
+  private BoardClass(GameBoard gameBoard) {
     map = new EnumMap(PositionTransformer.class);
     for (PositionTransformer transformer : TRACKING_TRANSFORMERS) {
       map.put(transformer, BitBoard.fromGameBoard(gameBoard, transformer));
     }
   }
 
+  @Override
   public BoardClass withPositionSet(int i, int j, StoneType stoneType) {
     return new BoardClass(this, i, j, stoneType);
   }
- public static BoardClass fromGameBoard(ReadOnlyGameBoard gameBoard) {
+
+  public static BoardClass fromGameBoard(GameBoard gameBoard) {
     return new BoardClass(gameBoard);
   }
 
@@ -94,5 +105,14 @@ public class BoardClass implements ReadOnlyGameBoard {
       }
     }
     return true;
+  }
+
+  @Override
+  public boolean wins(StoneType stoneType) {
+    return matchesAny(Patterns.getGoalPatterns(stoneType));
+  }
+
+  public static BoardClass getEmptyBoard() {
+    return EMPTY_BOARD;
   }
 }
