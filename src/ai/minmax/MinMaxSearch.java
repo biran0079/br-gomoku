@@ -2,7 +2,10 @@ package ai.minmax;
 
 import ai.AI;
 import com.google.common.collect.Iterables;
-import common.*;
+import common.BoardClass;
+import common.Constants;
+import common.Patterns;
+import common.StoneType;
 import model.GameBoard;
 import model.Position;
 
