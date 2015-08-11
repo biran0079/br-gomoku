@@ -15,7 +15,7 @@ import static common.PositionTransformer.CLOCK_270_M;
  */
 class TransitionTableImpl implements TransitionTable {
 
-  private static final PositionTransformer[] IDENTICAL_TRANSFORMERS =
+  protected static final PositionTransformer[] IDENTICAL_TRANSFORMERS =
       new PositionTransformer[] {
           IDENTITY,
           IDENTITY_M,

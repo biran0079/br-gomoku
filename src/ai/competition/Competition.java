@@ -22,6 +22,25 @@ public class Competition {
     this.boardClasses = boardClasses;
   }
 
+  public void benchmark(AI ai, StoneType firstMove) {
+    StoneType secondMove = firstMove.getOpponent();
+    CompetitionAI competitionAI1 = CompetitionAI.create(ai);
+    CompetitionAI competitionAI2 = CompetitionAI.create(ai);
+    Stopwatch stopwatch = Stopwatch.createStarted();
+    boardClasses.stream()
+        .parallel()
+        .forEach(boardClass -> {
+          competeSingleGameWithMoveOrder(boardClass,
+              new CompetitionAI[]{competitionAI2, competitionAI1},
+              new StoneType[]{firstMove, secondMove});
+          System.out.println(competitionAI1);
+          System.out.println(competitionAI2);
+        });
+    System.out.printf("Total duration for %s: %.2f src.\n",
+        ai,
+        stopwatch.elapsed(TimeUnit.MILLISECONDS) / 1000.0);
+  }
+
   public void compete(AI ai1, AI ai2, StoneType firstMove) {
 
     StoneType secondMove = firstMove.getOpponent();
@@ -32,21 +51,22 @@ public class Competition {
     boardClasses.stream()
         .parallel()
         .flatMap(boardClass ->
-              Lists.<Runnable>newArrayList(
-                  () -> competeSingleGameWithMoveOrder(boardClass,
-                      new CompetitionAI[]{competitionAI1, competitionAI2},
-                      new StoneType[]{firstMove, secondMove}),
-                  () -> competeSingleGameWithMoveOrder(boardClass,
-                      new CompetitionAI[]{competitionAI2, competitionAI1},
-                      new StoneType[]{firstMove, secondMove})
-                  ).stream())
+            Lists.<Runnable>newArrayList(
+                () -> competeSingleGameWithMoveOrder(boardClass,
+                    new CompetitionAI[]{competitionAI1, competitionAI2},
+                    new StoneType[]{firstMove, secondMove}),
+                () -> competeSingleGameWithMoveOrder(boardClass,
+                    new CompetitionAI[]{competitionAI2, competitionAI1},
+                    new StoneType[]{firstMove, secondMove})
+            ).stream())
         .forEach(runnable -> {
           runnable.run();
           System.out.println(competitionAI1);
           System.out.println(competitionAI2);
-
         });
-    System.out.printf("Total duration: %.2f src.",
+    System.out.printf("Total duration for %s vs %s: %.2f src.\n",
+        ai1,
+        ai2,
         stopwatch.elapsed(TimeUnit.MILLISECONDS) / 1000.0);
   }
 

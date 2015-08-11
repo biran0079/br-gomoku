@@ -51,7 +51,7 @@ public class MinMaxSearch implements AI {
       throw new IllegalStateException("Already won.");
     }
     MinMax minMax = stoneType == StoneType.BLACK ? MinMax.MAX : MinMax.MIN;
-    MinMaxNode res = null;
+    MinMaxNode res;
     try {
       res = minMaxSearch(boardClass, Integer.MIN_VALUE, Integer.MAX_VALUE,
           maxDepth, minMax, stoneType, transitionTableFactory.create());

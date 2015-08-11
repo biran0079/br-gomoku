@@ -3,7 +3,6 @@ package common;
 import com.google.common.collect.Iterables;
 import model.GameBoard;
 
-import javax.inject.Inject;
 import java.util.EnumMap;
 
 import static common.PositionTransformer.*;

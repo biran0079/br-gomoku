@@ -6,6 +6,7 @@ import com.google.common.math.DoubleMath;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Vector;
 
 /**
  * Thread safe implementation of CompetitionAI.
@@ -13,7 +14,7 @@ import java.util.List;
 class CompetitionAIImpl implements CompetitionAI {
 
   private int win, lose, draw;
-  private List<Long> moveTimeCostMs = new ArrayList<>();
+  private Vector<Long> moveTimeCostMs = new Vector<>();
   private final AI ai;
 
   CompetitionAIImpl(AI ai) {
@@ -56,12 +57,12 @@ class CompetitionAIImpl implements CompetitionAI {
   }
 
   @Override
-  public synchronized void recordMoveTimeCost(long ms) {
+  public void recordMoveTimeCost(long ms) {
     moveTimeCostMs.add(ms);
   }
 
   @Override
-  public synchronized double getMeanMoveMs() {
+  public double getMeanMoveMs() {
     return DoubleMath.mean(moveTimeCostMs);
   }
 
