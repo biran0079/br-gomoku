@@ -3,7 +3,6 @@ package ai.minmax;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import common.*;
-import javafx.geometry.Pos;
 import model.Position;
 
 import java.util.*;
