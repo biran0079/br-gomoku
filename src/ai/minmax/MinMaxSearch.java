@@ -7,21 +7,14 @@ import model.GameBoard;
 import model.Position;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
-import static common.PositionTransformer.*;
-import static common.PositionTransformer.CLOCK_270_M;
-import static common.PositionTransformer.IDENTITY;
 
 public class MinMaxSearch implements AI {
 
   private final int maxDepth;
-  private final Map<BitBoard, Node> transitionTable = new HashMap<>();
+  private final TransitionTable.Factory transitionTableFactory;
   private final CandidateMovesSelector candidateMovesSelector;
   private final String name;
   private final boolean alphaBetaPruning;
-  private final boolean useTransitionTable;
   private final Evaluator evaluator;
 
   private int evalCount;
@@ -31,7 +24,7 @@ public class MinMaxSearch implements AI {
     this.name = builder.name;
     this.maxDepth = builder.maxDepth;
     this.alphaBetaPruning = builder.alphaBetaPruning;
-    this.useTransitionTable = builder.useTransitionTable;
+    this.transitionTableFactory = builder.transitionTableFactory;
     this.candidateMovesSelector = new CandidateMovesSelector(
         builder.randomSampleBranchCandidates);
     this.evaluator = builder.evaluator;
@@ -50,29 +43,25 @@ public class MinMaxSearch implements AI {
   public Position nextMove(GameBoard gameBoard, StoneType stoneType) {
     evalCount = 0;
     cacheHit = 0;
-    transitionTable.clear();
     BoardClass boardClass = BoardClass.fromGameBoard(gameBoard);
     if (boardClass.matchesAny(Iterables.concat(Patterns.BLACK_GOALS, Patterns.WHITE_GOALS))) {
       throw new IllegalStateException("Already won.");
     }
     MinMax minMax = stoneType == StoneType.BLACK ? MinMax.MAX : MinMax.MIN;
-    Node res = null;
+    MinMaxNode res = null;
     try {
-      res = minMaxSearch(boardClass, Integer.MIN_VALUE, Integer.MAX_VALUE, maxDepth, minMax, stoneType);
-      return res.p;
+      res = minMaxSearch(boardClass, Integer.MIN_VALUE, Integer.MAX_VALUE,
+          maxDepth, minMax, stoneType, transitionTableFactory.create());
+      return res.getBestMove();
     } catch (Throwable e) {
       e.printStackTrace();
       throw e;
     } finally {
-      if (shouldPrintStats()) {
+      if (Constants.DEBUG) {
         System.err.println(boardClass +
-            "eval result:" + res.f +", eval called " + evalCount + " times, cache hit " + cacheHit + " times.");
+            "eval result:" + res.getScore() +", eval called " + evalCount + " times, cache hit " + cacheHit + " times.");
       }
     }
-  }
-
-  private boolean shouldPrintStats() {
-    return false;
   }
 
   private int eval(BoardClass boardClass, StoneType stoneType) {
@@ -96,120 +85,78 @@ public class MinMaxSearch implements AI {
     }
   }
 
-  private static final PositionTransformer[] IDENTICAL_TRANSFORMERS =
-      new PositionTransformer[] {
-          IDENTITY,
-          IDENTITY_M,
-          CLOCK_90,
-          CLOCK_90_M,
-          CLOCK_180,
-          CLOCK_180_M,
-          CLOCK_270,
-          CLOCK_270_M,
-      };
 
-  private Node maybeSave(BoardClass boardClass, Node node) {
-    if (useTransitionTable) {
-      for (PositionTransformer transformer : IDENTICAL_TRANSFORMERS) {
-        BitBoard bitBoard = boardClass.getBoard(transformer);
-        if (!transitionTable.containsKey(bitBoard)) {
-          transitionTable.put(bitBoard, node.transform(transformer));
-        }
-      }
-    }
+  private MinMaxNode save(TransitionTable transitionTable, BoardClass boardClass, MinMaxNode node) {
+    transitionTable.put(boardClass, node);
     return node;
   }
 
-  private Node minMaxSearch(BoardClass boardClass,
-                            int alpha,
-                            int beta,
-                            int depth,
-                            MinMax minMax,
-                            StoneType stoneType) {
-    BitBoard identity = boardClass.getBoard(PositionTransformer.IDENTITY);
-    if (transitionTable.containsKey(identity)) {
+  private MinMaxNode minMaxSearch(BoardClass boardClass,
+                                  int alpha,
+                                  int beta,
+                                  int depth,
+                                  MinMax minMax,
+                                  StoneType stoneType,
+                                  TransitionTable transitionTable) {
+    MinMaxNode fromCache = transitionTable.get(boardClass);
+    if (fromCache != null) {
       cacheHit++;
-      return transitionTable.get(identity);
+      return fromCache;
     }
     if (boardClass.matchesAny(Patterns.BLACK_GOALS)) {
-      return maybeSave(boardClass, new Node(null, Integer.MAX_VALUE));
+      return save(transitionTable, boardClass, new MinMaxNode(null, Integer.MAX_VALUE));
     } else if (boardClass.matchesAny(Patterns.WHITE_GOALS)) {
-      return maybeSave(boardClass, new Node(null, Integer.MIN_VALUE));
+      return save(transitionTable, boardClass, new MinMaxNode(null, Integer.MIN_VALUE));
     } else if (depth == 0) {
-      return maybeSave(boardClass, new Node(null, eval(boardClass, stoneType)));
+      return save(transitionTable, boardClass, new MinMaxNode(null, eval(boardClass, stoneType)));
     }
-
-    Node res = null;
+    MinMaxNode res = null;
     Collection<Position> candidateMoves =
         candidateMovesSelector.getCandidateMoves(boardClass, minMax.getStoneType());
     if (depth == maxDepth && candidateMoves.size() == 1) {
-      return new Node(Iterables.getOnlyElement(candidateMoves), 0);
+      return new MinMaxNode(Iterables.getOnlyElement(candidateMoves), 0);
     }
     for (Position position : candidateMoves) {
       int i = position.getRowIndex(), j = position.getColumnIndex();
       BoardClass newBoardClass = boardClass.withPositionSet(i, j, minMax.getStoneType());
       if (minMax == MinMax.MAX) {
-        int curMax = res == null ? alpha : res.f;
-        int v = minMaxSearch(newBoardClass, curMax, beta, depth - 1, MinMax.MIN, stoneType).f;
+        int curMax = res == null ? alpha : res.getScore();
+        int v = minMaxSearch(newBoardClass, curMax, beta, depth - 1,
+            MinMax.MIN, stoneType, transitionTable).getScore();
         res = update(minMax, res, position, v);
-        if (alphaBetaPruning && res.f >= beta) {
-          return maybeSave(boardClass, res);
+        if (alphaBetaPruning && res.getScore() >= beta) {
+          return save(transitionTable, boardClass, res);
         }
       } else {
-        int curMin = res == null ? beta : res.f;
-        int v = minMaxSearch(newBoardClass, alpha, curMin, depth - 1, MinMax.MAX, stoneType).f;
+        int curMin = res == null ? beta : res.getScore();
+        int v = minMaxSearch(newBoardClass, alpha, curMin, depth - 1,
+            MinMax.MAX, stoneType, transitionTable).getScore();
         res = update(minMax, res, position, v);
-        if (alphaBetaPruning && res.f <= alpha) {
-          return maybeSave(boardClass, res);
+        if (alphaBetaPruning && res.getScore() <= alpha) {
+          return save(transitionTable, boardClass, res);
         }
       }
     }
-    return maybeSave(boardClass, res);
+    return save(transitionTable, boardClass, res);
   }
 
-  private Node update(MinMax minMax, Node current, Position position, int f) {
+  private MinMaxNode update(MinMax minMax, MinMaxNode current, Position position, int f) {
     if (current == null) {
-      return new Node(position, f);
+      return new MinMaxNode(position, f);
     }
     switch (minMax) {
       case MAX:
-        if (f > current.f) {
-          return new Node(position, f);
+        if (f > current.getScore()) {
+          return new MinMaxNode(position, f);
         }
         return current;
       case MIN:
-        if (f < current.f) {
-          return new Node(position, f);
+        if (f < current.getScore()) {
+          return new MinMaxNode(position, f);
         }
         return current;
       default:
         throw new IllegalArgumentException();
-    }
-  }
-  private static class Node {
-    private final Position p;
-    private final int f;
-
-    Node(Position p, int f) {
-      this.p = p;
-      this.f = f;
-    }
-
-    Node transform(PositionTransformer transformer) {
-      if (p == null || transformer == IDENTITY) {
-        return this;
-      }
-      return new Node(p.transform(transformer), f);
-    }
-
-    @Override
-    public String toString() {
-      return new StringBuilder()
-          .append("position: ")
-          .append(p)
-          .append(", store: ")
-          .append(f)
-          .toString();
     }
   }
 
@@ -219,44 +166,50 @@ public class MinMaxSearch implements AI {
     private String name = "min_max_search";
     private int randomSampleBranchCandidates = 0;
     private boolean alphaBetaPruning = true;
-    private boolean useTransitionTable = true;
     private Evaluator evaluator = new DefaultEvaluator();
+    private TransitionTable.Factory transitionTableFactory =
+        () -> new TransitionTableImpl();
 
     private Builder() {
-    }
-
-    public Builder setEvaluator(Evaluator evaluator) {
-      this.evaluator = evaluator;
-      return this;
     }
 
     public MinMaxSearch build() {
       return new MinMaxSearch(this);
     }
 
-    public Builder setName(String name) {
+    public Builder withEvaluator(Evaluator evaluator) {
+      this.evaluator = evaluator;
+      return this;
+    }
+
+    public Builder withName(String name) {
       this.name = name;
       return this;
     }
 
-    public Builder setMaxDepth(int maxDepth) {
+    public Builder withMaxDepth(int maxDepth) {
       this.maxDepth = maxDepth;
       return this;
     }
 
-    public Builder setRandomSampleBranchCandidates(int randomSampleBranchCandidates) {
+    public Builder withRandomSampleBranchCandidates(int randomSampleBranchCandidates) {
       this.randomSampleBranchCandidates = randomSampleBranchCandidates;
       return this;
     }
 
-    public Builder setAlphaBetaPruning(boolean alphaBetaPruning) {
+    public Builder withAlphaBetaPruning(boolean alphaBetaPruning) {
       this.alphaBetaPruning = alphaBetaPruning;
       return this;
     }
 
-    public Builder setUseTransitionTable(boolean useTransitionTable) {
-      this.useTransitionTable = useTransitionTable;
+    public Builder withTransitionTableFactory(
+        TransitionTable.Factory transitionTableFactory) {
+      this.transitionTableFactory = transitionTableFactory;
       return this;
+    }
+
+    public Builder noTransitionTable() {
+      return withTransitionTableFactory(() -> new NoopTransitionTable());
     }
   }
 

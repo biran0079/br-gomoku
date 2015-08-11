@@ -4,6 +4,7 @@ import ai.AI;
 import com.google.common.math.DoubleMath;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -76,7 +77,10 @@ class CompetitionAIImpl implements CompetitionAI {
         .append(getDraw())
         .append(" draw, ")
         .append("average move duration: ")
-        .append(String.format("%.2f", getMeanMoveMs() / 1000))
+        .append(String.format("%.2f [%.2f, %.2f]",
+            getMeanMoveMs() / 1000,
+            Collections.min(moveTimeCostMs) * 1.0 / 1000,
+            Collections.max(moveTimeCostMs) * 1.0 / 1000))
         .append(" sec.")
         .toString();
   }

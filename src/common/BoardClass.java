@@ -81,6 +81,11 @@ public class BoardClass implements GameBoard {
   }
 
   @Override
+  public int getStoneCount() {
+    return getBoard(IDENTITY).getStoneCount();
+  }
+
+  @Override
   public boolean isEmpty() {
     return getBoard(IDENTITY).isEmpty();
   }

@@ -30,13 +30,15 @@ public class BitBoard {
   private static final int MASK_BITS = 3;
 
   private final int[] board;
+  private final int stoneCount;
 
   private BitBoard(int rowNumber) {
     board = new int[rowNumber];
+    stoneCount = 0;
   }
 
   private BitBoard(GameBoard gameBoard, PositionTransformer transformer) {
-    this(transformer.getBoardRowNumber());
+    this.board = new int[transformer.getBoardRowNumber()];
     for (int i = 0; i < Constants.BOARD_SIZE; i++) {
       for (int j = 0; j < Constants.BOARD_SIZE; j++) {
         StoneType stoneType = gameBoard.get(i, j);
@@ -45,10 +47,13 @@ public class BitBoard {
         }
       }
     }
+    this.stoneCount = gameBoard.getStoneCount();
   }
 
-  private BitBoard(BitBoard bitBoard) {
-    board = Arrays.copyOf(bitBoard.board, bitBoard.board.length);
+  private BitBoard(BitBoard bitBoard, int i, int j, StoneType stoneType) {
+    this.board = Arrays.copyOf(bitBoard.board, bitBoard.board.length);
+    setBits(this.board, i, j, stoneType);
+    this.stoneCount = bitBoard.stoneCount + 1;
   }
 
   public static BitBoard fromGameBoard(GameBoard gameBoard, PositionTransformer transformer) {
@@ -77,9 +82,10 @@ public class BitBoard {
   }
 
   public BitBoard set(int i, int j, StoneType stoneType) {
-    BitBoard result = new BitBoard(this);
-    setBits(result.board, i, j, stoneType);
-    return result;
+    if (Constants.DEBUG && stoneType == StoneType.NOTHING) {
+      throw new IllegalStateException("Cannot set nothing.");
+    }
+    return new BitBoard(this, i, j, stoneType);
   }
 
   public StoneType get(int i, int j) {
@@ -154,5 +160,9 @@ public class BitBoard {
       }
     }
     return true;
+  }
+
+  public int getStoneCount() {
+    return stoneCount;
   }
 }
