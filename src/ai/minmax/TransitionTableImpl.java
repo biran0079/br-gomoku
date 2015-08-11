@@ -11,7 +11,7 @@ import static common.PositionTransformer.*;
 import static common.PositionTransformer.CLOCK_270_M;
 
 /**
- * Thread safe transition table.
+ * Non-thread-safe transition table.
  */
 class TransitionTableImpl implements TransitionTable {
 
@@ -27,7 +27,7 @@ class TransitionTableImpl implements TransitionTable {
           CLOCK_270_M,
       };
 
-  protected final Map<BitBoard, MinMaxNode> cache = Maps.newConcurrentMap();
+  protected final Map<BitBoard, MinMaxNode> cache = Maps.newHashMap();
 
   @Override
   public MinMaxNode get(BoardClass boardClass) {

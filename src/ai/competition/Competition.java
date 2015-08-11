@@ -2,6 +2,7 @@ package ai.competition;
 
 import ai.AI;
 import com.google.common.base.Stopwatch;
+import com.google.common.collect.Lists;
 import common.BoardClass;
 import common.Patterns;
 import common.StoneType;
@@ -22,21 +23,28 @@ public class Competition {
   }
 
   public void compete(AI ai1, AI ai2, StoneType firstMove) {
+
+    StoneType secondMove = firstMove.getOpponent();
     CompetitionAI competitionAI1 = CompetitionAI.create(ai1);
     CompetitionAI competitionAI2 = CompetitionAI.create(ai2);
+
     Stopwatch stopwatch = Stopwatch.createStarted();
     boardClasses.stream()
         .parallel()
-        .forEach(boardClass -> {
-          StoneType secondMove = firstMove.getOpponent();
-          competeSingleGameWithMoveOrder(boardClass,
-              new CompetitionAI[] {competitionAI1, competitionAI2},
-              new StoneType[] {firstMove, secondMove});
-          competeSingleGameWithMoveOrder(boardClass,
-              new CompetitionAI[] {competitionAI2, competitionAI1},
-              new StoneType[] {firstMove, secondMove});
+        .flatMap(boardClass ->
+              Lists.<Runnable>newArrayList(
+                  () -> competeSingleGameWithMoveOrder(boardClass,
+                      new CompetitionAI[]{competitionAI1, competitionAI2},
+                      new StoneType[]{firstMove, secondMove}),
+                  () -> competeSingleGameWithMoveOrder(boardClass,
+                      new CompetitionAI[]{competitionAI2, competitionAI1},
+                      new StoneType[]{firstMove, secondMove})
+                  ).stream())
+        .forEach(runnable -> {
+          runnable.run();
           System.out.println(competitionAI1);
           System.out.println(competitionAI2);
+
         });
     System.out.printf("Total duration: %.2f src.",
         stopwatch.elapsed(TimeUnit.MILLISECONDS) / 1000.0);
