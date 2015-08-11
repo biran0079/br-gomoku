@@ -1,7 +1,8 @@
 package player;
 
-import ai.minmax.MinMaxSearch;
 import common.StoneType;
+
+import ai.minmax.MinMaxSearch;
 import model.GameBoard;
 import model.Position;
 

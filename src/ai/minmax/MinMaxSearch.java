@@ -1,18 +1,29 @@
 package ai.minmax;
 
-import ai.AI;
+import static common.PositionTransformer.CLOCK_180;
+import static common.PositionTransformer.CLOCK_180_M;
+import static common.PositionTransformer.CLOCK_270;
+import static common.PositionTransformer.CLOCK_270_M;
+import static common.PositionTransformer.CLOCK_90;
+import static common.PositionTransformer.CLOCK_90_M;
+import static common.PositionTransformer.IDENTITY;
+import static common.PositionTransformer.IDENTITY_M;
+
 import com.google.common.collect.Iterables;
-import common.*;
-import model.Position;
-import model.ReadOnlyGameBoard;
+
+import common.BitBoard;
+import common.BoardClass;
+import common.Patterns;
+import common.PositionTransformer;
+import common.StoneType;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import static common.PositionTransformer.*;
-import static common.PositionTransformer.CLOCK_270_M;
-import static common.PositionTransformer.IDENTITY;
+import ai.AI;
+import model.Position;
+import model.ReadOnlyGameBoard;
 
 public class MinMaxSearch implements AI {
 
@@ -52,7 +63,8 @@ public class MinMaxSearch implements AI {
     cacheHit = 0;
     transitionTable.clear();
     BoardClass boardClass = BoardClass.fromGameBoard(gameBoard);
-    if (boardClass.matchesAny(Iterables.concat(Patterns.BLACK_GOALS, Patterns.WHITE_GOALS))) {
+    if (boardClass.matchesAny(Patterns.BLACK_GOALS)
+        || boardClass.matchesAny(Patterns.WHITE_GOALS)) {
       throw new IllegalStateException("Already won.");
     }
     MinMax minMax = stoneType == StoneType.BLACK ? MinMax.MAX : MinMax.MIN;

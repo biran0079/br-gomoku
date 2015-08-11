@@ -1,12 +1,24 @@
 package ai.minmax;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import common.*;
-import javafx.geometry.Pos;
-import model.Position;
 
-import java.util.*;
+import common.BitBoard;
+import common.BoardClass;
+import common.Constants;
+import common.Patterns;
+import common.PositionTransformer;
+import common.StoneType;
+import common.Utils;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+
+import model.Position;
 
 /**
  * Class that selects candidate moves.
@@ -30,48 +42,42 @@ public class CandidateMovesSelector {
                     .orElseGet(() -> getNeighboringMoves(boardClass)))));
   }
 
-  private Optional<Collection<Position>> immediateDefensiveMoves(BoardClass boardClass, StoneType stoneType) {
-    for (Pattern p : boardClass.filterMatchedPatterns(Patterns.getStraitFour(stoneType.getOpponent()))) {
-      return Optional.of(Collections.singleton(p.getDefensiveMoves().get(0)));
-    }
-    return Optional.empty();
+  private static <T> Collection<T> singleton(T e) {
+    return Collections.singleton(e);
   }
 
-  private Optional<Collection<Position>> regularDefensiveMoves(BoardClass boardClass, StoneType stoneType) {
-    List<Pattern> threateningPattern = Lists.newArrayList(
-        boardClass.filterMatchedPatterns(Patterns.getThree(stoneType.getOpponent())));
-    if (!threateningPattern.isEmpty()) {
-      Set<Position> union = null;
-      for (Pattern p : threateningPattern) {
-        if (union == null) {
-          union = Sets.newHashSet(p.getDefensiveMoves());
-        } else {
-          union = Sets.union(union, Sets.newHashSet(p.getDefensiveMoves()));
-        }
-      }
-      return Optional.of(union.isEmpty()
-          ? Collections.singleton(threateningPattern.get(0).getDefensiveMoves().get(0))
-          : union);
-    }
-    return Optional.empty();
+  private Optional<Collection<Position>> immediateDefensiveMoves(
+      BoardClass boardClass,
+      StoneType stoneType) {
+    return boardClass.filterMatchedPatterns(Patterns.getStraitFour(stoneType.getOpponent()))
+        .map((p) -> singleton(p.getDefensiveMoves().get(0)))
+        .findFirst();
   }
 
-  private Optional<Collection<Position>> immediateOffensiveMoves(BoardClass boardClass, StoneType stoneType) {
-    for (Pattern p : boardClass.filterMatchedPatterns(Patterns.getStraitFour(stoneType))) {
-      return Optional.of(Collections.singleton(p.getDefensiveMoves().get(0)));
-    }
-    return Optional.empty();
+  private Optional<Collection<Position>> regularDefensiveMoves(
+      BoardClass boardClass,
+      StoneType stoneType) {
+    return boardClass.filterMatchedPatterns(Patterns.getThree(stoneType.getOpponent()))
+        .map((p) -> (Set<Position>) Sets.newHashSet(p.getDefensiveMoves()))
+        .reduce((s1, s2) -> Sets.union(s1, s2))
+        .map((s) -> (Collection<Position>) s);
   }
 
-  private Optional<Collection<Position>> regularOffensiveMoves(BoardClass boardClass, StoneType stoneType) {
-    Set<Position> result = new HashSet<>();
-    for (Pattern p : boardClass.filterMatchedPatterns(Patterns.getThree(stoneType))) {
-      result.addAll(p.getDefensiveMoves());
-    }
-    if (result.isEmpty()) {
-      return Optional.empty();
-    }
-    return Optional.of(result);
+  private Optional<Collection<Position>> immediateOffensiveMoves(
+      BoardClass boardClass,
+      StoneType stoneType) {
+    return boardClass.filterMatchedPatterns(Patterns.getStraitFour(stoneType))
+        .map((p) -> singleton(p.getDefensiveMoves().get(0)))
+        .findFirst();
+  }
+
+  private Optional<Collection<Position>> regularOffensiveMoves(
+      BoardClass boardClass,
+      StoneType stoneType) {
+    return boardClass.filterMatchedPatterns(Patterns.getThree(stoneType))
+        .map(p -> (Set<Position>) Sets.newHashSet(p.getDefensiveMoves()))
+        .reduce((s1, s2) -> Sets.union(s1, s2))
+        .map(p -> (Collection<Position>) p);
   }
 
   private Collection<Position> getNeighboringMoves(BoardClass boardClass) {

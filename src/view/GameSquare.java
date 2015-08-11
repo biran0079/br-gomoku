@@ -1,11 +1,13 @@
 package view;
 
 import common.StoneType;
-import model.Position;
 
-import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+
+import model.Position;
 
 public class GameSquare extends JButton implements ActionListener {
 

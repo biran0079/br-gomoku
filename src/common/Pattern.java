@@ -1,8 +1,8 @@
 package common;
 
-import model.Position;
-
 import java.util.List;
+
+import model.Position;
 
 /**
  * Defines a BitBoard pattern.

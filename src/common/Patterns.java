@@ -1,13 +1,17 @@
 package common;
 
-import static common.MoveType.*;
+import static common.MoveType.D1;
+import static common.MoveType.D2;
+import static common.MoveType.E;
+import static common.MoveType.X;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import model.Position;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import model.Position;
 
 /**
  * Predefined patterns.
@@ -113,7 +117,7 @@ public class Patterns {
     return pattern;
   }
 
-  public static Iterable<Pattern> getThree(StoneType stoneType) {
+  public static List<Pattern> getThree(StoneType stoneType) {
     switch (stoneType) {
       case WHITE:
         return WHITE_THREE;
@@ -124,7 +128,7 @@ public class Patterns {
     }
   }
 
-  public static Iterable<Pattern> getStraitFour(StoneType stoneType) {
+  public static List<Pattern> getStraitFour(StoneType stoneType) {
     switch (stoneType) {
       case WHITE:
         return WHITE_STRAIT_FOUR;
@@ -135,7 +139,7 @@ public class Patterns {
     }
   }
 
-  public static Iterable<Pattern> getGoalPatterns(StoneType stoneType) {
+  public static List<Pattern> getGoalPatterns(StoneType stoneType) {
     switch (stoneType) {
       case WHITE:
         return WHITE_GOALS;

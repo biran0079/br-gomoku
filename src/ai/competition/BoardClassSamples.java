@@ -1,6 +1,7 @@
 package ai.competition;
 
 import com.google.common.collect.ImmutableList;
+
 import common.BoardClass;
 import common.BoardClassUtil;
 

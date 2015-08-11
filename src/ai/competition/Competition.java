@@ -1,19 +1,20 @@
 package ai.competition;
 
-import ai.AI;
-import ai.minmax.MinMaxSearch;
 import com.google.common.base.Stopwatch;
-import com.google.common.collect.Iterables;
 import com.google.common.math.DoubleMath;
+
 import common.BoardClass;
 import common.Patterns;
 import common.StoneType;
-import model.Position;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import ai.AI;
+import ai.minmax.MinMaxSearch;
+import model.Position;
 
 /**
  * Competition between AIs by playing games against each other.
@@ -29,6 +30,7 @@ public class Competition {
   void compete(AI ai1, AI ai2, StoneType firstMove) {
     AIWithStats ai1WithStats = new AIWithStats(ai1);
     AIWithStats ai2WithStats = new AIWithStats(ai2);
+    Stopwatch stopwatch = Stopwatch.createStarted();
     for (BoardClass gameBoard : boardClasses) {
       StoneType secondMove = firstMove.getOpponent();
       competeSingleGameWithMoveOrder(gameBoard,
@@ -37,9 +39,11 @@ public class Competition {
       competeSingleGameWithMoveOrder(gameBoard,
           new AIWithStats[] {ai2WithStats, ai1WithStats},
           new StoneType[] {firstMove, secondMove});
-      System.err.println(ai1WithStats);
-      System.err.println(ai2WithStats);
+      System.out.println(ai1WithStats);
+      System.out.println(ai2WithStats);
     }
+    System.out.printf("Competition ends. Total duration: %d ms.\n",
+        stopwatch.elapsed(TimeUnit.MILLISECONDS));
   }
 
   private void competeSingleGameWithMoveOrder(BoardClass gameBoard, AIWithStats[] ai, StoneType[] stoneType) {

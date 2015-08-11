@@ -1,6 +1,5 @@
 package ai.minmax;
 
-import com.google.common.collect.Iterables;
 import common.BoardClass;
 import common.Patterns;
 
@@ -16,8 +15,8 @@ public class DefaultEvaluator implements Evaluator {
           || boardClass.matchesAny(Patterns.BLACK_THREE)) {
         return 10;
       } else {
-        int ws4 = Iterables.size(boardClass.filterMatchedPatterns(Patterns.WHITE_STRAIT_FOUR));
-        int w3 = Iterables.size(boardClass.filterMatchedPatterns(Patterns.WHITE_THREE));
+        int ws4 = (int) boardClass.filterMatchedPatterns(Patterns.WHITE_STRAIT_FOUR).count();
+        int w3 = (int) boardClass.filterMatchedPatterns(Patterns.WHITE_THREE).count();
         return -(ws4 + w3);
       }
     } else {
@@ -25,8 +24,8 @@ public class DefaultEvaluator implements Evaluator {
           || boardClass.matchesAny(Patterns.WHITE_THREE)) {
         return -10;
       } else {
-        int bs4 = Iterables.size(boardClass.filterMatchedPatterns(Patterns.BLACK_STRAIT_FOUR));
-        int b3 = Iterables.size(boardClass.filterMatchedPatterns(Patterns.BLACK_THREE));
+        int bs4 = (int) boardClass.filterMatchedPatterns(Patterns.BLACK_STRAIT_FOUR).count();
+        int b3 = (int) boardClass.filterMatchedPatterns(Patterns.BLACK_THREE).count();
         return bs4 + b3;
       }
     }

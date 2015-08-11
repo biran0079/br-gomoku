@@ -1,8 +1,8 @@
 package common;
 
-import model.ReadOnlyGameBoard;
-
 import java.util.Arrays;
+
+import model.ReadOnlyGameBoard;
 
 /**
  * Implement board efficiently with bit wise operations.

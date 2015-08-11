@@ -1,12 +1,21 @@
 package common;
 
-import com.google.common.collect.Iterables;
-import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
-import model.ReadOnlyGameBoard;
+import static common.PositionTransformer.CLOCK_180;
+import static common.PositionTransformer.CLOCK_180_M;
+import static common.PositionTransformer.CLOCK_270;
+import static common.PositionTransformer.CLOCK_270_M;
+import static common.PositionTransformer.CLOCK_90;
+import static common.PositionTransformer.CLOCK_90_M;
+import static common.PositionTransformer.IDENTITY;
+import static common.PositionTransformer.IDENTITY_M;
+import static common.PositionTransformer.LEFT_DIAGONAL;
+import static common.PositionTransformer.RIGHT_DIAGONAL;
 
 import java.util.EnumMap;
+import java.util.List;
+import java.util.stream.Stream;
 
-import static common.PositionTransformer.*;
+import model.ReadOnlyGameBoard;
 
 /**
  * Class of bit boards by PositionTransformer operation.
@@ -52,12 +61,12 @@ public class BoardClass implements ReadOnlyGameBoard {
     return new BoardClass(gameBoard);
   }
 
-  public boolean matchesAny(Iterable<Pattern> patterns) {
-    return Iterables.any(patterns, (p) -> matches(p));
+  public boolean matchesAny(List<Pattern> patterns) {
+    return patterns.stream().anyMatch(this::matches);
   }
 
-  public Iterable<Pattern> filterMatchedPatterns(Iterable<Pattern> patterns) {
-    return Iterables.filter(patterns, (p) -> matches(p));
+  public Stream<Pattern> filterMatchedPatterns(List<Pattern> patterns) {
+    return patterns.stream().filter(this::matches);
   }
 
   public BitBoard getBoard(PositionTransformer transformer) {

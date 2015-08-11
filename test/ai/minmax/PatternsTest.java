@@ -1,17 +1,26 @@
 package ai.minmax;
 
+import static common.BoardClassUtil.B;
+import static common.BoardClassUtil.E;
+import static common.BoardClassUtil.W;
+import static common.BoardClassUtil.createBoard;
+import static org.junit.Assert.assertEquals;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import common.*;
-import model.Position;
+
+import common.BoardClass;
+import common.Pattern;
+import common.Patterns;
+import common.PositionTransformer;
+import common.StoneType;
+
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
-import static common.BoardClassUtil.*;
+import model.Position;
 
 /**
  * Unit tests for Patterns class.
@@ -264,9 +273,14 @@ public class PatternsTest {
                                  StoneType stoneType,
                                  ImmutableList<Pattern> candidates) {
     BoardClass boardClass = createBoard(board);
-    List<Pattern> patterns = Lists.newArrayList(boardClass.filterMatchedPatterns(candidates));
-    assertEquals(1, patterns.size());
-    assertEquals(orientation, patterns.get(0).getTransformer());
-    assertEquals(stoneType, patterns.get(0).getStoneType());
+
+    final List<Pattern> patterns = new ArrayList<>();
+    boardClass.filterMatchedPatterns(candidates)
+        .forEach(p -> {
+          patterns.add(p);
+          assertEquals(orientation, p.getTransformer());
+          assertEquals(stoneType, p.getStoneType());
+        });
+    assertEquals(1L, patterns.size());
   }
 }
