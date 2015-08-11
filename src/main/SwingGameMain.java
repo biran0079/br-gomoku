@@ -1,4 +1,4 @@
-package game;
+package main;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -11,7 +11,7 @@ import view.ViewModule;
 /**
  * Main class of the game.
  */
-class Main {
+class SwingGameMain {
 
   public static void main(String[] args) {
     Injector injector = Guice.createInjector(

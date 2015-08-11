@@ -29,15 +29,6 @@ class GameBoardImpl implements GameBoard {
   }
 
   @Override
-  public StoneType[][] toArray() {
-    StoneType[][] res = new StoneType[Constants.BOARD_SIZE][Constants.BOARD_SIZE];
-    for (int i = 0; i < Constants.BOARD_SIZE; i++)
-      for (int j = 0; j < Constants.BOARD_SIZE; j++)
-        res[i][j] = board[i][j];
-    return res;
-  }
-
-  @Override
   public void initialize() {
     for (int i = 0; i < Constants.BOARD_SIZE; i++)
       for (int j = 0; j < Constants.BOARD_SIZE; j++) {

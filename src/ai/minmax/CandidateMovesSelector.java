@@ -40,17 +40,17 @@ public class CandidateMovesSelector {
     List<Pattern> threateningPattern = Lists.newArrayList(
         boardClass.filterMatchedPatterns(Patterns.getThree(stoneType.getOpponent())));
     if (!threateningPattern.isEmpty()) {
-      Set<Position> union = null;
+      Set<Position> intersection = null;
       for (Pattern p : threateningPattern) {
-        if (union == null) {
-          union = Sets.newHashSet(p.getDefensiveMoves());
+        if (intersection == null) {
+          intersection = Sets.newHashSet(p.getDefensiveMoves());
         } else {
-          union = Sets.union(union, Sets.newHashSet(p.getDefensiveMoves()));
+          intersection = Sets.intersection(intersection, Sets.newHashSet(p.getDefensiveMoves()));
         }
       }
-      return Optional.of(union.isEmpty()
+      return Optional.of(intersection.isEmpty()
           ? Collections.singleton(threateningPattern.get(0).getDefensiveMoves().get(0))
-          : union);
+          : intersection);
     }
     return Optional.empty();
   }
