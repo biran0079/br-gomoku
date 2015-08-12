@@ -3,15 +3,10 @@ package ai.competition.main;
 import ai.AI;
 import ai.competition.BoardClassSamples;
 import ai.competition.Competition;
-import ai.minmax.HashEvaluationTable;
 import ai.minmax.MinMaxSearch;
 
-import ai.minmax.SmartTransitionTable;
+import ai.minmax.transitiontable.SmartTransitionTable;
 import common.StoneType;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
 
 /**
  * Entry point of a competition.

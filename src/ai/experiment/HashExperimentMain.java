@@ -3,7 +3,7 @@ package ai.experiment;
 import common.StoneType;
 
 import ai.competition.BoardClassSamples;
-import ai.minmax.HashEvaluationTable;
+import ai.minmax.transitiontable.HashEvaluationTable;
 import ai.minmax.MinMaxSearch;
 
 public class HashExperimentMain {

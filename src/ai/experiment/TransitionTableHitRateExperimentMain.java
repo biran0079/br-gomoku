@@ -4,9 +4,9 @@ import ai.AI;
 import ai.competition.BoardClassSamples;
 import ai.competition.Competition;
 import ai.minmax.MinMaxSearch;
-import ai.minmax.SmartTransitionTable;
-import ai.minmax.TransitionTableImpl;
-import ai.minmax.TransitionTableWithStats;
+import ai.minmax.transitiontable.SmartTransitionTable;
+import ai.minmax.transitiontable.TransitionTableImpl;
+import ai.minmax.transitiontable.TransitionTableWithStats;
 import common.StoneType;
 
 /**

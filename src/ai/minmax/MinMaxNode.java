@@ -9,7 +9,7 @@ import static common.PositionTransformer.CLOCK_270_M;
 /**
  * Node of min-max search tree.
  */
-class MinMaxNode {
+public class MinMaxNode {
 
   private final Position bestMove;
   private final int score;
@@ -27,7 +27,7 @@ class MinMaxNode {
     return score;
   }
 
-  MinMaxNode transform(PositionTransformer transformer) {
+  public MinMaxNode transform(PositionTransformer transformer) {
     if (bestMove == null || transformer == IDENTITY) {
       return this;
     }

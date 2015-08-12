@@ -1,5 +1,6 @@
-package ai.minmax;
+package ai.minmax.transitiontable;
 
+import ai.minmax.MinMaxNode;
 import com.google.common.collect.Maps;
 import common.BitBoard;
 import common.BoardClass;

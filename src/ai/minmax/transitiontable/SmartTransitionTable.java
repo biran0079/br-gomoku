@@ -1,5 +1,6 @@
-package ai.minmax;
+package ai.minmax.transitiontable;
 
+import ai.minmax.MinMaxNode;
 import common.BoardClass;
 
 import static common.PositionTransformer.IDENTITY;

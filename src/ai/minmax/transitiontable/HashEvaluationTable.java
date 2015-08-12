@@ -1,5 +1,6 @@
-package ai.minmax;
+package ai.minmax.transitiontable;
 
+import ai.minmax.MinMaxNode;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.math.DoubleMath;

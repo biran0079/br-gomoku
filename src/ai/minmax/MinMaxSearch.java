@@ -1,10 +1,12 @@
 package ai.minmax;
 
 import ai.AI;
+import ai.minmax.transitiontable.NoopTransitionTable;
+import ai.minmax.transitiontable.TransitionTable;
+import ai.minmax.transitiontable.TransitionTableImpl;
 import com.google.common.collect.Iterables;
 import common.BoardClass;
 import common.Constants;
-import common.Patterns;
 import common.StoneType;
 import model.GameBoard;
 import model.Position;
