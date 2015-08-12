@@ -1,13 +1,14 @@
-package common;
+package common.boardclass;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import common.Constants;
+import common.PositionTransformer;
+import common.StoneType;
 import model.GameBoard;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 /**

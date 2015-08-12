@@ -1,6 +1,7 @@
-package common;
+package common.boardclass;
 
 import com.google.common.collect.Iterables;
+import common.*;
 import model.GameBoard;
 
 import java.util.EnumMap;
@@ -10,7 +11,7 @@ import static common.PositionTransformer.*;
 /**
  * Class of bit boards by PositionTransformer operation.
  */
-public class BoardClass implements GameBoard {
+class BoardClassImpl implements BoardClass {
 
   private final EnumMap<PositionTransformer, BitBoard> map;
 
@@ -28,16 +29,16 @@ public class BoardClass implements GameBoard {
           LEFT_DIAGONAL,
       };
 
-  private static final BoardClass EMPTY_BOARD = new BoardClass();
+  private static final BoardClassImpl EMPTY_BOARD = new BoardClassImpl();
 
-  private BoardClass() {
+  private BoardClassImpl() {
     map = new EnumMap(PositionTransformer.class);
     for (PositionTransformer transformer : TRACKING_TRANSFORMERS) {
       map.put(transformer, BitBoard.emptyBoard(transformer.getBoardRowNumber()));
     }
   }
 
-  private BoardClass(BoardClass boardClass, int i, int j, StoneType stoneType) {
+  private BoardClassImpl(BoardClassImpl boardClass, int i, int j, StoneType stoneType) {
     map = new EnumMap(PositionTransformer.class);
     for (PositionTransformer transformer : TRACKING_TRANSFORMERS) {
       int ti = transformer.getI(i, j);
@@ -46,7 +47,7 @@ public class BoardClass implements GameBoard {
     }
   }
 
-  private BoardClass(GameBoard gameBoard) {
+  private BoardClassImpl(GameBoard gameBoard) {
     map = new EnumMap(PositionTransformer.class);
     for (PositionTransformer transformer : TRACKING_TRANSFORMERS) {
       map.put(transformer, BitBoard.fromGameBoard(gameBoard, transformer));
@@ -54,32 +55,23 @@ public class BoardClass implements GameBoard {
   }
 
   @Override
-  public BoardClass withPositionSet(int i, int j, StoneType stoneType) {
-    return new BoardClass(this, i, j, stoneType);
+  public BoardClassImpl withPositionSet(int i, int j, StoneType stoneType) {
+    return new BoardClassImpl(this, i, j, stoneType);
   }
 
-  public static BoardClass fromGameBoard(GameBoard gameBoard) {
-    if (gameBoard instanceof  BoardClass) {
-      return (BoardClass) gameBoard;
-    }
-    return new BoardClass(gameBoard);
+  @Override
+  public boolean matchesAny(StoneType stoneType, PatternType patternType) {
+    return Iterables.any(Patterns.get(stoneType, patternType), (p) -> matches(p));
   }
 
-  public boolean matchesAny(Iterable<Pattern> patterns) {
-    return Iterables.any(patterns, (p) -> matches(p));
+  @Override
+  public Iterable<Pattern> getMatchingPatterns(StoneType stoneType, PatternType patternType) {
+    return Iterables.filter(Patterns.get(stoneType, patternType), (p) -> matches(p));
   }
 
-  public Iterable<Pattern> filterMatchedPatterns(Iterable<Pattern> patterns) {
-    return Iterables.filter(patterns, (p) -> matches(p));
-  }
-
+  @Override
   public BitBoard getBoard(PositionTransformer transformer) {
     return map.get(transformer);
-  }
-
-  private boolean matches(Pattern pattern) {
-    int row = getBoard(pattern.getTransformer()).getRow(pattern.getRowIndex());
-    return (row & pattern.getMask()) == pattern.getPattern();
   }
 
   @Override
@@ -109,10 +101,27 @@ public class BoardClass implements GameBoard {
 
   @Override
   public boolean wins(StoneType stoneType) {
-    return matchesAny(Patterns.get(stoneType, PatternType.FIVE));
+    return matchesAny(stoneType, PatternType.FIVE);
   }
 
-  public static BoardClass getEmptyBoard() {
-    return EMPTY_BOARD;
+  private boolean matches(Pattern pattern) {
+    int row = getBoard(pattern.getTransformer()).getRow(pattern.getRowIndex());
+    return (row & pattern.getMask()) == pattern.getPattern();
+  }
+
+  static class Factory implements BoardClass.Factory {
+
+    @Override
+    public BoardClass fromGameBoard(GameBoard gameBoard) {
+      if (gameBoard instanceof BoardClassImpl) {
+        return (BoardClassImpl) gameBoard;
+      }
+      return new BoardClassImpl(gameBoard);
+    }
+
+    @Override
+    public BoardClass getEmptyBoard() {
+      return EMPTY_BOARD;
+    }
   }
 }

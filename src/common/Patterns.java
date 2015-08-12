@@ -5,6 +5,7 @@ import static common.MoveType.*;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
+import common.boardclass.BitBoard;
 import model.Position;
 
 import java.util.*;
@@ -39,25 +40,25 @@ public class Patterns {
   private static ImmutableSet<Pattern> createThreePatterns(StoneType stoneType) {
     return ImmutableSet.<Pattern>builder()
         .addAll(createPatterns(stoneType, new MoveType[] {D2, X, X, D1, X, D2}))
-        .addAll(createPatterns(stoneType, new MoveType[]{D2, X, D1, X, X, D2}))
-        .addAll(createPatterns(stoneType, new MoveType[]{E, D1, X, X, X, D1}))
+        .addAll(createPatterns(stoneType, new MoveType[] {D2, X, D1, X, X, D2}))
+        .addAll(createPatterns(stoneType, new MoveType[] {E, D1, X, X, X, D1}))
         .addAll(createPatterns(stoneType, new MoveType[] {D1, X, X, X, D1, E}))
         .build();
   }
 
   private static ImmutableSet<Pattern> createStraitFourPatterns(StoneType stoneType) {
     return ImmutableSet.<Pattern>builder()
-        .addAll(createPatterns(stoneType, new MoveType[]{D1, X, X, X, X}))
+        .addAll(createPatterns(stoneType, new MoveType[] {D1, X, X, X, X}))
         .addAll(createPatterns(stoneType, new MoveType[] {X, D1, X, X, X}))
         .addAll(createPatterns(stoneType, new MoveType[] {X, X, D1, X, X}))
-        .addAll(createPatterns(stoneType, new MoveType[]{X, X, X, D1, X}))
+        .addAll(createPatterns(stoneType, new MoveType[] {X, X, X, D1, X}))
         .addAll(createPatterns(stoneType, new MoveType[] {X, X, X, X, D1}))
         .build();
   }
 
   private static ImmutableSet<Pattern> createGoalPatterns(StoneType stoneType) {
     return ImmutableSet.<Pattern>builder()
-        .addAll(createPatterns(stoneType, new MoveType[]{X, X, X, X, X}))
+        .addAll(createPatterns(stoneType, new MoveType[] {X, X, X, X, X}))
         .build();
   }
 

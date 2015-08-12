@@ -3,13 +3,11 @@ package ai.competition;
 import ai.AI;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.Lists;
-import common.BoardClass;
-import common.Patterns;
 import common.StoneType;
+import common.boardclass.BoardClass;
 import model.Position;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -21,10 +19,6 @@ public class Competition {
 
   public Competition(Collection<BoardClass> boardClasses) {
     this.boardClasses = boardClasses;
-  }
-
-  public Competition(BoardClass boardClasses) {
-    this(Collections.singleton(boardClasses));
   }
 
   public void compete(AI ai1, AI ai2, StoneType firstMove) {

@@ -3,6 +3,8 @@ package ai.minmax;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import common.*;
+import common.boardclass.BitBoard;
+import common.boardclass.BoardClass;
 import model.Position;
 
 import java.util.*;
@@ -30,8 +32,7 @@ public class CandidateMovesSelector {
   }
 
   private Optional<Collection<Position>> immediateDefensiveMoves(BoardClass boardClass, StoneType stoneType) {
-    for (Pattern p : boardClass.filterMatchedPatterns(
-        Patterns.get(stoneType.getOpponent(), PatternType.STRAIT_FOUR))) {
+    for (Pattern p : boardClass.getMatchingPatterns(stoneType.getOpponent(), PatternType.STRAIT_FOUR)) {
       return Optional.of(Collections.singleton(p.getDefensiveMoves().get(0)));
     }
     return Optional.empty();
@@ -39,7 +40,7 @@ public class CandidateMovesSelector {
 
   private Optional<Collection<Position>> regularDefensiveMoves(BoardClass boardClass, StoneType stoneType) {
     List<Pattern> threateningPattern = Lists.newArrayList(
-        boardClass.filterMatchedPatterns(Patterns.get(stoneType.getOpponent(), PatternType.THREE)));
+        boardClass.getMatchingPatterns(stoneType.getOpponent(), PatternType.THREE));
     if (!threateningPattern.isEmpty()) {
       Set<Position> intersection = null;
       for (Pattern p : threateningPattern) {
@@ -57,8 +58,7 @@ public class CandidateMovesSelector {
   }
 
   private Optional<Collection<Position>> immediateOffensiveMoves(BoardClass boardClass, StoneType stoneType) {
-    for (Pattern p : boardClass.filterMatchedPatterns(
-        Patterns.get(stoneType, PatternType.STRAIT_FOUR))) {
+    for (Pattern p : boardClass.getMatchingPatterns(stoneType, PatternType.STRAIT_FOUR)) {
       return Optional.of(Collections.singleton(p.getDefensiveMoves().get(0)));
     }
     return Optional.empty();
@@ -66,7 +66,7 @@ public class CandidateMovesSelector {
 
   private Optional<Collection<Position>> regularOffensiveMoves(BoardClass boardClass, StoneType stoneType) {
     Set<Position> result = new HashSet<>();
-    for (Pattern p : boardClass.filterMatchedPatterns(Patterns.get(stoneType, PatternType.THREE))) {
+    for (Pattern p : boardClass.getMatchingPatterns(stoneType, PatternType.THREE)) {
       result.addAll(p.getDefensiveMoves());
     }
     if (result.isEmpty()) {

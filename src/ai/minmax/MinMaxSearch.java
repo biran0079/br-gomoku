@@ -5,9 +5,9 @@ import ai.minmax.transitiontable.NoopTransitionTable;
 import ai.minmax.transitiontable.TransitionTable;
 import ai.minmax.transitiontable.TransitionTableImpl;
 import com.google.common.collect.Iterables;
-import common.BoardClass;
-import common.Constants;
-import common.StoneType;
+import common.*;
+import common.boardclass.BoardClass;
+import common.boardclass.BoardClassUtil;
 import model.GameBoard;
 import model.Position;
 
@@ -21,6 +21,7 @@ public class MinMaxSearch implements AI {
   private final String name;
   private final boolean alphaBetaPruning;
   private final Evaluator evaluator;
+  private final BoardClass.Factory boardClassFactory;
 
   private int evalCount;
   private int cacheHit;
@@ -33,6 +34,7 @@ public class MinMaxSearch implements AI {
     this.candidateMovesSelector = new CandidateMovesSelector(
         builder.randomSampleBranchCandidates);
     this.evaluator = builder.evaluator;
+    this.boardClassFactory = builder.boardClassFactory;
   }
 
   public static Builder newBuilder() {
@@ -48,7 +50,7 @@ public class MinMaxSearch implements AI {
   public Position nextMove(GameBoard gameBoard, StoneType stoneType) {
     evalCount = 0;
     cacheHit = 0;
-    BoardClass boardClass = BoardClass.fromGameBoard(gameBoard);
+    BoardClass boardClass = boardClassFactory.fromGameBoard(gameBoard);
     if (boardClass.wins(StoneType.BLACK) || boardClass.wins(StoneType.WHITE)) {
       throw new IllegalStateException("Already won.");
     }
@@ -178,12 +180,18 @@ public class MinMaxSearch implements AI {
     private Evaluator evaluator = new DefaultEvaluator();
     private TransitionTable.Factory transitionTableFactory =
         () -> new TransitionTableImpl();
+    private BoardClass.Factory boardClassFactory = BoardClassUtil.DEFAULT_FACTORY;
 
     private Builder() {
     }
 
     public MinMaxSearch build() {
       return new MinMaxSearch(this);
+    }
+
+    public Builder setBoardClassFactory(BoardClass.Factory boardClassFactory) {
+      this.boardClassFactory = boardClassFactory;
+      return this;
     }
 
     public Builder withEvaluator(Evaluator evaluator) {

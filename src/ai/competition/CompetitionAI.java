@@ -52,26 +52,30 @@ public class CompetitionAI {
   }
 
   public double getMeanMoveMs() {
-    return DoubleMath.mean(moveTimeCostMs);
+    synchronized (moveTimeCostMs) {
+      return DoubleMath.mean(moveTimeCostMs);
+    }
   }
 
   @Override
   public String toString() {
-    return new StringBuilder()
-        .append(getAI())
-        .append( " ")
-        .append(getWin())
-        .append(" wins, ")
-        .append(getLose())
-        .append(" loses, ")
-        .append(getDraw())
-        .append(" draw, ")
-        .append("average move duration: ")
-        .append(String.format("%.2f [%.2f, %.2f]",
-            getMeanMoveMs() / 1000,
-            Collections.min(moveTimeCostMs) * 1.0 / 1000,
-            Collections.max(moveTimeCostMs) * 1.0 / 1000))
-        .append(" sec.")
-        .toString();
+    synchronized (moveTimeCostMs) {
+      return new StringBuilder()
+          .append(getAI())
+          .append( " ")
+          .append(getWin())
+          .append(" wins, ")
+          .append(getLose())
+          .append(" loses, ")
+          .append(getDraw())
+          .append(" draw, ")
+          .append("average move duration: ")
+          .append(String.format("%.2f [%.2f, %.2f]",
+              getMeanMoveMs() / 1000,
+              Collections.min(moveTimeCostMs) * 1.0 / 1000,
+              Collections.max(moveTimeCostMs) * 1.0 / 1000))
+          .append(" sec.")
+          .toString();
+    }
   }
 }

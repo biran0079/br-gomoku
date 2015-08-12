@@ -4,9 +4,8 @@ import ai.minmax.MinMaxNode;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.math.DoubleMath;
-
-import common.BitBoard;
-import common.BoardClass;
+import common.boardclass.BitBoard;
+import common.boardclass.BoardClass;
 import common.PositionTransformer;
 
 import java.util.Collections;

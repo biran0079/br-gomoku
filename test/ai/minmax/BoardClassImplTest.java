@@ -1,6 +1,8 @@
 package ai.minmax;
 
 import common.*;
+import common.boardclass.BoardClass;
+import common.boardclass.BoardClassUtil;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
@@ -8,7 +10,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Some unit tests for BoardClass.
  */
-public class BoardClassTest {
+public class BoardClassImplTest {
 
   @Test
   public void testSample() {
@@ -28,7 +30,7 @@ public class BoardClassTest {
             "_______O_______\n" +
             "_______________\n" +
             "_______________");
-    assertTrue(boardClass.matchesAny(Patterns.get(StoneType.BLACK, PatternType.STRAIT_FOUR)));
-    assertTrue(boardClass.matchesAny(Patterns.get(StoneType.BLACK, PatternType.OPEN_FOUR)));
+    assertTrue(boardClass.matchesAny(StoneType.BLACK, PatternType.STRAIT_FOUR));
+    assertTrue(boardClass.matchesAny(StoneType.BLACK, PatternType.OPEN_FOUR));
   }
 }

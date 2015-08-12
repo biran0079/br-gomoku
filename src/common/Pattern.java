@@ -3,8 +3,6 @@ package common;
 import com.google.common.collect.ImmutableList;
 import model.Position;
 
-import java.util.List;
-
 /**
  * Defines a BitBoard pattern.
  */

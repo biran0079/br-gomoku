@@ -2,8 +2,8 @@ package ai.minmax.transitiontable;
 
 import ai.minmax.MinMaxNode;
 import com.google.common.collect.Maps;
-import common.BitBoard;
-import common.BoardClass;
+import common.boardclass.BitBoard;
+import common.boardclass.BoardClass;
 import common.PositionTransformer;
 
 import java.util.Map;

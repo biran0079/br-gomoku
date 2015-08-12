@@ -1,6 +1,6 @@
 package ai.minmax;
 
-import common.BoardClass;
+import common.boardclass.BoardClass;
 
 /**
  * Evaluates game board status into an int.

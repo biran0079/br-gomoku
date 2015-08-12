@@ -1,0 +1,23 @@
+package common.boardclass;
+
+import common.*;
+import model.GameBoard;
+
+/**
+ * Interface for board class that is used by AI searching algorithm.
+ */
+public interface BoardClass extends GameBoard {
+
+  BoardClass withPositionSet(int i, int j, StoneType stoneType);
+
+  boolean matchesAny(StoneType stoneType, PatternType patternType);
+
+  Iterable<Pattern> getMatchingPatterns(StoneType stoneType, PatternType patternType);
+
+  BitBoard getBoard(PositionTransformer transformer);
+
+  interface Factory extends GameBoard.Factory {
+
+    BoardClass fromGameBoard(GameBoard gameBoard);
+  }
+}

@@ -94,7 +94,7 @@ class GameControllerImpl implements GameController {
   private Player[] initializeGame() {
     ui.clearBoard();
     history.clear();
-    gameBoard = gameBoardFactory.newEmptyBoard();
+    gameBoard = gameBoardFactory.getEmptyBoard();
     PlayerType[] types = ui.getSelectedPlayerTypes();
     return new Player[] {
         createPlayer(types[0], "player1", StoneType.BLACK),
