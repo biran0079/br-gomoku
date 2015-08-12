@@ -1,6 +1,6 @@
 package view;
 
-import common.PlayerType;
+import controller.PlayerType;
 
 import javax.inject.Inject;
 import javax.swing.*;

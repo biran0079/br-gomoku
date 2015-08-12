@@ -109,7 +109,7 @@ public class BoardClass implements GameBoard {
 
   @Override
   public boolean wins(StoneType stoneType) {
-    return matchesAny(Patterns.getGoalPatterns(stoneType));
+    return matchesAny(Patterns.get(stoneType, PatternType.FIVE));
   }
 
   public static BoardClass getEmptyBoard() {

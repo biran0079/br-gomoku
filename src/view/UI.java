@@ -1,6 +1,6 @@
 package view;
 
-import common.PlayerType;
+import controller.PlayerType;
 import common.StoneType;
 import model.Position;
 import player.Player;

@@ -1,5 +1,6 @@
 package common;
 
+import com.google.common.collect.ImmutableList;
 import model.Position;
 
 import java.util.List;
@@ -13,14 +14,14 @@ public class Pattern {
   private final int mask;
   private final PositionTransformer transformer;
   private final StoneType stoneType;
-  private final List<Position> defensiveMoves;
+  private final ImmutableList<Position> defensiveMoves;
 
   Pattern(int rowIndex,
           int pattern,
           int mask,
           PositionTransformer transformer,
           StoneType stoneType,
-          List<Position> defensiveMoves) {
+          ImmutableList<Position> defensiveMoves) {
     this.rowIndex = rowIndex;
     this.pattern = pattern;
     this.mask = mask;
@@ -29,7 +30,7 @@ public class Pattern {
     this.defensiveMoves = defensiveMoves;
   }
 
-  public List<Position> getDefensiveMoves() {
+  public ImmutableList<Position> getDefensiveMoves() {
     return defensiveMoves;
   }
 
@@ -51,23 +52,6 @@ public class Pattern {
 
   public StoneType getStoneType() {
     return stoneType;
-  }
-
-  @Override
-  public int hashCode() {
-    return rowIndex ^ pattern ^ mask ^ transformer.ordinal();
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (!(o instanceof Pattern)) {
-      return false;
-    }
-    Pattern p = (Pattern) o;
-    return rowIndex == p.rowIndex
-        && pattern == p.pattern
-        && mask == p.mask
-        && transformer == p.transformer;
   }
 
   @Override

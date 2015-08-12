@@ -1,6 +1,5 @@
 package controller;
 
-import common.PlayerType;
 import common.StoneType;
 import model.GameBoard;
 import model.History;
