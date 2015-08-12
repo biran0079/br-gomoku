@@ -6,6 +6,7 @@ import ai.competition.Competition;
 import ai.minmax.HashEvaluationTable;
 import ai.minmax.MinMaxSearch;
 
+import ai.minmax.SmartTransitionTable;
 import common.StoneType;
 
 import java.util.ArrayList;
@@ -19,7 +20,8 @@ public class CompetitionMain {
 
   public static void main(String[] args) {
     AI ai1 = MinMaxSearch.newBuilder()
-        .withName("d3-hash-eval")
+        .withName("d3-smart-transition")
+        .withTransitionTableFactory(() -> new SmartTransitionTable())
         .withMaxDepth(3)
         .build();
     AI ai2 = MinMaxSearch.newBuilder()

@@ -13,7 +13,7 @@ import static common.PositionTransformer.CLOCK_270_M;
 /**
  * Non-thread-safe transition table.
  */
-class TransitionTableImpl implements TransitionTable {
+public class TransitionTableImpl implements TransitionTable {
 
   protected static final PositionTransformer[] IDENTICAL_TRANSFORMERS =
       new PositionTransformer[] {

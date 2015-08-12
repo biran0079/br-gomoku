@@ -9,6 +9,7 @@ import common.StoneType;
 import model.Position;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -22,23 +23,8 @@ public class Competition {
     this.boardClasses = boardClasses;
   }
 
-  public void benchmark(AI ai, StoneType firstMove) {
-    StoneType secondMove = firstMove.getOpponent();
-    CompetitionAI competitionAI1 = CompetitionAI.create(ai);
-    CompetitionAI competitionAI2 = CompetitionAI.create(ai);
-    Stopwatch stopwatch = Stopwatch.createStarted();
-    boardClasses.stream()
-        .parallel()
-        .forEach(boardClass -> {
-          competeSingleGameWithMoveOrder(boardClass,
-              new CompetitionAI[]{competitionAI2, competitionAI1},
-              new StoneType[]{firstMove, secondMove});
-          System.out.println(competitionAI1);
-          System.out.println(competitionAI2);
-        });
-    System.out.printf("Total duration for %s: %.2f src.\n",
-        ai,
-        stopwatch.elapsed(TimeUnit.MILLISECONDS) / 1000.0);
+  public Competition(BoardClass boardClasses) {
+    this(Collections.singleton(boardClasses));
   }
 
   public void compete(AI ai1, AI ai2, StoneType firstMove) {
@@ -76,12 +62,12 @@ public class Competition {
       StoneType[] stoneType) {
     int i = 0;
     while (true) {
-      if (boardClass.matchesAny(Patterns.getGoalPatterns(stoneType[0]))) {
+      if (boardClass.wins(stoneType[0])) {
         ai[0].incWin();
         ai[1].incLose();
         break;
       }
-      if (boardClass.matchesAny(Patterns.getGoalPatterns(stoneType[1]))) {
+      if (boardClass.wins(stoneType[1])) {
         ai[1].incWin();
         ai[0].incLose();
         break;

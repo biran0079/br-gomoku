@@ -51,18 +51,19 @@ public class MinMaxSearch implements AI {
       throw new IllegalStateException("Already won.");
     }
     MinMax minMax = stoneType == StoneType.BLACK ? MinMax.MAX : MinMax.MIN;
-    MinMaxNode res;
+    MinMaxNode result = null;
     try {
-      res = minMaxSearch(boardClass, Integer.MIN_VALUE, Integer.MAX_VALUE,
+      result = minMaxSearch(boardClass, Integer.MIN_VALUE, Integer.MAX_VALUE,
           maxDepth, minMax, stoneType, transitionTableFactory.create());
-      return res.getBestMove();
+      return result.getBestMove();
     } catch (Throwable e) {
       e.printStackTrace();
       throw e;
     } finally {
-      if (Constants.DEBUG) {
-        System.err.println(boardClass +
-            "eval result:" + res.getScore() +", eval called " + evalCount + " times, cache hit " + cacheHit + " times.");
+      if (Constants.DEBUG && result != null) {
+        System.err.println(boardClass
+            +  name + "\neval result:" + result.getScore() +", eval called " + evalCount
+            + " times, cache hit " + cacheHit + " times.");
       }
     }
   }
