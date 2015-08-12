@@ -13,9 +13,9 @@ public class HashExperimentMain {
         .forEach(boardClass -> {
           HashEvaluationTable table = new HashEvaluationTable();
           MinMaxSearch.newBuilder()
-              .withName("d5")
+              .withName("d6")
               .withTransitionTableFactory(() -> table)
-              .withMaxDepth(5)
+              .withMaxDepth(6)
               .build()
               .nextMove(boardClass, StoneType.BLACK);
           table.printStats();

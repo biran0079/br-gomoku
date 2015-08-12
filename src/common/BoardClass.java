@@ -59,6 +59,9 @@ public class BoardClass implements GameBoard {
   }
 
   public static BoardClass fromGameBoard(GameBoard gameBoard) {
+    if (gameBoard instanceof  BoardClass) {
+      return (BoardClass) gameBoard;
+    }
     return new BoardClass(gameBoard);
   }
 

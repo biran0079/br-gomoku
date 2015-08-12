@@ -70,8 +70,10 @@ public class Competition {
         stopwatch.elapsed(TimeUnit.MILLISECONDS) / 1000.0);
   }
 
-  private void competeSingleGameWithMoveOrder(BoardClass gameBoard, CompetitionAI[] ai, StoneType[] stoneType) {
-    BoardClass boardClass = BoardClass.fromGameBoard(gameBoard);
+  private void competeSingleGameWithMoveOrder(
+      BoardClass boardClass,
+      CompetitionAI[] ai,
+      StoneType[] stoneType) {
     int i = 0;
     while (true) {
       if (boardClass.matchesAny(Patterns.getGoalPatterns(stoneType[0]))) {
