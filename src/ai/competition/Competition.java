@@ -30,8 +30,8 @@ public class Competition {
   public void compete(AI ai1, AI ai2, StoneType firstMove) {
 
     StoneType secondMove = firstMove.getOpponent();
-    CompetitionAI competitionAI1 = CompetitionAI.create(ai1);
-    CompetitionAI competitionAI2 = CompetitionAI.create(ai2);
+    CompetitionAI competitionAI1 = new CompetitionAI(ai1);
+    CompetitionAI competitionAI2 = new CompetitionAI(ai2);
 
     Stopwatch stopwatch = Stopwatch.createStarted();
     boardClasses.stream()
