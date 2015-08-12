@@ -1,4 +1,4 @@
-package common;
+package common.pattern;
 
 /**
  * Different types of stones in a pattern.

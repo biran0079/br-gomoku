@@ -1,10 +1,15 @@
-package common;
+package common.pattern;
 
-import static common.MoveType.*;
+import static common.pattern.MoveType.*;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
+
+import common.Constants;
+import common.PatternType;
+import common.PositionTransformer;
+import common.StoneType;
 import common.boardclass.BitBoard;
 import model.Position;
 

@@ -3,6 +3,9 @@ package ai.minmax;
 import com.google.common.collect.Lists;
 import common.*;
 import common.boardclass.BoardClass;
+import common.pattern.Pattern;
+import common.pattern.Patterns;
+
 import org.junit.Test;
 
 import java.util.List;

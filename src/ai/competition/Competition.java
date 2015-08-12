@@ -29,7 +29,6 @@ public class Competition {
 
     Stopwatch stopwatch = Stopwatch.createStarted();
     boardClasses.stream()
-        .parallel()
         .flatMap(boardClass ->
             Lists.<Runnable>newArrayList(
                 () -> competeSingleGameWithMoveOrder(boardClass,

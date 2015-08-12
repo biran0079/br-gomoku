@@ -1,6 +1,8 @@
 package common.boardclass;
 
 import common.*;
+import common.pattern.Pattern;
+
 import model.GameBoard;
 
 /**

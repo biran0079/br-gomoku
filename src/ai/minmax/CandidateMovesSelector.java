@@ -5,6 +5,8 @@ import com.google.common.collect.Sets;
 import common.*;
 import common.boardclass.BitBoard;
 import common.boardclass.BoardClass;
+import common.pattern.Pattern;
+
 import model.Position;
 
 import java.util.*;
@@ -32,7 +34,8 @@ public class CandidateMovesSelector {
   }
 
   private Optional<Collection<Position>> immediateDefensiveMoves(BoardClass boardClass, StoneType stoneType) {
-    for (Pattern p : boardClass.getMatchingPatterns(stoneType.getOpponent(), PatternType.STRAIT_FOUR)) {
+    for (Pattern p : boardClass.getMatchingPatterns(stoneType.getOpponent(),
+        PatternType.STRAIT_FOUR)) {
       return Optional.of(Collections.singleton(p.getDefensiveMoves().get(0)));
     }
     return Optional.empty();

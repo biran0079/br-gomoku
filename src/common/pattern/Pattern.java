@@ -1,6 +1,11 @@
-package common;
+package common.pattern;
 
 import com.google.common.collect.ImmutableList;
+
+import common.PositionTransformer;
+import common.StoneType;
+import common.boardclass.BoardClass;
+
 import model.Position;
 
 /**
@@ -32,24 +37,16 @@ public class Pattern {
     return defensiveMoves;
   }
 
-  public int getRowIndex() {
-    return rowIndex;
-  }
-
-  public int getPattern() {
-    return pattern;
-  }
-
-  public int getMask() {
-    return mask;
-  }
-
   public PositionTransformer getTransformer() {
     return transformer;
   }
 
   public StoneType getStoneType() {
     return stoneType;
+  }
+
+  public boolean matches(BoardClass boardClass) {
+    return (boardClass.getBoard(transformer).getRow(rowIndex) & mask) == pattern;
   }
 
   @Override

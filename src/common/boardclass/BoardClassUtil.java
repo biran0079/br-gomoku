@@ -1,5 +1,6 @@
 package common.boardclass;
 
+import common.Constants;
 import common.StoneType;
 import model.GameBoard;
 
@@ -70,6 +71,19 @@ public class BoardClassUtil {
     @Override
     public boolean wins(StoneType stoneType) {
       throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public int getStoneCount() {
+      int ct = 0;
+      for (int i = 0; i < Constants.BOARD_SIZE; i++) {
+        for (int j = 0; j < Constants.BOARD_SIZE; j++) {
+          if (get(i, j) != StoneType.NOTHING) {
+            ct++;
+          }
+        }
+      }
+      return ct;
     }
   }
 }

@@ -2,18 +2,22 @@ package common.boardclass;
 
 import com.google.common.collect.Iterables;
 import common.*;
+import common.pattern.Pattern;
+import common.pattern.Patterns;
+
 import model.GameBoard;
 
 import java.util.EnumMap;
+import java.util.Map;
 
 import static common.PositionTransformer.*;
 
 /**
  * Class of bit boards by PositionTransformer operation.
  */
-class BoardClassImpl implements BoardClass {
+class BoardClassImpl extends AbstractBoardClass {
 
-  private final EnumMap<PositionTransformer, BitBoard> map;
+  private final Map<PositionTransformer, BitBoard> map;
 
   private static final PositionTransformer[] TRACKING_TRANSFORMERS =
       new PositionTransformer[] {
@@ -61,52 +65,17 @@ class BoardClassImpl implements BoardClass {
 
   @Override
   public boolean matchesAny(StoneType stoneType, PatternType patternType) {
-    return Iterables.any(Patterns.get(stoneType, patternType), (p) -> matches(p));
+    return Iterables.any(Patterns.get(stoneType, patternType), (p) -> p.matches(this));
   }
 
   @Override
   public Iterable<Pattern> getMatchingPatterns(StoneType stoneType, PatternType patternType) {
-    return Iterables.filter(Patterns.get(stoneType, patternType), (p) -> matches(p));
+    return Iterables.filter(Patterns.get(stoneType, patternType), (p) -> p.matches(this));
   }
 
   @Override
   public BitBoard getBoard(PositionTransformer transformer) {
     return map.get(transformer);
-  }
-
-  @Override
-  public int getStoneCount() {
-    return getBoard(IDENTITY).getStoneCount();
-  }
-
-  @Override
-  public boolean isEmpty() {
-    return getStoneCount() == 0;
-  }
-
-  @Override
-  public String toString() {
-    return getBoard(PositionTransformer.IDENTITY).toString();
-  }
-
-  @Override
-  public StoneType get(int i, int j) {
-    return getBoard(IDENTITY).get(i, j);
-  }
-
-  @Override
-  public boolean isFull() {
-    return getStoneCount() == Constants.BOARD_SIZE * Constants.BOARD_SIZE;
-  }
-
-  @Override
-  public boolean wins(StoneType stoneType) {
-    return matchesAny(stoneType, PatternType.FIVE);
-  }
-
-  private boolean matches(Pattern pattern) {
-    int row = getBoard(pattern.getTransformer()).getRow(pattern.getRowIndex());
-    return (row & pattern.getMask()) == pattern.getPattern();
   }
 
   static class Factory implements BoardClass.Factory {

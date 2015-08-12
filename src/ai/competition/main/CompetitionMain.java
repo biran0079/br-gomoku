@@ -15,8 +15,7 @@ public class CompetitionMain {
 
   public static void main(String[] args) {
     AI ai1 = MinMaxSearch.newBuilder()
-        .withName("d3-smart-transition")
-        .withTransitionTableFactory(() -> new SmartTransitionTable())
+        .withName("d3")
         .withMaxDepth(3)
         .build();
     AI ai2 = MinMaxSearch.newBuilder()
