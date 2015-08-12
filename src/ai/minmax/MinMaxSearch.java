@@ -47,7 +47,10 @@ public class MinMaxSearch implements AI {
     evalCount = 0;
     cacheHit = 0;
     BoardClass boardClass = BoardClass.fromGameBoard(gameBoard);
-    if (boardClass.matchesAny(Iterables.concat(Patterns.BLACK_GOALS, Patterns.WHITE_GOALS))) {
+    if (boardClass.wins(StoneType.BLACK) || boardClass.wins(StoneType.WHITE)) {
+      throw new IllegalStateException("Already won.");
+    }
+    if (boardClass.isFull()) {
       throw new IllegalStateException("Already won.");
     }
     MinMax minMax = stoneType == StoneType.BLACK ? MinMax.MAX : MinMax.MIN;
@@ -107,9 +110,9 @@ public class MinMaxSearch implements AI {
       cacheHit++;
       return fromCache;
     }
-    if (boardClass.matchesAny(Patterns.BLACK_GOALS)) {
+    if (boardClass.wins(StoneType.BLACK)) {
       return save(transitionTable, boardClass, new MinMaxNode(null, Integer.MAX_VALUE));
-    } else if (boardClass.matchesAny(Patterns.WHITE_GOALS)) {
+    } else if (boardClass.wins(StoneType.WHITE)) {
       return save(transitionTable, boardClass, new MinMaxNode(null, Integer.MIN_VALUE));
     } else if (depth == 0) {
       return save(transitionTable, boardClass, new MinMaxNode(null, eval(boardClass, stoneType)));

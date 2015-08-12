@@ -153,15 +153,6 @@ public class BitBoard {
     board[i] |= (getBits(stoneType) << (j * 2));
   }
 
-  public boolean isEmpty() {
-    for (int row : board) {
-      if (row != 0) {
-        return false;
-      }
-    }
-    return true;
-  }
-
   public int getStoneCount() {
     return stoneCount;
   }

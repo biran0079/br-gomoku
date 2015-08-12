@@ -89,7 +89,7 @@ public class BoardClass implements GameBoard {
 
   @Override
   public boolean isEmpty() {
-    return getBoard(IDENTITY).isEmpty();
+    return getStoneCount() == 0;
   }
 
   @Override
@@ -104,14 +104,7 @@ public class BoardClass implements GameBoard {
 
   @Override
   public boolean isFull() {
-    BitBoard board = getBoard(IDENTITY);
-    for (int i = 0; i < Constants.BOARD_SIZE; i++) {
-      for (int j = 0; j < Constants.BOARD_SIZE; j++) {
-        if (board.get(i, j) == StoneType.NOTHING)
-          return false;
-      }
-    }
-    return true;
+    return getStoneCount() == Constants.BOARD_SIZE * Constants.BOARD_SIZE;
   }
 
   @Override
