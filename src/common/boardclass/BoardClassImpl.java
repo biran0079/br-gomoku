@@ -3,7 +3,6 @@ package common.boardclass;
 import com.google.common.collect.Iterables;
 import common.*;
 import common.pattern.Pattern;
-import common.pattern.Patterns;
 
 import model.GameBoard;
 
@@ -17,7 +16,7 @@ import static common.PositionTransformer.*;
  */
 class BoardClassImpl extends AbstractBoardClass {
 
-  private final Map<PositionTransformer, BitBoard> map;
+  private static final Pattern.Factory PATTERNS = Pattern.DEFAULT_FACTORY;
 
   private static final PositionTransformer[] TRACKING_TRANSFORMERS =
       new PositionTransformer[] {
@@ -34,6 +33,8 @@ class BoardClassImpl extends AbstractBoardClass {
       };
 
   private static final BoardClassImpl EMPTY_BOARD = new BoardClassImpl();
+
+  private final Map<PositionTransformer, BitBoard> map;
 
   private BoardClassImpl() {
     map = new EnumMap(PositionTransformer.class);
@@ -65,12 +66,12 @@ class BoardClassImpl extends AbstractBoardClass {
 
   @Override
   public boolean matchesAny(StoneType stoneType, PatternType patternType) {
-    return Iterables.any(Patterns.get(stoneType, patternType), (p) -> p.matches(this));
+    return Iterables.any(PATTERNS.get(stoneType, patternType), (p) -> p.matches(this));
   }
 
   @Override
   public Iterable<Pattern> getMatchingPatterns(StoneType stoneType, PatternType patternType) {
-    return Iterables.filter(Patterns.get(stoneType, patternType), (p) -> p.matches(this));
+    return Iterables.filter(PATTERNS.get(stoneType, patternType), (p) -> p.matches(this));
   }
 
   @Override

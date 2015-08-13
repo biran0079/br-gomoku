@@ -18,7 +18,9 @@ import java.util.*;
 /**
  * Predefined patterns.
  */
-public class Patterns {
+class Patterns implements Pattern.Factory {
+
+  static final Patterns INSTANCE = new Patterns();
 
   private static final Map<StoneType, Map<PatternType, ImmutableSet<Pattern>>>
       PATTERNS = initializePatterns();
@@ -131,7 +133,9 @@ public class Patterns {
     return pattern;
   }
 
-  public static ImmutableSet<Pattern> get(StoneType stoneType, PatternType patternType) {
+  public ImmutableSet<Pattern> get(StoneType stoneType, PatternType patternType) {
     return PATTERNS.get(stoneType).get(patternType);
   }
+
+  private Patterns() {}
 }
