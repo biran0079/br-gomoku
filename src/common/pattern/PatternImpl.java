@@ -2,8 +2,10 @@ package common.pattern;
 
 import com.google.common.collect.ImmutableList;
 
+import common.Constants;
 import common.PositionTransformer;
 import common.StoneType;
+import common.boardclass.BitBoard;
 import common.boardclass.BoardClass;
 
 import model.Position;
@@ -54,15 +56,19 @@ class PatternImpl implements Pattern {
 
   @Override
   public String toString() {
-    return new StringBuilder()
-        .append("transformer: ")
-        .append(transformer)
-        .append(", row: ")
-        .append(rowIndex)
-        .append(", mask: ")
-        .append(mask)
-        .append(", pattern: ")
-        .append(pattern)
-        .toString();
+    StringBuilder sb = new StringBuilder();
+    for (int i = 0; i < Constants.BOARD_SIZE; i++) {
+      for (int j = 0; j < Constants.BOARD_SIZE; j++) {
+        int ti = transformer.getI(i, j);
+        int tj = transformer.getJ(i, j);
+        if (ti == rowIndex && ((mask >> (2 * tj)) & 3) == 3) {
+          sb.append(StoneType.fromBits((pattern >> (tj * 2)) & 3));
+        } else {
+          sb.append(".");
+        }
+      }
+      sb.append("\n");
+    }
+    return sb.toString();
   }
 }

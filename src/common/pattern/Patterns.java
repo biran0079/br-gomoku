@@ -92,7 +92,7 @@ class Patterns implements Pattern.Factory {
   private Iterable<Pattern> createPatterns(
       StoneType stoneType,
       MoveType[] movePattern) {
-    int originalPattern = generatePattern(movePattern, BitBoard.getBits(stoneType));
+    int originalPattern = generatePattern(movePattern, stoneType.getBits());
     int patternLength = movePattern.length;
     List<Pattern> result = new ArrayList<>();
     for (int i = 0; i < Constants.BOARD_SIZE; i++) {

@@ -25,9 +25,6 @@ public class BitBoard {
             }
           });
 
-  private static final int EMPTY_BITS = 0;
-  private static final int BLACK_BITS = 1;
-  private static final int WHITE_BITS = 2;
   private static final int MASK_BITS = 3;
 
   private final int[] board;
@@ -69,19 +66,6 @@ public class BitBoard {
     }
   }
 
-  public static int getBits(StoneType stoneType) {
-    switch (stoneType) {
-      case BLACK:
-        return BLACK_BITS;
-      case WHITE:
-        return WHITE_BITS;
-      case NOTHING:
-        return EMPTY_BITS;
-      default:
-        throw new IllegalArgumentException();
-    }
-  }
-
   public BitBoard set(int i, int j, StoneType stoneType) {
     if (Constants.DEBUG && stoneType == StoneType.NOTHING) {
       throw new IllegalStateException("Cannot set nothing.");
@@ -90,17 +74,7 @@ public class BitBoard {
   }
 
   public StoneType get(int i, int j) {
-    int bits = (board[i] >> (j * 2)) & MASK_BITS;
-    switch (bits) {
-      case BLACK_BITS:
-        return StoneType.BLACK;
-      case WHITE_BITS:
-        return StoneType.WHITE;
-      case EMPTY_BITS:
-        return StoneType.NOTHING;
-      default:
-        throw new IllegalStateException("Invalid game board.");
-    }
+    return StoneType.fromBits((board[i] >> (j * 2)) & MASK_BITS);
   }
 
   public int getRow(int i) {
@@ -112,17 +86,7 @@ public class BitBoard {
     StringBuilder sb = new StringBuilder();
     for (int i = 0; i < board.length; i++) {
       for (int j = 0; j < Constants.BOARD_SIZE; j++) {
-        switch (get(i, j)) {
-          case BLACK:
-            sb.append("O");
-            break;
-          case WHITE:
-            sb.append("X");
-            break;
-          default:
-            sb.append("_");
-            break;
-        }
+        sb.append(get(i, j));
       }
       sb.append("\n");
     }
@@ -151,7 +115,7 @@ public class BitBoard {
     if (Constants.DEBUG && ((board[i] >> (j * 2)) & 3) != 0) {
       throw new IllegalArgumentException("Cannot set an non-empty position on board!");
     }
-    board[i] |= (getBits(stoneType) << (j * 2));
+    board[i] |= (stoneType.getBits() << (j * 2));
   }
 
   public int getStoneCount() {

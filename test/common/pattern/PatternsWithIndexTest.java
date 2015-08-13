@@ -1,10 +1,11 @@
 package common.pattern;
 
-import static org.junit.Assert.*;
-
+import common.Constants;
 import common.StoneType;
 
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class PatternsWithIndexTest {
 
@@ -12,7 +13,15 @@ public class PatternsWithIndexTest {
 
   @Test
   public void testGet() {
-    patternsWithIndex.get(0, 0, StoneType.WHITE);
-
+    for (int i = 0; i < Constants.BOARD_SIZE; i++) {
+      for (int j = 0; j < Constants.BOARD_SIZE; j++) {
+        for (StoneType stoneType : StoneType.values()) {
+          for (Pattern pattern : patternsWithIndex.get(i, j, stoneType)) {
+            assertEquals(stoneType.toString().charAt(0),
+                pattern.toString().split("\n")[i].charAt(j));
+          }
+        }
+      }
+    }
   }
 }
