@@ -8,14 +8,14 @@ import javax.inject.Inject;
 /**
  * Represents session of a single game.
  */
-class GameSessoin {
+class GameSession {
 
   private final GameController gameController;
   private boolean sessionSopped = false;
-  private boolean waitingForHumanMove = false;
+  private volatile boolean waitingForHumanMove = false;
 
   @Inject
-  GameSessoin(GameController gameController) {
+  GameSession(GameController gameController) {
     this.gameController = gameController;
   }
 

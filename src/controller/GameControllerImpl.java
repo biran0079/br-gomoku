@@ -19,12 +19,14 @@ class GameControllerImpl implements GameController {
 
 	private final History history;
 	private final UI ui;
-  private final Provider<GameSessoin> gameSessoinProvider;
+  private final Provider<GameSession> gameSessionProvider;
   private final ExecutorService gameSessionExecutor = Executors.newSingleThreadExecutor();
   private final PlayerFactory playerFactory;
   private final GameBoard.Factory gameBoardFactory;
 
   private GameBoard gameBoard;
+  // TODO introduce session scope.
+  private volatile GameSession currentSession;
 
   private volatile Future<?> currentGameSessionFuture;
 
@@ -32,12 +34,12 @@ class GameControllerImpl implements GameController {
 	GameControllerImpl(History history,
                      GameBoard.Factory gameBoardFactory,
                      UI ui,
-                     Provider<GameSessoin> gameSessoinProvider,
+                     Provider<GameSession> gameSessionProvider,
                      PlayerFactory playerFactory) {
 		this.history = history;
 		this.gameBoardFactory = gameBoardFactory;
     this.ui = ui;
-    this.gameSessoinProvider = gameSessoinProvider;
+    this.gameSessionProvider = gameSessionProvider;
     this.playerFactory = playerFactory;
 		ui.addUndoActionListener((e) -> undo());
 		ui.addNewGameActionListener((e) -> restartGame());
@@ -47,7 +49,8 @@ class GameControllerImpl implements GameController {
   public void startGame() {
     currentGameSessionFuture = gameSessionExecutor.submit(() -> {
       try {
-        gameSessoinProvider.get().newGameStart(initializeGame());
+        currentSession = gameSessionProvider.get();
+        currentSession.newGameStart(initializeGame());
       } catch (Throwable e) {
         e.printStackTrace();
         throw e;
@@ -58,7 +61,8 @@ class GameControllerImpl implements GameController {
   @Override
   public void undo() {
     if (history.size() < 2
-        || !gameSessoinProvider.get().isWaitingForHumanMove()) {
+        || currentSession == null
+        || !currentSession.isWaitingForHumanMove()) {
       return;
     }
     HistoryEntry historyEntry;

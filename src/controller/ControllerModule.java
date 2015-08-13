@@ -13,6 +13,6 @@ public class ControllerModule extends AbstractModule {
     bind(GameControllerImpl.class).in(Singleton.class);
     bind(GameController.class).to(GameControllerImpl.class);
 
-    bind(GameSessoin.class);
+    bind(GameSession.class);
   }
 }
