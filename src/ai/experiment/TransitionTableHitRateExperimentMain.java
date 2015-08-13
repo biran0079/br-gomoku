@@ -30,7 +30,7 @@ public class TransitionTableHitRateExperimentMain {
             new TransitionTableImpl(), defaultStats))
         .withMaxDepth(3)
         .build();
-      new Competition(BoardClassSamples.INITIAL_10).compete(ai1, ai2, StoneType.BLACK);
+      new Competition(BoardClassSamples.INITIAL_10).competeParallel(ai1, ai2, StoneType.BLACK);
 
     System.err.println(smartStats);
     System.err.println(defaultStats);

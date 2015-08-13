@@ -10,6 +10,7 @@ import model.GameBoard;
  */
 public interface BoardClass extends GameBoard {
 
+  @Override
   BoardClass withPositionSet(int i, int j, StoneType stoneType);
 
   boolean matchesAny(StoneType stoneType, PatternType patternType);
@@ -21,5 +22,8 @@ public interface BoardClass extends GameBoard {
   interface Factory extends GameBoard.Factory {
 
     BoardClass fromGameBoard(GameBoard gameBoard);
+
+    @Override
+    BoardClass getEmptyBoard();
   }
 }

@@ -9,6 +9,7 @@ import model.Position;
 
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Stream;
 
 /**
  * Competition between AIs by playing games against each other.
@@ -21,14 +22,25 @@ public class Competition {
     this.boardClasses = boardClasses;
   }
 
-  public void compete(AI ai1, AI ai2, StoneType firstMove) {
+  public void competeSequential(AI ai1, AI ai2, StoneType firstMove) {
+    compete(ai1, ai2, firstMove, false);
+  }
 
+  public void competeParallel(AI ai1, AI ai2, StoneType firstMove) {
+    compete(ai1, ai2, firstMove, true);
+  }
+
+  private void compete(AI ai1, AI ai2, StoneType firstMove, boolean runInParallel) {
     StoneType secondMove = firstMove.getOpponent();
     CompetitionAI competitionAI1 = new CompetitionAI(ai1);
     CompetitionAI competitionAI2 = new CompetitionAI(ai2);
 
     Stopwatch stopwatch = Stopwatch.createStarted();
-    boardClasses.stream()
+    Stream<BoardClass> gameStream = boardClasses.stream();
+    if (runInParallel) {
+      gameStream = gameStream.parallel();
+    }
+    gameStream
         .flatMap(boardClass ->
             Lists.<Runnable>newArrayList(
                 () -> competeSingleGameWithMoveOrder(boardClass,

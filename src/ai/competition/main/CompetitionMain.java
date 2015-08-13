@@ -5,7 +5,6 @@ import ai.competition.BoardClassSamples;
 import ai.competition.Competition;
 import ai.minmax.MinMaxSearch;
 
-import ai.minmax.transitiontable.SmartTransitionTable;
 import common.StoneType;
 
 /**
@@ -22,6 +21,6 @@ public class CompetitionMain {
         .withName("d3")
         .withMaxDepth(3)
         .build();
-    new Competition(BoardClassSamples.INITIAL_10).compete(ai1, ai2, StoneType.BLACK);
+    new Competition(BoardClassSamples.INITIAL_10).competeSequential(ai1, ai2, StoneType.BLACK);
   }
 }
