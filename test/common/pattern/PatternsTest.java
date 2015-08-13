@@ -1,5 +1,6 @@
-package ai.minmax;
+package common.pattern;
 
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import common.*;
 import common.boardclass.BoardClass;
@@ -248,9 +249,9 @@ public class PatternsTest {
                                  StoneType stoneType,
                                  PatternType patternType) {
     BoardClass boardClass = createBoard(board);
-    List<Pattern> patterns = Lists.newArrayList(boardClass.getMatchingPatterns(stoneType, patternType));
-    assertEquals(1, patterns.size());
-    assertEquals(orientation, patterns.get(0).getTransformer());
-    assertEquals(stoneType, patterns.get(0).getStoneType());
+    PatternImpl pattern = (PatternImpl)
+        Iterables.getOnlyElement(boardClass.getMatchingPatterns(stoneType, patternType));
+    assertEquals(orientation, pattern.getTransformer());
+    assertEquals(stoneType, pattern.getStoneType());
   }
 }

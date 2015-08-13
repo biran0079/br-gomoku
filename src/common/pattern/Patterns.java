@@ -90,8 +90,9 @@ public class Patterns {
       int pattern = originalPattern;
       for (int j = 0; j <= Constants.BOARD_SIZE - patternLength; j++) {
         ImmutableList<Position> emptyPos = getDefensiveMoves(i, j, movePattern);
-        result.add(new Pattern(i, pattern, mask, PositionTransformer.IDENTITY, stoneType, emptyPos));
-        result.add(new Pattern(i, pattern, mask, PositionTransformer.CLOCK_90, stoneType,
+        result.add(new PatternImpl(i, pattern, mask, PositionTransformer.IDENTITY, stoneType,
+            emptyPos));
+        result.add(new PatternImpl(i, pattern, mask, PositionTransformer.CLOCK_90, stoneType,
             ImmutableList.copyOf(
                 Lists.transform(emptyPos, (p) -> p.transform(PositionTransformer.CLOCK_270)))));
         mask <<= 2;
@@ -105,10 +106,10 @@ public class Patterns {
       int mask = ((1 << (2 * patternLength)) - 1) << (2 * start);
       for (int j = start; j <= maxCol - patternLength; j++) {
         List<Position> emptyPos = getDefensiveMoves(i, j, movePattern);
-        result.add(new Pattern(i, pattern, mask, PositionTransformer.RIGHT_DIAGONAL, stoneType,
+        result.add(new PatternImpl(i, pattern, mask, PositionTransformer.RIGHT_DIAGONAL, stoneType,
             ImmutableList.copyOf(
                 Lists.transform(emptyPos, (p) -> p.transform(PositionTransformer.RIGHT_DIAGONAL_REVERSE)))));
-        result.add(new Pattern(i, pattern, mask, PositionTransformer.LEFT_DIAGONAL, stoneType,
+        result.add(new PatternImpl(i, pattern, mask, PositionTransformer.LEFT_DIAGONAL, stoneType,
             ImmutableList.copyOf(
                 Lists.transform(emptyPos, (p) -> p.transform(PositionTransformer.LEFT_DIAGONAL_REVERSE)))));
         mask <<= 2;

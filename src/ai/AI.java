@@ -5,7 +5,7 @@ import model.GameBoard;
 import model.Position;
 
 /**
- * Created by biran on 8/9/2015.
+ * Abstract interface for gomoku AI.
  */
 public interface AI {
 
