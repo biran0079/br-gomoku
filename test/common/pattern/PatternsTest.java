@@ -21,8 +21,8 @@ public class PatternsTest {
 
   @Test
   public void testGoalNumber() {
-    assertEquals(572, Patterns.INSTANCE.get(StoneType.BLACK, PatternType.FIVE).size());
-    assertEquals(572, Patterns.INSTANCE.get(StoneType.WHITE, PatternType.FIVE).size());
+    assertEquals(572, Pattern.DEFAULT_FACTORY.get(StoneType.BLACK, PatternType.FIVE).size());
+    assertEquals(572, Pattern.DEFAULT_FACTORY.get(StoneType.WHITE, PatternType.FIVE).size());
   }
 
   @Test

@@ -34,6 +34,21 @@ public enum PositionTransformer {
     this.boardRowNumber = boardRowNumber;
   }
 
+  public PositionTransformer reverse() {
+    switch (this) {
+      case IDENTITY:
+        return IDENTITY;
+      case CLOCK_90:
+        return CLOCK_270;
+      case RIGHT_DIAGONAL:
+        return RIGHT_DIAGONAL_REVERSE;
+      case LEFT_DIAGONAL:
+        return LEFT_DIAGONAL_REVERSE;
+      default:
+        throw new IllegalArgumentException(this + ".reverse() is not supported.");
+    }
+  }
+
   public int getBoardRowNumber() {
     return boardRowNumber;
   }

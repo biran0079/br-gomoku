@@ -23,5 +23,5 @@ public interface Pattern {
     ImmutableSet<Pattern> get(StoneType stoneType, PatternType patternType);
   }
 
-  static final Factory DEFAULT_FACTORY = Patterns.INSTANCE;
+  static final Factory DEFAULT_FACTORY = new Patterns();
 }
