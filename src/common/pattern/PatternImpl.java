@@ -3,6 +3,7 @@ package common.pattern;
 import com.google.common.collect.ImmutableList;
 
 import common.Constants;
+import common.PatternType;
 import common.PositionTransformer;
 import common.StoneType;
 import common.boardclass.BitBoard;
@@ -21,19 +22,22 @@ class PatternImpl implements Pattern {
   private final PositionTransformer transformer;
   private final StoneType stoneType;
   private final ImmutableList<Position> defensiveMoves;
+  private final PatternType patternType;
 
   PatternImpl(int rowIndex,
           int pattern,
           int mask,
           PositionTransformer transformer,
           StoneType stoneType,
-          ImmutableList<Position> defensiveMoves) {
+          ImmutableList<Position> defensiveMoves,
+          PatternType patternType) {
     this.rowIndex = rowIndex;
     this.pattern = pattern;
     this.mask = mask;
     this.transformer = transformer;
     this.stoneType = stoneType;
     this.defensiveMoves = defensiveMoves;
+    this.patternType = patternType;
   }
 
   @Override
@@ -45,8 +49,14 @@ class PatternImpl implements Pattern {
     return transformer;
   }
 
-  StoneType getStoneType() {
+  @Override
+  public StoneType getStoneType() {
     return stoneType;
+  }
+
+  @Override
+  public PatternType getPatternType() {
+    return patternType;
   }
 
   @Override

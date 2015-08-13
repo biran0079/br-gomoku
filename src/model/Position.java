@@ -3,7 +3,7 @@ package model;
 import common.Constants;
 import common.PositionTransformer;
 
-public class Position {
+public class Position implements Comparable<Position> {
 
 	private final int i;
 	private final int j;
@@ -57,15 +57,27 @@ public class Position {
 
   @Override
   public int hashCode() {
-    return i * Constants.BOARD_SIZE + j;
+    return linearIndex();
   }
 
   @Override
   public boolean equals(Object o) {
+    if (o == this) {
+      return true;
+    }
     if (!(o instanceof Position)) {
       return false;
     }
     Position p = (Position) o;
     return p.i == i && p.j == j;
+  }
+
+  @Override
+  public int compareTo(Position p) {
+    return linearIndex() - p.linearIndex();
+  }
+
+  private int linearIndex() {
+    return i * Constants.BOARD_SIZE + j;
   }
 }

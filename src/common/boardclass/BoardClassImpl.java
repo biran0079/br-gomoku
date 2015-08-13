@@ -15,15 +15,15 @@ class BoardClassImpl extends AbstractBoardClass {
 
   private static final BoardClassImpl EMPTY_BOARD = new BoardClassImpl();
 
-  BoardClassImpl() {
+  private BoardClassImpl() {
     super();
   }
 
-  BoardClassImpl(AbstractBoardClass boardClass, int i, int j, StoneType stoneType) {
+  private  BoardClassImpl(AbstractBoardClass boardClass, int i, int j, StoneType stoneType) {
     super(boardClass, i, j, stoneType);
   }
 
-  BoardClassImpl(GameBoard gameBoard) {
+  private BoardClassImpl(GameBoard gameBoard) {
     super(gameBoard);
   }
 
@@ -45,7 +45,7 @@ class BoardClassImpl extends AbstractBoardClass {
   static class Factory implements BoardClass.Factory {
 
     @Override
-    public BoardClass fromGameBoard(GameBoard gameBoard) {
+    public BoardClassImpl fromGameBoard(GameBoard gameBoard) {
       if (gameBoard instanceof BoardClassImpl) {
         return (BoardClassImpl) gameBoard;
       }
@@ -53,7 +53,7 @@ class BoardClassImpl extends AbstractBoardClass {
     }
 
     @Override
-    public BoardClass getEmptyBoard() {
+    public BoardClassImpl getEmptyBoard() {
       return EMPTY_BOARD;
     }
   }

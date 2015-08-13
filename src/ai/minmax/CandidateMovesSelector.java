@@ -34,37 +34,61 @@ public class CandidateMovesSelector {
   }
 
   private Optional<Collection<Position>> immediateDefensiveMoves(BoardClass boardClass, StoneType stoneType) {
+    Set<Position> candidates = new HashSet<>();
     for (Pattern p : boardClass.getMatchingPatterns(stoneType.getOpponent(),
         PatternType.STRAIT_FOUR)) {
-      return Optional.of(Collections.singleton(p.getDefensiveMoves().get(0)));
+      candidates.addAll(p.getDefensiveMoves());
     }
-    return Optional.empty();
+    if (candidates.isEmpty()) {
+      return Optional.empty();
+    }
+    return Optional.of(Collections.singleton(Collections.min(candidates)));
   }
 
   private Optional<Collection<Position>> regularDefensiveMoves(BoardClass boardClass, StoneType stoneType) {
     List<Pattern> threateningPattern = Lists.newArrayList(
         boardClass.getMatchingPatterns(stoneType.getOpponent(), PatternType.THREE));
     if (!threateningPattern.isEmpty()) {
-      Set<Position> intersection = null;
+      List<Position> candidates = new ArrayList<>();
       for (Pattern p : threateningPattern) {
-        if (intersection == null) {
-          intersection = Sets.newHashSet(p.getDefensiveMoves());
-        } else {
-          intersection = Sets.intersection(intersection, Sets.newHashSet(p.getDefensiveMoves()));
-        }
+        candidates.addAll(p.getDefensiveMoves());
       }
-      return Optional.of(intersection.isEmpty()
-          ? Collections.singleton(threateningPattern.get(0).getDefensiveMoves().get(0))
-          : intersection);
+      return Optional.of(Collections.singleton(mostFrequentElement(candidates)));
     }
     return Optional.empty();
   }
 
-  private Optional<Collection<Position>> immediateOffensiveMoves(BoardClass boardClass, StoneType stoneType) {
-    for (Pattern p : boardClass.getMatchingPatterns(stoneType, PatternType.STRAIT_FOUR)) {
-      return Optional.of(Collections.singleton(p.getDefensiveMoves().get(0)));
+  private Position mostFrequentElement(List<Position> candidates) {
+    Collections.sort(candidates);
+    int ct = 0, maxCt = 0;
+    Position pre = null, result = null;
+    for (Position cur : candidates) {
+      if (cur.equals(pre)) {
+        ct++;
+      } else {
+        if (ct > maxCt) {
+          result = pre;
+          maxCt = ct;
+        }
+        ct = 1;
+      }
+      pre = cur;
     }
-    return Optional.empty();
+    if (ct > maxCt) {
+      result = pre;
+    }
+    return result;
+  }
+
+  private Optional<Collection<Position>> immediateOffensiveMoves(BoardClass boardClass, StoneType stoneType) {
+    Set<Position> candidates = new HashSet<>();
+    for (Pattern p : boardClass.getMatchingPatterns(stoneType, PatternType.STRAIT_FOUR)) {
+      candidates.addAll(p.getDefensiveMoves());
+    }
+    if (candidates.isEmpty()) {
+      return Optional.empty();
+    }
+    return Optional.of(Collections.singleton(Collections.min(candidates)));
   }
 
   private Optional<Collection<Position>> regularOffensiveMoves(BoardClass boardClass, StoneType stoneType) {

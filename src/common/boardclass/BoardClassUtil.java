@@ -13,6 +13,8 @@ public class BoardClassUtil {
   public static final StoneType W = StoneType.WHITE;
   public static final StoneType B = StoneType.BLACK;
   public static final BoardClass.Factory DEFAULT_FACTORY = new BoardClassImpl.Factory();
+  public static final BoardClass.Factory PRE_COMPUTE_MATCHING_FACTORY =
+      new BoardClassWithMatchingPatterns.Factory();
 
   public static BoardClass fromString(String s) {
     final String[] b = s.split("\n");

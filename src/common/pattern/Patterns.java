@@ -39,39 +39,40 @@ class Patterns implements Pattern.Factory {
   }
 
   Pattern createPattern(int i, int j, int pattern, int mask,
-      PositionTransformer transformer, StoneType stoneType, MoveType[] movePattern) {
+                        PositionTransformer transformer, StoneType stoneType,
+                        MoveType[] movePattern, PatternType patternType) {
     return new PatternImpl(i, pattern, mask, transformer, stoneType,
-        getDefensiveMoves(i, j, movePattern, transformer.reverse()));
+        getDefensiveMoves(i, j, movePattern, transformer.reverse()), patternType);
   }
 
   private ImmutableSet<Pattern> createOpenPatterns(StoneType stoneType) {
     return ImmutableSet.<Pattern>builder()
-        .addAll(createPatterns(stoneType, new MoveType[] {D1, X, X, X, X, D1}))
+        .addAll(createPatterns(stoneType, new MoveType[] {D1, X, X, X, X, D1}, PatternType.OPEN_FOUR))
         .build();
   }
 
   private ImmutableSet<Pattern> createThreePatterns(StoneType stoneType) {
     return ImmutableSet.<Pattern>builder()
-        .addAll(createPatterns(stoneType, new MoveType[] {D2, X, X, D1, X, D2}))
-        .addAll(createPatterns(stoneType, new MoveType[] {D2, X, D1, X, X, D2}))
-        .addAll(createPatterns(stoneType, new MoveType[] {E, D1, X, X, X, D1}))
-        .addAll(createPatterns(stoneType, new MoveType[] {D1, X, X, X, D1, E}))
+        .addAll(createPatterns(stoneType, new MoveType[] {D2, X, X, D1, X, D2}, PatternType.THREE))
+        .addAll(createPatterns(stoneType, new MoveType[] {D2, X, D1, X, X, D2}, PatternType.THREE))
+        .addAll(createPatterns(stoneType, new MoveType[] {E, D1, X, X, X, D1}, PatternType.THREE))
+        .addAll(createPatterns(stoneType, new MoveType[] {D1, X, X, X, D1, E}, PatternType.THREE))
         .build();
   }
 
   private ImmutableSet<Pattern> createStraitFourPatterns(StoneType stoneType) {
     return ImmutableSet.<Pattern>builder()
-        .addAll(createPatterns(stoneType, new MoveType[] {D1, X, X, X, X}))
-        .addAll(createPatterns(stoneType, new MoveType[] {X, D1, X, X, X}))
-        .addAll(createPatterns(stoneType, new MoveType[] {X, X, D1, X, X}))
-        .addAll(createPatterns(stoneType, new MoveType[]{X, X, X, D1, X}))
-        .addAll(createPatterns(stoneType, new MoveType[] {X, X, X, X, D1}))
+        .addAll(createPatterns(stoneType, new MoveType[] {D1, X, X, X, X}, PatternType.STRAIT_FOUR))
+        .addAll(createPatterns(stoneType, new MoveType[] {X, D1, X, X, X}, PatternType.STRAIT_FOUR))
+        .addAll(createPatterns(stoneType, new MoveType[] {X, X, D1, X, X}, PatternType.STRAIT_FOUR))
+        .addAll(createPatterns(stoneType, new MoveType[] {X, X, X, D1, X}, PatternType.STRAIT_FOUR))
+        .addAll(createPatterns(stoneType, new MoveType[] {X, X, X, X, D1}, PatternType.STRAIT_FOUR))
         .build();
   }
 
   private ImmutableSet<Pattern> createGoalPatterns(StoneType stoneType) {
     return ImmutableSet.<Pattern>builder()
-        .addAll(createPatterns(stoneType, new MoveType[] {X, X, X, X, X}))
+        .addAll(createPatterns(stoneType, new MoveType[] {X, X, X, X, X}, PatternType.FIVE))
         .build();
   }
 
@@ -91,7 +92,8 @@ class Patterns implements Pattern.Factory {
 
   private Iterable<Pattern> createPatterns(
       StoneType stoneType,
-      MoveType[] movePattern) {
+      MoveType[] movePattern,
+      PatternType patternType) {
     int originalPattern = generatePattern(movePattern, stoneType.getBits());
     int patternLength = movePattern.length;
     List<Pattern> result = new ArrayList<>();
@@ -100,9 +102,9 @@ class Patterns implements Pattern.Factory {
       int pattern = originalPattern;
       for (int j = 0; j <= Constants.BOARD_SIZE - patternLength; j++) {
         result.add(createPattern(i, j, pattern, mask, PositionTransformer.IDENTITY,
-            stoneType, movePattern));
+            stoneType, movePattern, patternType));
         result.add(createPattern(i, j, pattern, mask, PositionTransformer.CLOCK_90,
-            stoneType, movePattern));
+            stoneType, movePattern, patternType));
         mask <<= 2;
         pattern <<= 2;
       }
@@ -114,9 +116,9 @@ class Patterns implements Pattern.Factory {
       int mask = ((1 << (2 * patternLength)) - 1) << (2 * start);
       for (int j = start; j <= maxCol - patternLength; j++) {
         result.add(createPattern(i, j, pattern, mask, PositionTransformer.RIGHT_DIAGONAL,
-            stoneType, movePattern));
+            stoneType, movePattern, patternType));
         result.add(createPattern(i, j, pattern, mask, PositionTransformer.LEFT_DIAGONAL,
-            stoneType, movePattern));
+            stoneType, movePattern, patternType));
         mask <<= 2;
         pattern <<= 2;
       }

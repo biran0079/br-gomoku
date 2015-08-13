@@ -18,6 +18,10 @@ public interface Pattern {
 
   boolean matches(BoardClass boardClass);
 
+  StoneType getStoneType();
+
+  PatternType getPatternType();
+
   interface Factory {
 
     ImmutableSet<Pattern> get(StoneType stoneType, PatternType patternType);

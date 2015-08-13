@@ -1,7 +1,9 @@
 package player;
 
 import ai.minmax.MinMaxSearch;
+import ai.minmax.transitiontable.SmartTransitionTable;
 import common.StoneType;
+import common.boardclass.BoardClassUtil;
 import model.GameBoard;
 import model.Position;
 
@@ -9,7 +11,11 @@ public class MinMaxSearchPlayer implements Player {
 
   private final String name;
   private final StoneType stoneType;
-  private final MinMaxSearch minMaxSearch = MinMaxSearch.newBuilder().build();
+  private final MinMaxSearch minMaxSearch = MinMaxSearch.newBuilder()
+      .withBoardClassFactory(BoardClassUtil.PRE_COMPUTE_MATCHING_FACTORY)
+      .withTransitionTableFactory(() -> new SmartTransitionTable())
+      .withMaxDepth(6)
+      .build();
 
   public MinMaxSearchPlayer(String s, StoneType stoneType) {
     this.name = s;

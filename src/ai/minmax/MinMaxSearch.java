@@ -189,7 +189,7 @@ public class MinMaxSearch implements AI {
       return new MinMaxSearch(this);
     }
 
-    public Builder setBoardClassFactory(BoardClass.Factory boardClassFactory) {
+    public Builder withBoardClassFactory(BoardClass.Factory boardClassFactory) {
       this.boardClassFactory = boardClassFactory;
       return this;
     }
