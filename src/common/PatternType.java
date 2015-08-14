@@ -5,7 +5,7 @@ package common;
  */
 public enum PatternType {
   THREE,
+  FOUR,
   STRAIT_FOUR,
-  OPEN_FOUR,
   FIVE;
 }

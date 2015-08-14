@@ -1,13 +1,14 @@
 package ai.minmax;
 
 import ai.AI;
+import ai.candidatemoveselector.CandidateMovesSelector;
 import ai.minmax.transitiontable.NoopTransitionTable;
 import ai.minmax.transitiontable.TransitionTable;
 import ai.minmax.transitiontable.TransitionTableImpl;
 import com.google.common.collect.Iterables;
 import common.*;
 import common.boardclass.BoardClass;
-import common.boardclass.BoardClassUtil;
+import common.boardclass.BoardFactories;
 import model.GameBoard;
 import model.Position;
 
@@ -180,7 +181,7 @@ public class MinMaxSearch implements AI {
     private Evaluator evaluator = new DefaultEvaluator();
     private TransitionTable.Factory transitionTableFactory =
         () -> new TransitionTableImpl();
-    private BoardClass.Factory boardClassFactory = BoardClassUtil.DEFAULT_FACTORY;
+    private BoardClass.Factory boardClassFactory = BoardFactories.DEFAULT_FACTORY;
 
     private Builder() {
     }

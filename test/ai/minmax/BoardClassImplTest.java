@@ -2,7 +2,7 @@ package ai.minmax;
 
 import common.*;
 import common.boardclass.BoardClass;
-import common.boardclass.BoardClassUtil;
+import common.boardclass.testing.BoardClassUtil;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
@@ -30,7 +30,7 @@ public class BoardClassImplTest {
             "_______O_______\n" +
             "_______________\n" +
             "_______________");
+    assertTrue(boardClass.matchesAny(StoneType.BLACK, PatternType.FOUR));
     assertTrue(boardClass.matchesAny(StoneType.BLACK, PatternType.STRAIT_FOUR));
-    assertTrue(boardClass.matchesAny(StoneType.BLACK, PatternType.OPEN_FOUR));
   }
 }

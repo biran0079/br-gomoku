@@ -6,8 +6,8 @@ import com.google.common.base.MoreObjects;
 
 import common.StoneType;
 import common.boardclass.BoardClass;
-import common.boardclass.BoardClassUtil;
 
+import common.boardclass.BoardFactories;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -15,12 +15,10 @@ import java.util.List;
 
 import ai.AI;
 import model.Position;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
 
 public class MinMaxSearchTest {
 
-  private final BoardClass emptyBoard = BoardClassUtil.DEFAULT_FACTORY.getEmptyBoard();
+  private final BoardClass emptyBoard = BoardFactories.DEFAULT_FACTORY.getEmptyBoard();
 
   private final AI d3 = MinMaxSearch.newBuilder()
       .withName("d3")
@@ -34,13 +32,13 @@ public class MinMaxSearchTest {
 
   private final AI d3pm = MinMaxSearch.newBuilder()
       .withName("d3_pm")
-      .withBoardClassFactory(BoardClassUtil.PRE_COMPUTE_MATCHING_FACTORY)
+      .withBoardClassFactory(BoardFactories.PRE_COMPUTE_MATCHING_FACTORY)
       .withMaxDepth(3)
       .build();
 
   private final AI d4pm = MinMaxSearch.newBuilder()
       .withName("d4")
-      .withBoardClassFactory(BoardClassUtil.PRE_COMPUTE_MATCHING_FACTORY)
+      .withBoardClassFactory(BoardFactories.PRE_COMPUTE_MATCHING_FACTORY)
       .withMaxDepth(4)
       .build();
 

@@ -1,7 +1,9 @@
-package common.boardclass;
+package common.boardclass.testing;
 
 import common.Constants;
 import common.StoneType;
+import common.boardclass.BoardClass;
+import common.boardclass.BoardFactories;
 import model.GameBoard;
 
 /**
@@ -12,13 +14,10 @@ public class BoardClassUtil {
   public static final StoneType E = StoneType.NOTHING;
   public static final StoneType W = StoneType.WHITE;
   public static final StoneType B = StoneType.BLACK;
-  public static final BoardClass.Factory DEFAULT_FACTORY = new BoardClassImpl.Factory();
-  public static final BoardClass.Factory PRE_COMPUTE_MATCHING_FACTORY =
-      new BoardClassWithMatchingPatterns.Factory();
 
   public static BoardClass fromString(String s) {
     final String[] b = s.split("\n");
-    return DEFAULT_FACTORY.fromGameBoard(new AbstractGameBoard() {
+    return BoardFactories.DEFAULT_FACTORY.fromGameBoard(new AbstractGameBoard() {
 
       @Override
       public StoneType get(int i, int j) {
@@ -50,7 +49,7 @@ public class BoardClassUtil {
   }
 
   public static BoardClass createBoard(StoneType[][] board) {
-    return DEFAULT_FACTORY.fromGameBoard(fromString(board));
+    return BoardFactories.DEFAULT_FACTORY.fromGameBoard(fromString(board));
   }
 
   private abstract static class AbstractGameBoard implements GameBoard {

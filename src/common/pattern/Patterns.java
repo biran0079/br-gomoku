@@ -9,7 +9,6 @@ import common.Constants;
 import common.PatternType;
 import common.PositionTransformer;
 import common.StoneType;
-import common.boardclass.BitBoard;
 import model.Position;
 
 import java.util.*;
@@ -30,8 +29,8 @@ class Patterns implements Pattern.Factory {
     for (StoneType stoneType : new StoneType[] {StoneType.BLACK, StoneType.WHITE}) {
       Map<PatternType, ImmutableSet<Pattern>> innerMap = new EnumMap(PatternType.class);
       innerMap.put(PatternType.FIVE, createGoalPatterns(stoneType));
+      innerMap.put(PatternType.FOUR, createFourPatterns(stoneType));
       innerMap.put(PatternType.STRAIT_FOUR, createStraitFourPatterns(stoneType));
-      innerMap.put(PatternType.OPEN_FOUR, createOpenPatterns(stoneType));
       innerMap.put(PatternType.THREE, createThreePatterns(stoneType));
       result.put(stoneType, innerMap);
     }
@@ -45,9 +44,9 @@ class Patterns implements Pattern.Factory {
         getDefensiveMoves(i, j, movePattern, transformer.reverse()), patternType);
   }
 
-  private ImmutableSet<Pattern> createOpenPatterns(StoneType stoneType) {
+  private ImmutableSet<Pattern> createStraitFourPatterns(StoneType stoneType) {
     return ImmutableSet.<Pattern>builder()
-        .addAll(createPatterns(stoneType, new MoveType[] {D1, X, X, X, X, D1}, PatternType.OPEN_FOUR))
+        .addAll(createPatterns(stoneType, new MoveType[] {D1, X, X, X, X, D1}, PatternType.STRAIT_FOUR))
         .build();
   }
 
@@ -60,13 +59,13 @@ class Patterns implements Pattern.Factory {
         .build();
   }
 
-  private ImmutableSet<Pattern> createStraitFourPatterns(StoneType stoneType) {
+  private ImmutableSet<Pattern> createFourPatterns(StoneType stoneType) {
     return ImmutableSet.<Pattern>builder()
-        .addAll(createPatterns(stoneType, new MoveType[] {D1, X, X, X, X}, PatternType.STRAIT_FOUR))
-        .addAll(createPatterns(stoneType, new MoveType[] {X, D1, X, X, X}, PatternType.STRAIT_FOUR))
-        .addAll(createPatterns(stoneType, new MoveType[] {X, X, D1, X, X}, PatternType.STRAIT_FOUR))
-        .addAll(createPatterns(stoneType, new MoveType[] {X, X, X, D1, X}, PatternType.STRAIT_FOUR))
-        .addAll(createPatterns(stoneType, new MoveType[] {X, X, X, X, D1}, PatternType.STRAIT_FOUR))
+        .addAll(createPatterns(stoneType, new MoveType[] {D1, X, X, X, X}, PatternType.FOUR))
+        .addAll(createPatterns(stoneType, new MoveType[] {X, D1, X, X, X}, PatternType.FOUR))
+        .addAll(createPatterns(stoneType, new MoveType[] {X, X, D1, X, X}, PatternType.FOUR))
+        .addAll(createPatterns(stoneType, new MoveType[] {X, X, X, D1, X}, PatternType.FOUR))
+        .addAll(createPatterns(stoneType, new MoveType[] {X, X, X, X, D1}, PatternType.FOUR))
         .build();
   }
 

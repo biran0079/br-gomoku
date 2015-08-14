@@ -1,18 +1,13 @@
 package common.pattern;
 
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 import common.*;
 import common.boardclass.BoardClass;
-import common.pattern.Pattern;
-import common.pattern.Patterns;
 
 import org.junit.Test;
 
-import java.util.List;
-
 import static org.junit.Assert.*;
-import static common.boardclass.BoardClassUtil.*;
+import static common.boardclass.testing.BoardClassUtil.*;
 
 /**
  * Unit tests for Patterns class.
@@ -109,7 +104,7 @@ public class PatternsTest {
         },
         PositionTransformer.IDENTITY,
         StoneType.BLACK,
-        PatternType.STRAIT_FOUR);
+        PatternType.FOUR);
 
     testSinglePattern(
         new StoneType[][]{
@@ -118,7 +113,7 @@ public class PatternsTest {
         },
         PositionTransformer.IDENTITY,
         StoneType.WHITE,
-        PatternType.STRAIT_FOUR);
+        PatternType.FOUR);
   }
 
   @Test
@@ -132,7 +127,7 @@ public class PatternsTest {
         },
         PositionTransformer.CLOCK_90,
         StoneType.BLACK,
-        PatternType.STRAIT_FOUR);
+        PatternType.FOUR);
 
     testSinglePattern(
         new StoneType[][]{
@@ -143,7 +138,7 @@ public class PatternsTest {
         },
         PositionTransformer.CLOCK_90,
         StoneType.WHITE,
-        PatternType.STRAIT_FOUR);
+        PatternType.FOUR);
   }
 
   @Test
@@ -157,7 +152,7 @@ public class PatternsTest {
         },
         PositionTransformer.LEFT_DIAGONAL,
         StoneType.BLACK,
-        PatternType.STRAIT_FOUR);
+        PatternType.FOUR);
 
     testSinglePattern(
         new StoneType[][]{
@@ -169,7 +164,7 @@ public class PatternsTest {
         },
         PositionTransformer.RIGHT_DIAGONAL,
         StoneType.WHITE,
-        PatternType.STRAIT_FOUR);
+        PatternType.FOUR);
   }
 
   @Test

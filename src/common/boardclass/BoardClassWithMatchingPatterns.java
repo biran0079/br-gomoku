@@ -1,20 +1,13 @@
 package common.boardclass;
 
-import ai.competition.BoardClassSamples;
-import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Sets;
 import common.PatternType;
 import common.StoneType;
 import common.pattern.Pattern;
 import common.pattern.PatternsWithIndex;
 import model.GameBoard;
-import model.Position;
 
-import java.util.EnumMap;
-import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 /**

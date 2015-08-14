@@ -1,7 +1,7 @@
 package ai.experiment;
 
 import ai.AI;
-import ai.competition.BoardClassSamples;
+import common.boardclass.testing.BoardClassSamples;
 import ai.competition.Competition;
 import ai.minmax.MinMaxSearch;
 import ai.minmax.transitiontable.SmartTransitionTable;
