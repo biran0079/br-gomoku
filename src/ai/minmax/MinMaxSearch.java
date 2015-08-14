@@ -78,8 +78,8 @@ public class MinMaxSearch implements AI {
 
   private int eval(BoardClass boardClass, StoneType stoneType) {
     evalCount++;
-    boolean blackMoveNext = stoneType == StoneType.BLACK ? maxDepth % 2 == 0 : maxDepth % 2 == 1;
-    return evaluator.eval(boardClass, blackMoveNext);
+    StoneType nextToMove = maxDepth % 2 == 0 ? stoneType : stoneType.getOpponent();
+    return evaluator.eval(boardClass, nextToMove);
   }
 
   private enum MinMax {

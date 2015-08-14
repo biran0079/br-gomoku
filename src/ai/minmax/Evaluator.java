@@ -1,5 +1,6 @@
 package ai.minmax;
 
+import common.StoneType;
 import common.boardclass.BoardClass;
 
 /**
@@ -8,5 +9,5 @@ import common.boardclass.BoardClass;
  */
 public interface Evaluator {
 
-  int eval(BoardClass boardClass, boolean blackMoveNext);
+  int eval(BoardClass boardClass, StoneType nextToMove);
 }

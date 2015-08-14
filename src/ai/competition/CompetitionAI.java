@@ -5,6 +5,7 @@ import com.google.common.math.DoubleMath;
 
 import java.util.Collections;
 import java.util.Vector;
+import java.util.stream.LongStream;
 
 /**
  * Holder of competition AI and competition results for the AI.
@@ -51,12 +52,6 @@ public class CompetitionAI {
     moveTimeCostMs.add(ms);
   }
 
-  public double getMeanMoveMs() {
-    synchronized (moveTimeCostMs) {
-      return DoubleMath.mean(moveTimeCostMs);
-    }
-  }
-
   @Override
   public String toString() {
     synchronized (moveTimeCostMs) {
@@ -69,12 +64,10 @@ public class CompetitionAI {
           .append(" loses, ")
           .append(getDraw())
           .append(" draw, ")
-          .append("average move duration: ")
-          .append(String.format("%.2f [%.2f, %.2f]",
-              getMeanMoveMs() / 1000,
-              Collections.min(moveTimeCostMs) * 1.0 / 1000,
-              Collections.max(moveTimeCostMs) * 1.0 / 1000))
-          .append(" sec.")
+          .append("duration(ms): ")
+          .append(moveTimeCostMs.stream()
+              .mapToLong(v -> v)
+              .summaryStatistics())
           .toString();
     }
   }
