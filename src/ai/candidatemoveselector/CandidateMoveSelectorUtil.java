@@ -2,8 +2,12 @@ package ai.candidatemoveselector;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+
+import common.Constants;
 import common.PatternType;
+import common.PositionTransformer;
 import common.StoneType;
+import common.boardclass.BitBoard;
 import common.boardclass.BoardClass;
 import common.pattern.Pattern;
 import model.Position;
@@ -89,5 +93,25 @@ public class CandidateMoveSelectorUtil {
       counter.put(position, newCount);
     }
     return Optional.of(result);
+  }
+
+  public static Collection<Position> getNeighboringMoves(BoardClass boardClass) {
+    Set<Position> result = new HashSet<>();
+    BitBoard board = boardClass.getBoard(PositionTransformer.IDENTITY);
+    int[][] d = {{1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1}, {0, -1}, {1, -1}};
+    for (int i = 0; i < Constants.BOARD_SIZE; i++) {
+      for (int j = 0; j < Constants.BOARD_SIZE; j++) {
+        if (board.get(i, j) != StoneType.NOTHING) {
+          for (int k = 0; k < d.length; k++) {
+            int ti = i + d[k][0], tj = j + d[k][1];
+            if (Position.isValid(ti, tj) && board.get(ti, tj) == StoneType.NOTHING) {
+              Position pos = Position.create(ti, tj);
+              result.add(pos);
+            }
+          }
+        }
+      }
+    }
+    return result;
   }
 }

@@ -1,6 +1,8 @@
 package ai.minmax;
 
 import common.PositionTransformer;
+import common.Transformable;
+
 import model.Position;
 
 import static common.PositionTransformer.*;
@@ -9,7 +11,7 @@ import static common.PositionTransformer.CLOCK_270_M;
 /**
  * Node of min-max search tree.
  */
-public class MinMaxNode {
+public class MinMaxNode implements Transformable<MinMaxNode> {
 
   private final Position bestMove;
   private final int score;
@@ -27,6 +29,7 @@ public class MinMaxNode {
     return score;
   }
 
+  @Override
   public MinMaxNode transform(PositionTransformer transformer) {
     if (bestMove == null || transformer == IDENTITY) {
       return this;

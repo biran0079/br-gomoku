@@ -1,24 +1,26 @@
 package ai.minmax.transitiontable;
 
 import ai.minmax.MinMaxNode;
+
+import common.Transformable;
 import common.boardclass.BoardClass;
 
 /**
  * Transition table with hit/miss stats.
  */
-public class TransitionTableWithStats implements TransitionTable {
+public class TransitionTableWithStats<T extends Transformable<T>> implements TransitionTable<T> {
 
-  private final TransitionTable delegate;
+  private final TransitionTable<T> delegate;
   private final Stats stats;
 
-  public TransitionTableWithStats(TransitionTable delegate, Stats stats) {
+  public TransitionTableWithStats(TransitionTable<T> delegate, Stats stats) {
     this.delegate = delegate;
     this.stats = stats;
   }
 
   @Override
-  public MinMaxNode get(BoardClass boardClass) {
-    MinMaxNode result = delegate.get(boardClass);
+  public T get(BoardClass boardClass) {
+    T result = delegate.get(boardClass);
     if (result == null) {
       stats.incMiss();
     } else {
@@ -28,7 +30,7 @@ public class TransitionTableWithStats implements TransitionTable {
   }
 
   @Override
-  public void put(BoardClass boardClass, MinMaxNode node) {
+  public void put(BoardClass boardClass, T node) {
     delegate.put(boardClass, node);
   }
 

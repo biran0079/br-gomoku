@@ -2,6 +2,8 @@ package ai.minmax.transitiontable;
 
 import ai.minmax.MinMaxNode;
 import com.google.common.collect.Maps;
+
+import common.Transformable;
 import common.boardclass.BitBoard;
 import common.boardclass.BoardClass;
 import common.PositionTransformer;
@@ -14,7 +16,7 @@ import static common.PositionTransformer.CLOCK_270_M;
 /**
  * Non-thread-safe transition table.
  */
-public class TransitionTableImpl implements TransitionTable {
+public class TransitionTableImpl<T extends Transformable<T>> implements TransitionTable<T> {
 
   protected static final PositionTransformer[] IDENTICAL_TRANSFORMERS =
       new PositionTransformer[] {
@@ -28,15 +30,15 @@ public class TransitionTableImpl implements TransitionTable {
           CLOCK_270_M,
       };
 
-  protected final Map<BitBoard, MinMaxNode> cache = Maps.newHashMap();
+  protected final Map<BitBoard, T> cache = Maps.newHashMap();
 
   @Override
-  public MinMaxNode get(BoardClass boardClass) {
+  public T get(BoardClass boardClass) {
     return cache.get(boardClass.getBoard(PositionTransformer.IDENTITY));
   }
 
   @Override
-  public void put(BoardClass boardClass, MinMaxNode node) {
+  public void put(BoardClass boardClass, T node) {
     for (PositionTransformer transformer : IDENTICAL_TRANSFORMERS) {
       BitBoard bitBoard = boardClass.getBoard(transformer);
       if (!cache.containsKey(bitBoard)) {

@@ -12,7 +12,7 @@ public enum PositionTransformer {
   CLOCK_90(IndexTransformer.GET_J, IndexTransformer.GET_C_I, BOARD_SIZE),
   CLOCK_90_M(IndexTransformer.GET_C_I, IndexTransformer.GET_J, BOARD_SIZE),
   CLOCK_180(IndexTransformer.GET_C_I, IndexTransformer.GET_C_J, BOARD_SIZE),
-  CLOCK_180_M(IndexTransformer.GET_C_J, IndexTransformer.GET_I, BOARD_SIZE),
+  CLOCK_180_M(IndexTransformer.GET_C_J, IndexTransformer.GET_C_I, BOARD_SIZE),
   CLOCK_270(IndexTransformer.GET_C_J, IndexTransformer.GET_I, BOARD_SIZE),
   CLOCK_270_M(IndexTransformer.GET_I, IndexTransformer.GET_C_J, BOARD_SIZE),
 

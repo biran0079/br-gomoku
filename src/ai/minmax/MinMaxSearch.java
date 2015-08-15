@@ -98,7 +98,8 @@ public class MinMaxSearch implements AI {
   }
 
 
-  private MinMaxNode save(TransitionTable transitionTable, BoardClass boardClass, MinMaxNode node) {
+  private MinMaxNode save(TransitionTable<MinMaxNode> transitionTable, BoardClass boardClass, MinMaxNode
+      node) {
     transitionTable.put(boardClass, node);
     return node;
   }
@@ -109,7 +110,7 @@ public class MinMaxSearch implements AI {
                                   int depth,
                                   MinMax minMax,
                                   StoneType stoneType,
-                                  TransitionTable transitionTable) {
+                                  TransitionTable<MinMaxNode> transitionTable) {
     MinMaxNode fromCache = transitionTable.get(boardClass);
     if (fromCache != null) {
       cacheHit++;
@@ -176,7 +177,7 @@ public class MinMaxSearch implements AI {
 
     private int maxDepth = 4;
     private String name = "min_max_search";
-    private int randomSampleBranchCandidates = 0;
+    private int randomSampleBranchCandidates = Integer.MAX_VALUE;
     private boolean alphaBetaPruning = true;
     private Evaluator evaluator = new DefaultEvaluator();
     private TransitionTable.Factory transitionTableFactory =

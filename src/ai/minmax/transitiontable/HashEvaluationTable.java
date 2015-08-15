@@ -4,6 +4,8 @@ import ai.minmax.MinMaxNode;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.math.DoubleMath;
+
+import common.Transformable;
 import common.boardclass.BitBoard;
 import common.boardclass.BoardClass;
 import common.PositionTransformer;
@@ -15,12 +17,12 @@ import java.util.stream.Collectors;
 /**
  * Evaluate hash function collision rate.
  */
-public class HashEvaluationTable extends TransitionTableImpl {
+public class HashEvaluationTable<T extends Transformable<T>> extends TransitionTableImpl<T> {
 
   private final Multimap<Integer, BitBoard> hashBucket = ArrayListMultimap.create();
 
   @Override
-  public void put(BoardClass boardClass, MinMaxNode node) {
+  public void put(BoardClass boardClass, T node) {
     for (PositionTransformer transformer : IDENTICAL_TRANSFORMERS) {
       BitBoard bitBoard = boardClass.getBoard(transformer);
       if (!cache.containsKey(bitBoard)) {
