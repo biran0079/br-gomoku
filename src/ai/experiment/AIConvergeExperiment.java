@@ -6,7 +6,6 @@ import common.StoneType;
 import common.boardclass.BoardClass;
 import common.boardclass.BoardClassGenerator;
 import common.boardclass.BoardFactories;
-import common.boardclass.testing.BoardClassSamples;
 
 import java.util.Collection;
 
@@ -30,6 +29,7 @@ public class AIConvergeExperiment {
         .withBoardClassFactory(BoardFactories.PRE_COMPUTE_MATCHING_FACTORY)
         .withMaxDepth(4)
         .build();
+
     Collection<BoardClass> games = Lists.newArrayList(
         new BoardClassGenerator().generateBoardWithStones(4));
 

@@ -1,13 +1,9 @@
 package ai.minmax.transitiontable;
 
-import ai.minmax.MinMaxNode;
+import static common.PositionTransformer.IDENTITY;
 
 import common.Transformable;
 import common.boardclass.BoardClass;
-
-import static common.PositionTransformer.IDENTITY;
-
-import javax.xml.crypto.dsig.Transform;
 
 /**
  * Be smart about transition to safe space.

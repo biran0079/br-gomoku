@@ -1,16 +1,10 @@
 package common.boardclass;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import com.google.common.collect.Iterables;
 
-import common.PositionTransformer;
-import common.boardclass.testing.BoardClassUtil;
-
 import org.junit.Test;
-
-import ai.minmax.transitiontable.TransitionSet;
-import ai.minmax.transitiontable.TransitionSetImpl;
 
 public class BoardClassGeneratorTest {
 

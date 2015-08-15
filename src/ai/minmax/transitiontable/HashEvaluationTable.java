@@ -1,14 +1,13 @@
 package ai.minmax.transitiontable;
 
-import ai.minmax.MinMaxNode;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.math.DoubleMath;
 
+import common.PositionTransformer;
 import common.Transformable;
 import common.boardclass.BitBoard;
 import common.boardclass.BoardClass;
-import common.PositionTransformer;
 
 import java.util.Collections;
 import java.util.List;

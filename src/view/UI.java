@@ -1,13 +1,16 @@
 package view;
 
-import controller.PlayerType;
 import common.StoneType;
-import model.Position;
-import player.Player;
+
+import java.awt.event.ActionListener;
 
 import javax.inject.Inject;
-import javax.swing.*;
-import java.awt.event.ActionListener;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+
+import controller.PlayerType;
+import model.Position;
+import player.Player;
 
 public class UI {
   private final GameFrame gameFrame;

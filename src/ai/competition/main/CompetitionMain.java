@@ -1,12 +1,12 @@
 package ai.competition.main;
 
-import ai.AI;
-import common.boardclass.testing.BoardClassSamples;
-import ai.competition.Competition;
-import ai.minmax.MinMaxSearch;
-
 import common.StoneType;
 import common.boardclass.BoardFactories;
+import common.boardclass.testing.BoardClassSamples;
+
+import ai.AI;
+import ai.competition.Competition;
+import ai.minmax.MinMaxSearch;
 
 /**
  * Entry point of a competition.

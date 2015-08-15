@@ -4,6 +4,7 @@ import common.Constants;
 import common.StoneType;
 import common.boardclass.BoardClass;
 import common.boardclass.BoardFactories;
+
 import model.GameBoard;
 
 /**

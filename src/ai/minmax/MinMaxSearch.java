@@ -1,18 +1,21 @@
 package ai.minmax;
 
+import com.google.common.collect.Iterables;
+
+import common.Constants;
+import common.StoneType;
+import common.boardclass.BoardClass;
+import common.boardclass.BoardFactories;
+
+import java.util.Collection;
+
 import ai.AI;
 import ai.candidatemoveselector.CandidateMovesSelector;
 import ai.minmax.transitiontable.NoopTransitionTable;
 import ai.minmax.transitiontable.TransitionTable;
 import ai.minmax.transitiontable.TransitionTableImpl;
-import com.google.common.collect.Iterables;
-import common.*;
-import common.boardclass.BoardClass;
-import common.boardclass.BoardFactories;
 import model.GameBoard;
 import model.Position;
-
-import java.util.Collection;
 
 public class MinMaxSearch implements AI {
 

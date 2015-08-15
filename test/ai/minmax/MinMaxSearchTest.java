@@ -6,8 +6,8 @@ import com.google.common.base.MoreObjects;
 
 import common.StoneType;
 import common.boardclass.BoardClass;
-
 import common.boardclass.BoardFactories;
+
 import org.junit.Test;
 
 import java.util.ArrayList;

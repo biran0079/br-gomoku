@@ -6,7 +6,6 @@ import common.Constants;
 import common.PatternType;
 import common.PositionTransformer;
 import common.StoneType;
-import common.boardclass.BitBoard;
 import common.boardclass.BoardClass;
 
 import model.Position;

@@ -1,11 +1,13 @@
 package ai.minmax;
 
-import common.PositionTransformer;
+import static org.junit.Assert.assertEquals;
+
 import common.Constants;
-import model.Position;
+import common.PositionTransformer;
+
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import model.Position;
 
 /**
  * Created by biran on 8/9/2015.

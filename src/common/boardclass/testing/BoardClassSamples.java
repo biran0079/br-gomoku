@@ -1,6 +1,7 @@
 package common.boardclass.testing;
 
 import com.google.common.collect.ImmutableList;
+
 import common.boardclass.BoardClass;
 
 /**

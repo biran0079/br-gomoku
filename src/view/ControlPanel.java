@@ -1,11 +1,14 @@
 package view;
 
-import controller.PlayerType;
+import java.awt.FlowLayout;
+import java.awt.event.ActionListener;
 
 import javax.inject.Inject;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionListener;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JPanel;
+
+import controller.PlayerType;
 
 public class ControlPanel extends JPanel {
 

@@ -1,11 +1,13 @@
 package ai.minmax;
 
-import common.*;
+import static org.junit.Assert.assertTrue;
+
+import common.PatternType;
+import common.StoneType;
 import common.boardclass.BoardClass;
 import common.boardclass.testing.BoardClassUtil;
-import org.junit.Test;
 
-import static org.junit.Assert.assertTrue;
+import org.junit.Test;
 
 /**
  * Some unit tests for BoardClass.

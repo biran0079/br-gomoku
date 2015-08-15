@@ -1,6 +1,9 @@
 package common.pattern;
 
-import static common.pattern.MoveType.*;
+import static common.pattern.MoveType.D1;
+import static common.pattern.MoveType.D2;
+import static common.pattern.MoveType.E;
+import static common.pattern.MoveType.X;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -9,9 +12,13 @@ import common.Constants;
 import common.PatternType;
 import common.PositionTransformer;
 import common.StoneType;
-import model.Position;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+
+import model.Position;
 
 /**
  * Predefined patterns.

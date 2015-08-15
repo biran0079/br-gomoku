@@ -1,7 +1,5 @@
 package ai.minmax.transitiontable;
 
-import ai.minmax.MinMaxNode;
-
 import common.Transformable;
 import common.boardclass.BoardClass;
 

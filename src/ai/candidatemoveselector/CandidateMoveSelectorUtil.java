@@ -1,8 +1,5 @@
 package ai.candidatemoveselector;
 
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-
 import common.Constants;
 import common.PatternType;
 import common.PositionTransformer;
@@ -10,9 +7,17 @@ import common.StoneType;
 import common.boardclass.BitBoard;
 import common.boardclass.BoardClass;
 import common.pattern.Pattern;
-import model.Position;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+
+import model.Position;
 
 /**
  * Utility methods for candidate selector.

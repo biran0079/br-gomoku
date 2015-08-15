@@ -1,8 +1,9 @@
 package view;
 
+import java.awt.BorderLayout;
+
 import javax.inject.Inject;
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JFrame;
 
 
 public class GameFrame extends JFrame{

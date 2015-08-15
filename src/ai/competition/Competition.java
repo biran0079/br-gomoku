@@ -1,15 +1,17 @@
 package ai.competition;
 
-import ai.AI;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.Lists;
+
 import common.StoneType;
 import common.boardclass.BoardClass;
-import model.Position;
 
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
+
+import ai.AI;
+import model.Position;
 
 /**
  * Competition between AIs by playing games against each other.

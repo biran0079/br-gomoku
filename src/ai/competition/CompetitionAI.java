@@ -1,11 +1,8 @@
 package ai.competition;
 
-import ai.AI;
-import com.google.common.math.DoubleMath;
-
-import java.util.Collections;
 import java.util.Vector;
-import java.util.stream.LongStream;
+
+import ai.AI;
 
 /**
  * Holder of competition AI and competition results for the AI.

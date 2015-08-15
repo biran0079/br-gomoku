@@ -2,13 +2,15 @@ package common.boardclass;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
+
 import common.PatternType;
 import common.StoneType;
 import common.pattern.Pattern;
 import common.pattern.PatternsWithIndex;
-import model.GameBoard;
 
 import java.util.Set;
+
+import model.GameBoard;
 
 /**
  * BoardClass with matching patterns pre-computed.

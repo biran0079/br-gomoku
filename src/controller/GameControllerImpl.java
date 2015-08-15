@@ -1,6 +1,14 @@
 package controller;
 
 import common.StoneType;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
+import javax.inject.Inject;
+import javax.inject.Provider;
+
 import model.GameBoard;
 import model.History;
 import model.HistoryEntry;
@@ -8,12 +16,6 @@ import model.Position;
 import player.Player;
 import player.PlayerFactory;
 import view.UI;
-
-import javax.inject.Inject;
-import javax.inject.Provider;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 class GameControllerImpl implements GameController {
 

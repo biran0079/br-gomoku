@@ -1,10 +1,10 @@
 package ai.experiment;
 
 import common.StoneType;
-
 import common.boardclass.testing.BoardClassSamples;
-import ai.minmax.transitiontable.HashEvaluationTable;
+
 import ai.minmax.MinMaxSearch;
+import ai.minmax.transitiontable.HashEvaluationTable;
 
 public class HashExperimentMain {
 

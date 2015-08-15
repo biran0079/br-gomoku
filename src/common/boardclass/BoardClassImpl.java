@@ -1,7 +1,9 @@
 package common.boardclass;
 
 import com.google.common.collect.Iterables;
-import common.*;
+
+import common.PatternType;
+import common.StoneType;
 import common.pattern.Pattern;
 
 import model.GameBoard;

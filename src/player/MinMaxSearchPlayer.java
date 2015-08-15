@@ -1,9 +1,10 @@
 package player;
 
-import ai.minmax.MinMaxSearch;
-import ai.minmax.transitiontable.SmartTransitionTable;
 import common.StoneType;
 import common.boardclass.BoardFactories;
+
+import ai.minmax.MinMaxSearch;
+import ai.minmax.transitiontable.SmartTransitionTable;
 import model.GameBoard;
 import model.Position;
 

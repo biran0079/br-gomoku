@@ -1,6 +1,8 @@
 package common.boardclass;
 
-import common.*;
+import common.PatternType;
+import common.PositionTransformer;
+import common.StoneType;
 import common.pattern.Pattern;
 
 import model.GameBoard;

@@ -1,17 +1,22 @@
 package ai.minmax.transitiontable;
 
-import ai.minmax.MinMaxNode;
+import static common.PositionTransformer.CLOCK_180;
+import static common.PositionTransformer.CLOCK_180_M;
+import static common.PositionTransformer.CLOCK_270;
+import static common.PositionTransformer.CLOCK_270_M;
+import static common.PositionTransformer.CLOCK_90;
+import static common.PositionTransformer.CLOCK_90_M;
+import static common.PositionTransformer.IDENTITY;
+import static common.PositionTransformer.IDENTITY_M;
+
 import com.google.common.collect.Maps;
 
+import common.PositionTransformer;
 import common.Transformable;
 import common.boardclass.BitBoard;
 import common.boardclass.BoardClass;
-import common.PositionTransformer;
 
 import java.util.Map;
-
-import static common.PositionTransformer.*;
-import static common.PositionTransformer.CLOCK_270_M;
 
 /**
  * Non-thread-safe transition table.

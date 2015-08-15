@@ -6,9 +6,13 @@ import common.Constants;
 import common.StoneType;
 import common.boardclass.BoardClass;
 
-import model.Position;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
-import java.util.*;
+import model.Position;
 
 /**
  * Class that selects candidate moves.
