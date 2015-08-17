@@ -5,6 +5,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import common.PatternType;
 import common.StoneType;
+import common.pattern.Pattern;
 import common.pattern.Threat;
 import common.pattern.Threats;
 import model.GameBoard;
@@ -65,6 +66,16 @@ public class BoardClassWithMatchingThreats extends AbstractBoardClass {
   @Override
   public BoardClassWithMatchingThreats withPositionSet(int i, int j, StoneType stoneType) {
     return new BoardClassWithMatchingThreats(this, i, j, stoneType);
+  }
+
+  private final Pattern.Factory patterns = Pattern.DEFAULT_FACTORY;
+
+  @Override
+  public boolean wins(StoneType stoneType) {
+    for (Pattern p : patterns.get(stoneType, PatternType.FIVE))
+      if (p.matches(this))
+        return true;
+    return false;
   }
 
   public static class Factory implements BoardClass.Factory<BoardClassWithMatchingThreats> {

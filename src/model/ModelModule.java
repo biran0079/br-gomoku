@@ -15,6 +15,6 @@ public class ModelModule extends AbstractModule {
     bind(HistoryImpl.class).in(Singleton.class);
     bind(History.class).to(HistoryImpl.class);
     bind(GameBoard.Factory.class)
-        .toInstance(BoardFactories.PRE_COMPUTE_MATCHING_FACTORY);
+        .toInstance(BoardFactories.BOARD_CLASS_WITH_MATCHING_PATTERNS_FACTORY);
   }
 }

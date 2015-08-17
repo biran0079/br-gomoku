@@ -123,6 +123,8 @@ public class MinMaxSearch implements AI {
       return save(transitionTable, boardClass, new MinMaxNode(null, Integer.MAX_VALUE));
     } else if (boardClass.wins(StoneType.WHITE)) {
       return save(transitionTable, boardClass, new MinMaxNode(null, Integer.MIN_VALUE));
+    } else if (boardClass.isFull()) {
+      return save(transitionTable, boardClass, new MinMaxNode(null, 0));
     } else if (depth == 0) {
       return save(transitionTable, boardClass, new MinMaxNode(null, eval(boardClass, stoneType)));
     }
@@ -187,7 +189,7 @@ public class MinMaxSearch implements AI {
     private Evaluator evaluator = new DefaultEvaluator();
     private TransitionTable.Factory transitionTableFactory =
         () -> new TransitionTableImpl();
-    private BoardClass.Factory boardClassFactory = BoardFactories.PRE_COMPUTE_MATCHING_FACTORY;
+    private BoardClass.Factory boardClassFactory = BoardFactories.BOARD_CLASS_WITH_MATCHING_PATTERNS_FACTORY;
 
     private Builder() {
     }

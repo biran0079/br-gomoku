@@ -1,5 +1,6 @@
 package player;
 
+import ai.candidatemoveselector.CandidateMoveSelectorImpl;
 import common.StoneType;
 import common.boardclass.BoardFactories;
 
@@ -15,6 +16,7 @@ public class MinMaxSearchPlayer implements Player {
   private final MinMaxSearch minMaxSearch = MinMaxSearch.newBuilder()
       .withTransitionTableFactory(() -> new SmartTransitionTable())
       .withMaxDepth(6)
+      .withCandidateMoveSelector(new CandidateMoveSelectorImpl(15))
       .build();
 
   public MinMaxSearchPlayer(String s, StoneType stoneType) {

@@ -16,12 +16,12 @@ public class CompetitionMain {
   public static void main(String[] args) {
     AI ai1 = MinMaxSearch.newBuilder()
         .withName("d4")
-        .withBoardClassFactory(BoardFactories.PRE_COMPUTE_MATCHING_FACTORY)
+        .withBoardClassFactory(BoardFactories.BOARD_CLASS_WITH_MATCHING_PATTERNS_FACTORY)
         .withMaxDepth(4)
         .build();
     AI ai2 = MinMaxSearch.newBuilder()
         .withName("d5")
-        .withBoardClassFactory(BoardFactories.PRE_COMPUTE_MATCHING_FACTORY)
+        .withBoardClassFactory(BoardFactories.BOARD_CLASS_WITH_MATCHING_PATTERNS_FACTORY)
         .withMaxDepth(5)
         .build();
     new Competition(BoardClassSamples.INITIAL_10).competeSequential(ai1, ai2, StoneType.BLACK);

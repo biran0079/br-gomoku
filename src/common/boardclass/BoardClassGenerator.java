@@ -22,11 +22,11 @@ public class BoardClassGenerator {
   public Iterable<BoardClass> generateBoardWithStones(int n) {
     if (n == 0) {
       return Collections.singletonList(
-          BoardFactories.PRE_COMPUTE_MATCHING_FACTORY.getEmptyBoard());
+          BoardFactories.BOARD_CLASS_WITH_MATCHING_PATTERNS_FACTORY.getEmptyBoard());
     }
     if (n == 1) {
       return Collections.singletonList(
-          BoardFactories.PRE_COMPUTE_MATCHING_FACTORY.getEmptyBoard()
+          BoardFactories.BOARD_CLASS_WITH_MATCHING_PATTERNS_FACTORY.getEmptyBoard()
               .withPositionSet(Constants.BOARD_SIZE / 2,
                   Constants.BOARD_SIZE / 2, StoneType.BLACK));
     }

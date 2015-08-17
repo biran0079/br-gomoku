@@ -70,7 +70,7 @@ class Patterns implements Pattern.Factory {
         .addAll(createPatterns(stoneType, new MoveType[] {D, X, X, X, X}))
         .addAll(createPatterns(stoneType, new MoveType[] {X, D, X, X, X}))
         .addAll(createPatterns(stoneType, new MoveType[] {X, X, D, X, X}))
-        .addAll(createPatterns(stoneType, new MoveType[]{X, X, X, D, X}))
+        .addAll(createPatterns(stoneType, new MoveType[] {X, X, X, D, X}))
         .addAll(createPatterns(stoneType, new MoveType[] {X, X, X, X, D}))
         .build();
   }
