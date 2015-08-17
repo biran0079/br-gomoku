@@ -27,7 +27,7 @@ public class CandidateMovesSelector {
 
   public Collection<Position> getCandidateMoves(BoardClass boardClass, StoneType stoneType) {
     if (boardClass.isEmpty()) {
-      return singleton(Position.create(Constants.BOARD_SIZE / 2, Constants.BOARD_SIZE / 2));
+      return singleton(Position.of(Constants.BOARD_SIZE / 2, Constants.BOARD_SIZE / 2));
     }
     Optional<Position> candidate = CandidateMoveSelectorUtil.anyOffendFour(boardClass, stoneType);
     if (candidate.isPresent()) {

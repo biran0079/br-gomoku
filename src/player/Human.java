@@ -26,7 +26,7 @@ class Human implements Player {
 	}
 	
 	private synchronized void humanMove(int i, int j){
-		this.move = Position.create(i, j);
+		this.move = Position.of(i, j);
 		notify();
 	}
 

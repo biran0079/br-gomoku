@@ -19,12 +19,13 @@ import common.StoneType;
 import java.util.EnumMap;
 import java.util.Map;
 
+import common.pattern.Pattern;
 import model.GameBoard;
 
 /**
  * Shared logic for all BoardClass implementations.
  */
-abstract class AbstractBoardClass implements BoardClass {
+abstract class AbstractBoardClass<T extends Pattern> implements BoardClass<T> {
 
   private static final PositionTransformer[] TRACKING_TRANSFORMERS =
       new PositionTransformer[] {
@@ -49,7 +50,7 @@ abstract class AbstractBoardClass implements BoardClass {
     }
   }
 
-  AbstractBoardClass(AbstractBoardClass boardClass, int i, int j, StoneType stoneType) {
+  AbstractBoardClass(AbstractBoardClass<T> boardClass, int i, int j, StoneType stoneType) {
     map = new EnumMap(PositionTransformer.class);
     for (PositionTransformer transformer : TRACKING_TRANSFORMERS) {
       int ti = transformer.getI(i, j);

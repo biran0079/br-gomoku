@@ -1,7 +1,6 @@
 package common.pattern;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import common.Constants;
 import common.PositionTransformer;
 import common.StoneType;
@@ -32,7 +31,7 @@ class PatternsUtil {
                                                            PositionTransformer transformer) {
     List<Position> defensiveMoves = new ArrayList<>();
     for (int k = 0; k < movePattern.length; k++) {
-      Position p = Position.create(i, j + k).transform(transformer);
+      Position p = Position.of(i, j + k).transform(transformer);
       if (movePattern[k] == MoveType.D) {
         defensiveMoves.add(0, p); // insert to head
       } else if (movePattern[k] == MoveType.D) {
@@ -45,7 +44,7 @@ class PatternsUtil {
   static Position getOffensiveMove(int i, int j, MoveType[] movePattern, PositionTransformer transformer) {
     for (int k = 0; k < movePattern.length; k++) {
       if (movePattern[k] == O) {
-        return Position.create(i, j + k).transform(transformer);
+        return Position.of(i, j + k).transform(transformer);
       }
     }
     throw new IllegalStateException("No offensive move found");
@@ -58,7 +57,7 @@ class PatternsUtil {
       result.put(stoneType, innerMap);
       for (int i = 0; i < Constants.BOARD_SIZE; i++) {
         for (int j = 0; j < Constants.BOARD_SIZE; j++) {
-          innerMap.put(Position.create(i, j), new HashSet<>());
+          innerMap.put(Position.of(i, j), new HashSet<>());
         }
       }
     }

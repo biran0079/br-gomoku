@@ -18,12 +18,12 @@ public class PositionTransformerTest {
   public void testReverse() {
     for (int i = 0; i < Constants.BOARD_SIZE; i++)
       for (int j = 0; j < Constants.BOARD_SIZE; j++) {
-        assertEquals(Position.create(i, j),
-            Position.create(i, j)
+        assertEquals(Position.of(i, j),
+            Position.of(i, j)
                 .transform(PositionTransformer.RIGHT_DIAGONAL)
                 .transform(PositionTransformer.RIGHT_DIAGONAL_REVERSE));
-        assertEquals(Position.create(i, j),
-            Position.create(i, j)
+        assertEquals(Position.of(i, j),
+            Position.of(i, j)
                 .transform(PositionTransformer.LEFT_DIAGONAL)
                 .transform(PositionTransformer.LEFT_DIAGONAL_REVERSE));
       }

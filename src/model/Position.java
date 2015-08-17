@@ -24,7 +24,7 @@ public class Position implements Comparable<Position> {
 		this.j = j;
 	}
 
-	public static Position create(int i, int j) {
+	public static Position of(int i, int j) {
     if (i < 0 || j < 0) {
       throw new IllegalArgumentException("Cannot have negative position index.");
     }
@@ -39,7 +39,7 @@ public class Position implements Comparable<Position> {
     if (transformer == PositionTransformer.IDENTITY) {
       return this;
     }
-    return create(transformer.getI(i, j), transformer.getJ(i, j));
+    return of(transformer.getI(i, j), transformer.getJ(i, j));
   }
 
 	public int getRowIndex() {

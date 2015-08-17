@@ -24,7 +24,7 @@ import model.Position;
  */
 public class CandidateMoveSelectorUtil {
 
-  public static Collection<Position> allDefendFour(BoardClass boardClass, StoneType stoneType) {
+  public static Collection<Position> allDefendFour(BoardClass<Pattern> boardClass, StoneType stoneType) {
     Set<Position> candidates = new HashSet<>();
     for (Pattern p : boardClass.getMatchingPatterns(stoneType.getOpponent(),
         PatternType.FOUR)) {
@@ -33,11 +33,11 @@ public class CandidateMoveSelectorUtil {
     return candidates;
   }
 
-  public static Optional<Position> anyDefendFour(BoardClass boardClass, StoneType stoneType) {
+  public static Optional<Position> anyDefendFour(BoardClass<Pattern> boardClass, StoneType stoneType) {
     return allDefendFour(boardClass, stoneType).stream().min((a, b) -> a.compareTo(b));
   }
 
-  public static Collection<Position> allDefendThree(BoardClass boardClass, StoneType stoneType) {
+  public static Collection<Position> allDefendThree(BoardClass<Pattern> boardClass, StoneType stoneType) {
     Set<Position> candidates = new HashSet<>();
     for (Pattern p :
         boardClass.getMatchingPatterns(stoneType.getOpponent(), PatternType.THREE)) {
@@ -46,7 +46,7 @@ public class CandidateMoveSelectorUtil {
     return candidates;
   }
 
-  public static Optional<Position> bestDefendThree(BoardClass boardClass, StoneType stoneType) {
+  public static Optional<Position> bestDefendThree(BoardClass<Pattern> boardClass, StoneType stoneType) {
     List<Position> candidates = new ArrayList<>();
     for (Pattern p :
         boardClass.getMatchingPatterns(stoneType.getOpponent(), PatternType.THREE)) {
@@ -55,7 +55,7 @@ public class CandidateMoveSelectorUtil {
     return mostFrequentElement(candidates);
   }
 
-  public static Collection<Position> allOffendFour(BoardClass boardClass, StoneType stoneType) {
+  public static Collection<Position> allOffendFour(BoardClass<Pattern> boardClass, StoneType stoneType) {
     Set<Position> candidates = new HashSet<>();
     for (Pattern p : boardClass.getMatchingPatterns(stoneType, PatternType.FOUR)) {
       candidates.addAll(p.getDefensiveMoves());
@@ -63,11 +63,11 @@ public class CandidateMoveSelectorUtil {
     return candidates;
   }
 
-  public static Optional<Position> anyOffendFour(BoardClass boardClass, StoneType stoneType) {
+  public static Optional<Position> anyOffendFour(BoardClass<Pattern> boardClass, StoneType stoneType) {
     return allOffendFour(boardClass, stoneType).stream().min((a, b) -> a.compareTo(b));
   }
 
-  public static Collection<Position> allOffendThree(BoardClass boardClass, StoneType stoneType) {
+  public static Collection<Position> allOffendThree(BoardClass<Pattern> boardClass, StoneType stoneType) {
     Set<Position> result = new HashSet<>();
     for (Pattern p : boardClass.getMatchingPatterns(stoneType, PatternType.THREE)) {
       result.addAll(p.getDefensiveMoves());
@@ -110,7 +110,7 @@ public class CandidateMoveSelectorUtil {
           for (int k = 0; k < d.length; k++) {
             int ti = i + d[k][0], tj = j + d[k][1];
             if (Position.isValid(ti, tj) && board.get(ti, tj) == StoneType.NOTHING) {
-              Position pos = Position.create(ti, tj);
+              Position pos = Position.of(ti, tj);
               result.add(pos);
             }
           }

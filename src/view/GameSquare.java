@@ -15,7 +15,7 @@ public class GameSquare extends JButton implements ActionListener {
 	private final ClickCallback clickClickCallback;
 
 	public GameSquare(int i, int j, ClickCallback clickClickCallback) {
-		this.position = Position.create(i, j);
+		this.position = Position.of(i, j);
 		this.setIcon(UIConstants.NOTHING_ICON);
 		this.addActionListener(this);
 		this.setBorderPainted(false);

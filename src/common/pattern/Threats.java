@@ -144,7 +144,7 @@ public class Threats implements Threat.Factory {
   }
 
   public Set<Threat> get(int i, int j, StoneType stoneType) {
-    return index.get(stoneType).get(Position.create(i, j));
+    return index.get(stoneType).get(Position.of(i, j));
   }
 
   private Threat createThreat(int i, int j, int pattern, int mask,
@@ -156,7 +156,7 @@ public class Threats implements Threat.Factory {
     PositionTransformer reverseTransform = transformer.reverse();
     for (int k = 0; k < movePattern.length; k++) {
       if (movePattern[k] == MoveType.X) {
-        Position p = Position.create(i, j + k).transform(reverseTransform);
+        Position p = Position.of(i, j + k).transform(reverseTransform);
         index.get(stoneType).get(p).add(result);
       }
     }

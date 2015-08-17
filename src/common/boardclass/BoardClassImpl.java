@@ -11,7 +11,7 @@ import model.GameBoard;
 /**
  * Class of bit boards by PositionTransformer operation.
  */
-class BoardClassImpl extends AbstractBoardClass {
+class BoardClassImpl extends AbstractBoardClass<Pattern> {
 
   private static final Pattern.Factory PATTERNS = Pattern.DEFAULT_FACTORY;
 
@@ -21,7 +21,8 @@ class BoardClassImpl extends AbstractBoardClass {
     super();
   }
 
-  private BoardClassImpl(AbstractBoardClass boardClass, int i, int j, StoneType stoneType) {
+  private BoardClassImpl(AbstractBoardClass<Pattern> boardClass,
+                         int i, int j, StoneType stoneType) {
     super(boardClass, i, j, stoneType);
   }
 

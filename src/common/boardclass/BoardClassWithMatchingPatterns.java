@@ -16,7 +16,7 @@ import model.GameBoard;
 /**
  * BoardClass with matching patterns pre-computed.
  */
-class BoardClassWithMatchingPatterns extends AbstractBoardClass {
+class BoardClassWithMatchingPatterns extends AbstractBoardClass<Pattern> {
 
   private static final PatternsWithIndex PATTERNS_WITH_INDEX = new PatternsWithIndex();
   private static final BoardClassWithMatchingPatterns EMPTY_BOARD = new BoardClassWithMatchingPatterns();

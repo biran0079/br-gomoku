@@ -31,7 +31,7 @@ public class PatternsWithIndex implements Pattern.Factory {
         PositionTransformer reverseTransform = transformer.reverse();
         for (int k = 0; k < movePattern.length; k++) {
           if (movePattern[k] == MoveType.X) {
-            Position p = Position.create(i, j + k).transform(reverseTransform);
+            Position p = Position.of(i, j + k).transform(reverseTransform);
             index.get(stoneType).get(p).add(result);
           }
         }
@@ -41,7 +41,7 @@ public class PatternsWithIndex implements Pattern.Factory {
   }
 
   public Set<Pattern> get(int i, int j, StoneType stoneType) {
-    return index.get(stoneType).get(Position.create(i, j));
+    return index.get(stoneType).get(Position.of(i, j));
   }
 
   @Override
