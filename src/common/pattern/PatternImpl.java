@@ -2,6 +2,7 @@ package common.pattern;
 
 import com.google.common.collect.ImmutableList;
 
+import com.google.common.collect.ImmutableSet;
 import common.Constants;
 import common.PatternType;
 import common.PositionTransformer;
@@ -20,14 +21,14 @@ class PatternImpl implements Pattern {
   private final int mask;
   private final PositionTransformer transformer;
   private final StoneType stoneType;
-  private final ImmutableList<Position> defensiveMoves;
+  private final ImmutableSet<Position> defensiveMoves;
 
   PatternImpl(int rowIndex,
-          int pattern,
-          int mask,
-          PositionTransformer transformer,
-          StoneType stoneType,
-          ImmutableList<Position> defensiveMoves) {
+              int pattern,
+              int mask,
+              PositionTransformer transformer,
+              StoneType stoneType,
+              ImmutableSet<Position> defensiveMoves) {
     this.rowIndex = rowIndex;
     this.pattern = pattern;
     this.mask = mask;
@@ -37,7 +38,7 @@ class PatternImpl implements Pattern {
   }
 
   @Override
-  public ImmutableList<Position> getDefensiveMoves() {
+  public ImmutableSet<Position> getDefensiveMoves() {
     return defensiveMoves;
   }
 

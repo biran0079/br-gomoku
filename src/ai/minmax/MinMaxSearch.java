@@ -1,5 +1,6 @@
 package ai.minmax;
 
+import ai.candidatemoveselector.CandidateMoveSelectorImpl;
 import com.google.common.collect.Iterables;
 
 import common.Constants;
@@ -35,8 +36,7 @@ public class MinMaxSearch implements AI {
     this.maxDepth = builder.maxDepth;
     this.alphaBetaPruning = builder.alphaBetaPruning;
     this.transitionTableFactory = builder.transitionTableFactory;
-    this.candidateMovesSelector = new CandidateMovesSelector(
-        builder.randomSampleBranchCandidates);
+    this.candidateMovesSelector = builder.candidateMoveSelector;
     this.evaluator = builder.evaluator;
     this.boardClassFactory = builder.boardClassFactory;
   }
@@ -133,7 +133,8 @@ public class MinMaxSearch implements AI {
       return new MinMaxNode(Iterables.getOnlyElement(candidateMoves), 0);
     }
     for (Position position : candidateMoves) {
-      int i = position.getRowIndex(), j = position.getColumnIndex();
+      int i = position.getRowIndex();
+      int j = position.getColumnIndex();
       BoardClass newBoardClass = boardClass.withPositionSet(i, j, minMax.getStoneType());
       if (minMax == MinMax.MAX) {
         int curMax = res == null ? alpha : res.getScore();
@@ -180,7 +181,8 @@ public class MinMaxSearch implements AI {
 
     private int maxDepth = 4;
     private String name = "min_max_search";
-    private int randomSampleBranchCandidates = Integer.MAX_VALUE;
+    private CandidateMovesSelector candidateMoveSelector =
+        new CandidateMoveSelectorImpl(Integer.MAX_VALUE);
     private boolean alphaBetaPruning = true;
     private Evaluator evaluator = new DefaultEvaluator();
     private TransitionTable.Factory transitionTableFactory =
@@ -214,8 +216,8 @@ public class MinMaxSearch implements AI {
       return this;
     }
 
-    public Builder withRandomSampleBranchCandidates(int randomSampleBranchCandidates) {
-      this.randomSampleBranchCandidates = randomSampleBranchCandidates;
+    public Builder withCandidateMoveSelector(CandidateMovesSelector candidateMoveSelector) {
+      this.candidateMoveSelector = candidateMoveSelector;
       return this;
     }
 

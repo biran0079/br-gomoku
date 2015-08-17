@@ -14,7 +14,7 @@ import ai.competition.Competition;
 import ai.minmax.MinMaxSearch;
 
 /**
- * Experiment
+ * Experiment that compares performance of two AIs.
  */
 public class AIConvergeExperiment {
 
@@ -25,9 +25,9 @@ public class AIConvergeExperiment {
         .withMaxDepth(3)
         .build();
     AI ai2 = MinMaxSearch.newBuilder()
-        .withName("d4")
+        .withName("d3")
         .withBoardClassFactory(BoardFactories.PRE_COMPUTE_MATCHING_FACTORY)
-        .withMaxDepth(4)
+        .withMaxDepth(3)
         .build();
 
     Collection<BoardClass> games = Lists.newArrayList(

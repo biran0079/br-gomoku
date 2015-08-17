@@ -1,5 +1,6 @@
 package ai.candidatemoveselector;
 
+import com.google.common.collect.Sets;
 import common.Constants;
 import common.PatternType;
 import common.PositionTransformer;
@@ -8,14 +9,7 @@ import common.boardclass.BitBoard;
 import common.boardclass.BoardClass;
 import common.pattern.Pattern;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import model.Position;
 
@@ -42,6 +36,27 @@ public class CandidateMoveSelectorUtil {
     for (Pattern p :
         boardClass.getMatchingPatterns(stoneType.getOpponent(), PatternType.THREE)) {
       candidates.addAll(p.getDefensiveMoves());
+    }
+    return candidates;
+  }
+
+  public static Collection<Position> defendThree(BoardClass boardClass, StoneType stoneType) {
+    Set<Position> candidates = null;
+    for (Pattern p :
+        boardClass.getMatchingPatterns(stoneType.getOpponent(), PatternType.THREE)) {
+      if (candidates == null) {
+        candidates = p.getDefensiveMoves();
+      } else {
+        candidates = Sets.intersection(candidates, p.getDefensiveMoves());
+      }
+    }
+    if (candidates == null) {
+      // no pattern of three
+      return Collections.emptyList();
+    }
+    if (candidates.isEmpty()) {
+      // return all defensive moves if no move defends all threat of three.
+      return allDefendThree(boardClass, stoneType);
     }
     return candidates;
   }

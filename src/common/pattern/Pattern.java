@@ -14,7 +14,7 @@ import model.Position;
  */
 public interface Pattern {
 
-  ImmutableList<Position> getDefensiveMoves();
+  ImmutableSet<Position> getDefensiveMoves();
 
   boolean matches(BoardClass boardClass);
 

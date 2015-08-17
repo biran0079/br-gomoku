@@ -31,19 +31,6 @@ public class MinMaxSearchTest {
       .withMaxDepth(4)
       .build();
 
-  private final AI d3pm = MinMaxSearch.newBuilder()
-      .withName("d3_pm")
-      .withBoardClassFactory(BoardFactories.PRE_COMPUTE_MATCHING_FACTORY)
-      .withMaxDepth(3)
-      .build();
-
-  private final AI d4pm = MinMaxSearch.newBuilder()
-      .withName("d4")
-      .withBoardClassFactory(BoardFactories.PRE_COMPUTE_MATCHING_FACTORY)
-      .withMaxDepth(4)
-      .build();
-
-
   @Test
   public void d3_withEmptyBoard() {
     String expectedMoves = "ArrayList{[[7, 7], [8, 8], [6, 6], [6, 7], [7, 5], [8, 9], [7, 4], [7, 3], [7, 6], [7, 8], [5, 6], [4, 6], [4, 7], [3, 8], [4, 8], [3, 9], [5, 7], [8, 4], [6, 5], [8, 3], [5, 4], [4, 3], [5, 5], [5, 3], [5, 8]]}";
@@ -52,24 +39,10 @@ public class MinMaxSearchTest {
   }
 
   @Test
-  public void d3pm_withEmptyBoard() {
-    String expectedMoves = "ArrayList{[[7, 7], [8, 8], [6, 6], [6, 7], [7, 5], [8, 9], [7, 4], [7, 3], [7, 6], [7, 8], [5, 6], [4, 6], [4, 7], [3, 8], [4, 8], [3, 9], [5, 7], [8, 4], [6, 5], [8, 3], [5, 4], [4, 3], [5, 5], [5, 3], [5, 8]]}";
-    assertEquals(expectedMoves,
-        play(emptyBoard, new AI[]{d3pm, d3pm}, new StoneType[]{StoneType.BLACK, StoneType.WHITE}));
-  }
-
-  @Test
   public void d4_withEmptyBoard() {
     String expectedMoves = "ArrayList{[[7, 7], [8, 8], [6, 6], [8, 9], [8, 7], [9, 7], [6, 7], [7, 9], [6, 10], [5, 9], [4, 9], [10, 6], [11, 5], [6, 9], [9, 9], [9, 8], [5, 7], [4, 7], [7, 5], [4, 8], [5, 8], [3, 10], [6, 4], [6, 3], [5, 3], [4, 2], [6, 5], [6, 8], [9, 5], [5, 5], [8, 5], [7, 6], [10, 5]]}";
     assertEquals(expectedMoves,
         play(emptyBoard, new AI[]{d4, d4}, new StoneType[]{StoneType.BLACK, StoneType.WHITE}));
-  }
-
-  @Test
-  public void d4pm_withEmptyBoard() {
-    String expectedMoves = "ArrayList{[[7, 7], [8, 8], [6, 6], [8, 9], [8, 7], [9, 7], [6, 7], [7, 9], [6, 10], [5, 9], [4, 9], [10, 6], [11, 5], [6, 9], [9, 9], [9, 8], [5, 7], [4, 7], [7, 5], [4, 8], [5, 8], [3, 10], [6, 4], [6, 3], [5, 3], [4, 2], [6, 5], [6, 8], [9, 5], [5, 5], [8, 5], [7, 6], [10, 5]]}";
-    assertEquals(expectedMoves,
-        play(emptyBoard, new AI[]{d4pm, d4pm}, new StoneType[]{StoneType.BLACK, StoneType.WHITE}));
   }
 
   private String play(BoardClass boardClass, AI[] ai, StoneType[] stoneType) {

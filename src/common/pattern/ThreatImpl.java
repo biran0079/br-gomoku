@@ -1,6 +1,7 @@
 package common.pattern;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import common.PatternType;
 import common.PositionTransformer;
 import common.StoneType;
@@ -18,7 +19,7 @@ class ThreatImpl extends PatternImpl implements Threat {
               int mask,
               PositionTransformer transformer,
               StoneType stoneType,
-              ImmutableList<Position> defensiveMoves,
+              ImmutableSet<Position> defensiveMoves,
               Position offensiveMove) {
     super(rowIndex, pattern, mask, transformer,
         stoneType, defensiveMoves);

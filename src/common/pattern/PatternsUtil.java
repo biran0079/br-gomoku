@@ -1,6 +1,7 @@
 package common.pattern;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import common.Constants;
 import common.PositionTransformer;
 import common.StoneType;
@@ -27,23 +28,22 @@ class PatternsUtil {
     return pattern;
   }
 
-  static ImmutableList<Position> getDefensiveMoves(int i, int j, MoveType[] movePattern,
-                                                           PositionTransformer transformer) {
-    List<Position> defensiveMoves = new ArrayList<>();
+  static ImmutableSet<Position> getDefensiveMoves(int i,
+                                                  int j,
+                                                  MoveType[] movePattern,
+                                                  PositionTransformer transformer) {
+    ImmutableSet.Builder<Position> builder = ImmutableSet.builder();
     for (int k = 0; k < movePattern.length; k++) {
-      Position p = Position.of(i, j + k).transform(transformer);
       if (movePattern[k] == MoveType.D) {
-        defensiveMoves.add(0, p); // insert to head
-      } else if (movePattern[k] == MoveType.D) {
-        defensiveMoves.add(p);
+        builder.add(Position.of(i, j + k).transform(transformer));
       }
     }
-    return ImmutableList.copyOf(defensiveMoves);
+    return builder.build();
   }
 
   static Position getOffensiveMove(int i, int j, MoveType[] movePattern, PositionTransformer transformer) {
     for (int k = 0; k < movePattern.length; k++) {
-      if (movePattern[k] == O) {
+      if (movePattern[k] == MoveType.O) {
         return Position.of(i, j + k).transform(transformer);
       }
     }

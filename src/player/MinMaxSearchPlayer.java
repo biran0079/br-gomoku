@@ -15,7 +15,6 @@ public class MinMaxSearchPlayer implements Player {
   private final MinMaxSearch minMaxSearch = MinMaxSearch.newBuilder()
       .withTransitionTableFactory(() -> new SmartTransitionTable())
       .withMaxDepth(6)
-      .withRandomSampleBranchCandidates(15)
       .build();
 
   public MinMaxSearchPlayer(String s, StoneType stoneType) {
