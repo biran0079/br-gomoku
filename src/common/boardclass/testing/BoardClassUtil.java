@@ -18,7 +18,8 @@ public class BoardClassUtil {
 
   public static BoardClass fromString(String s) {
     final String[] b = s.split("\n");
-    return BoardFactories.DEFAULT_FACTORY.fromGameBoard(new AbstractGameBoard() {
+    return BoardFactories.PRE_COMPUTE_MATCHING_FACTORY
+        .fromGameBoard(new AbstractGameBoard() {
 
       @Override
       public StoneType get(int i, int j) {
@@ -50,7 +51,7 @@ public class BoardClassUtil {
   }
 
   public static BoardClass createBoard(StoneType[][] board) {
-    return BoardFactories.DEFAULT_FACTORY.fromGameBoard(fromArray(board));
+    return BoardFactories.PRE_COMPUTE_MATCHING_FACTORY.fromGameBoard(fromArray(board));
   }
 
   private abstract static class AbstractGameBoard implements GameBoard {

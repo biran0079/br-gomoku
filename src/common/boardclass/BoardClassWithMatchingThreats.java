@@ -14,7 +14,7 @@ import java.util.Set;
 /**
  * TODO share code with BoardClassWithMatchingPatterns.
  */
-public class BoardClassWithMatchingThreats extends AbstractBoardClass<Threat> {
+public class BoardClassWithMatchingThreats extends AbstractBoardClass {
 
   private static final Threats THREATS_WITH_INDEX = new Threats();
   private static final BoardClassWithMatchingThreats EMPTY_BOARD = new BoardClassWithMatchingThreats();
@@ -41,7 +41,6 @@ public class BoardClassWithMatchingThreats extends AbstractBoardClass<Threat> {
     this.matchingThreats = computeMatchingPatterns();
   }
 
-
   private Set<Threat> computeMatchingPatterns() {
     ImmutableSet.Builder<Threat> builder = ImmutableSet.builder();
     for (StoneType stoneType : new StoneType[] {StoneType.BLACK, StoneType.WHITE}) {
@@ -66,10 +65,6 @@ public class BoardClassWithMatchingThreats extends AbstractBoardClass<Threat> {
   @Override
   public BoardClassWithMatchingThreats withPositionSet(int i, int j, StoneType stoneType) {
     return new BoardClassWithMatchingThreats(this, i, j, stoneType);
-  }
-
-  public Set<Threat> getMatchingThreat() {
-    return matchingThreats;
   }
 
   public static class Factory implements BoardClass.Factory<BoardClassWithMatchingThreats> {

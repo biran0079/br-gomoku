@@ -2,6 +2,7 @@ package ai.minmax;
 
 import common.StoneType;
 import common.boardclass.BoardClass;
+import common.pattern.Pattern;
 
 /**
  * Evaluates game board status into an int.

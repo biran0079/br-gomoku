@@ -25,7 +25,7 @@ import model.GameBoard;
 /**
  * Shared logic for all BoardClass implementations.
  */
-abstract class AbstractBoardClass<T extends Pattern> implements BoardClass<T> {
+abstract class AbstractBoardClass implements BoardClass {
 
   private static final PositionTransformer[] TRACKING_TRANSFORMERS =
       new PositionTransformer[] {
@@ -50,7 +50,7 @@ abstract class AbstractBoardClass<T extends Pattern> implements BoardClass<T> {
     }
   }
 
-  AbstractBoardClass(AbstractBoardClass<T> boardClass, int i, int j, StoneType stoneType) {
+  AbstractBoardClass(AbstractBoardClass boardClass, int i, int j, StoneType stoneType) {
     map = new EnumMap(PositionTransformer.class);
     for (PositionTransformer transformer : TRACKING_TRANSFORMERS) {
       int ti = transformer.getI(i, j);

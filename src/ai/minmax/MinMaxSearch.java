@@ -185,7 +185,7 @@ public class MinMaxSearch implements AI {
     private Evaluator evaluator = new DefaultEvaluator();
     private TransitionTable.Factory transitionTableFactory =
         () -> new TransitionTableImpl();
-    private BoardClass.Factory boardClassFactory = BoardFactories.DEFAULT_FACTORY;
+    private BoardClass.Factory boardClassFactory = BoardFactories.PRE_COMPUTE_MATCHING_FACTORY;
 
     private Builder() {
     }

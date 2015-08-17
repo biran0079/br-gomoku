@@ -25,9 +25,6 @@ public class Position implements Comparable<Position> {
 	}
 
 	public static Position of(int i, int j) {
-    if (i < 0 || j < 0) {
-      throw new IllegalArgumentException("Cannot have negative position index.");
-    }
 		return cached[i][j];
 	}
 

@@ -18,7 +18,8 @@ import model.Position;
 
 public class MinMaxSearchTest {
 
-  private final BoardClass emptyBoard = BoardFactories.DEFAULT_FACTORY.getEmptyBoard();
+  private final BoardClass emptyBoard =
+      BoardFactories.PRE_COMPUTE_MATCHING_FACTORY.getEmptyBoard();
 
   private final AI d3 = MinMaxSearch.newBuilder()
       .withName("d3")

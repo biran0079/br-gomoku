@@ -10,11 +10,11 @@ import model.GameBoard;
 /**
  * Interface for a equivalent class of game board.
  */
-public interface BoardClass<T extends Pattern> extends GameBoard {
+public interface BoardClass extends GameBoard {
 
   boolean matchesAny(StoneType stoneType, PatternType patternType);
 
-  Iterable<T> getMatchingPatterns(StoneType stoneType, PatternType patternType);
+  Iterable<? extends Pattern> getMatchingPatterns(StoneType stoneType, PatternType patternType);
 
   @Override
   BoardClass withPositionSet(int i, int j, StoneType stoneType);

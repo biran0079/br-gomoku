@@ -5,7 +5,7 @@ import common.boardclass.BoardClassWithMatchingThreats;
 import common.boardclass.testing.BoardClassUtil;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Unit test for ThreatBasedSearch.
@@ -34,6 +34,7 @@ public class ThreatBasedSearchTest {
         + "_______________\n"
         + "_______________\n"
         + "_______________\n");
+
     assertTrue(threatBasedSearch.winningPathExists(boardClass, StoneType.BLACK));
   }
 

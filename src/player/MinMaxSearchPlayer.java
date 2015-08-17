@@ -13,7 +13,6 @@ public class MinMaxSearchPlayer implements Player {
   private final String name;
   private final StoneType stoneType;
   private final MinMaxSearch minMaxSearch = MinMaxSearch.newBuilder()
-      .withBoardClassFactory(BoardFactories.PRE_COMPUTE_MATCHING_FACTORY)
       .withTransitionTableFactory(() -> new SmartTransitionTable())
       .withMaxDepth(6)
       .withRandomSampleBranchCandidates(15)
