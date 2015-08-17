@@ -20,8 +20,6 @@ public interface Pattern {
 
   StoneType getStoneType();
 
-  PatternType getPatternType();
-
   interface Factory {
 
     ImmutableSet<Pattern> get(StoneType stoneType, PatternType patternType);

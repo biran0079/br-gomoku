@@ -21,7 +21,7 @@ class BoardClassImpl extends AbstractBoardClass {
     super();
   }
 
-  private  BoardClassImpl(AbstractBoardClass boardClass, int i, int j, StoneType stoneType) {
+  private BoardClassImpl(AbstractBoardClass boardClass, int i, int j, StoneType stoneType) {
     super(boardClass, i, j, stoneType);
   }
 
@@ -44,7 +44,7 @@ class BoardClassImpl extends AbstractBoardClass {
     return Iterables.filter(PATTERNS.get(stoneType, patternType), (p) -> p.matches(this));
   }
 
-  static class Factory implements BoardClass.Factory {
+  static class Factory implements BoardClass.Factory<BoardClassImpl> {
 
     @Override
     public BoardClassImpl fromGameBoard(GameBoard gameBoard) {

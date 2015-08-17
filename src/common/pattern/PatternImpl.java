@@ -21,22 +21,19 @@ class PatternImpl implements Pattern {
   private final PositionTransformer transformer;
   private final StoneType stoneType;
   private final ImmutableList<Position> defensiveMoves;
-  private final PatternType patternType;
 
   PatternImpl(int rowIndex,
           int pattern,
           int mask,
           PositionTransformer transformer,
           StoneType stoneType,
-          ImmutableList<Position> defensiveMoves,
-          PatternType patternType) {
+          ImmutableList<Position> defensiveMoves) {
     this.rowIndex = rowIndex;
     this.pattern = pattern;
     this.mask = mask;
     this.transformer = transformer;
     this.stoneType = stoneType;
     this.defensiveMoves = defensiveMoves;
-    this.patternType = patternType;
   }
 
   @Override
@@ -51,11 +48,6 @@ class PatternImpl implements Pattern {
   @Override
   public StoneType getStoneType() {
     return stoneType;
-  }
-
-  @Override
-  public PatternType getPatternType() {
-    return patternType;
   }
 
   @Override

@@ -5,7 +5,7 @@ package common.boardclass;
  */
 public class BoardFactories {
 
-  public static final BoardClass.Factory DEFAULT_FACTORY = new BoardClassImpl.Factory();
-  public static final BoardClass.Factory PRE_COMPUTE_MATCHING_FACTORY =
+  public static final BoardClass.Factory<BoardClassImpl> DEFAULT_FACTORY = new BoardClassImpl.Factory();
+  public static final BoardClass.Factory<BoardClassWithMatchingPatterns> PRE_COMPUTE_MATCHING_FACTORY =
       new BoardClassWithMatchingPatterns.Factory();
 }

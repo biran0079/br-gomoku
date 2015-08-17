@@ -25,7 +25,7 @@ public class MinMaxSearch implements AI {
   private final String name;
   private final boolean alphaBetaPruning;
   private final Evaluator evaluator;
-  private final BoardClass.Factory boardClassFactory;
+  private final BoardClass.Factory<BoardClass> boardClassFactory;
 
   private int evalCount;
   private int cacheHit;

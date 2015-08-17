@@ -8,24 +8,24 @@ import common.pattern.Pattern;
 import model.GameBoard;
 
 /**
- * Interface for board class that is used by AI searching algorithm.
+ * Interface for a equivalent class of game board.
  */
 public interface BoardClass extends GameBoard {
-
-  @Override
-  BoardClass withPositionSet(int i, int j, StoneType stoneType);
 
   boolean matchesAny(StoneType stoneType, PatternType patternType);
 
   Iterable<Pattern> getMatchingPatterns(StoneType stoneType, PatternType patternType);
 
+  @Override
+  BoardClass withPositionSet(int i, int j, StoneType stoneType);
+
   BitBoard getBoard(PositionTransformer transformer);
 
-  interface Factory extends GameBoard.Factory {
+  interface Factory<T extends GameBoard> extends GameBoard.Factory {
 
-    BoardClass fromGameBoard(GameBoard gameBoard);
+    T fromGameBoard(GameBoard gameBoard);
 
     @Override
-    BoardClass getEmptyBoard();
+    T getEmptyBoard();
   }
 }

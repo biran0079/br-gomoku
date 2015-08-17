@@ -3,6 +3,7 @@ package common.boardclass;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 
+import com.google.common.collect.Sets;
 import common.PatternType;
 import common.StoneType;
 import common.pattern.Pattern;
@@ -68,11 +69,10 @@ class BoardClassWithMatchingPatterns extends AbstractBoardClass {
 
   @Override
   public Iterable<Pattern> getMatchingPatterns(StoneType stoneType, PatternType patternType) {
-    return Iterables.filter(matchingPatterns,
-        p -> p.getStoneType() == stoneType && p.getPatternType() == patternType);
+    return Sets.intersection(matchingPatterns, PATTERNS_WITH_INDEX.get(stoneType, patternType));
   }
 
-  static class Factory implements BoardClass.Factory {
+  static class Factory implements BoardClass.Factory<BoardClassWithMatchingPatterns> {
 
     @Override
     public BoardClassWithMatchingPatterns fromGameBoard(GameBoard gameBoard) {

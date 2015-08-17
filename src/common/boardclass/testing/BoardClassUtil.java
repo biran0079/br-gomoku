@@ -36,7 +36,7 @@ public class BoardClassUtil {
     });
   }
 
-  public static GameBoard fromString(StoneType[][] board) {
+  public static GameBoard fromArray(StoneType[][] board) {
     return new AbstractGameBoard() {
 
       @Override
@@ -50,7 +50,7 @@ public class BoardClassUtil {
   }
 
   public static BoardClass createBoard(StoneType[][] board) {
-    return BoardFactories.DEFAULT_FACTORY.fromGameBoard(fromString(board));
+    return BoardFactories.DEFAULT_FACTORY.fromGameBoard(fromArray(board));
   }
 
   private abstract static class AbstractGameBoard implements GameBoard {

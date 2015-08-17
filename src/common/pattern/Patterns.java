@@ -1,7 +1,6 @@
 package common.pattern;
 
-import static common.pattern.MoveType.D1;
-import static common.pattern.MoveType.D2;
+import static common.pattern.MoveType.D;
 import static common.pattern.MoveType.E;
 import static common.pattern.MoveType.X;
 
@@ -35,7 +34,7 @@ class Patterns implements Pattern.Factory {
     Map<StoneType, Map<PatternType, ImmutableSet<Pattern>>> result = new EnumMap(StoneType.class);
     for (StoneType stoneType : new StoneType[] {StoneType.BLACK, StoneType.WHITE}) {
       Map<PatternType, ImmutableSet<Pattern>> innerMap = new EnumMap(PatternType.class);
-      innerMap.put(PatternType.FIVE, createGoalPatterns(stoneType));
+      innerMap.put(PatternType.FIVE, createFivePatterns(stoneType));
       innerMap.put(PatternType.FOUR, createFourPatterns(stoneType));
       innerMap.put(PatternType.STRAIT_FOUR, createStraitFourPatterns(stoneType));
       innerMap.put(PatternType.THREE, createThreePatterns(stoneType));
@@ -46,61 +45,46 @@ class Patterns implements Pattern.Factory {
 
   Pattern createPattern(int i, int j, int pattern, int mask,
                         PositionTransformer transformer, StoneType stoneType,
-                        MoveType[] movePattern, PatternType patternType) {
+                        MoveType[] movePattern) {
     return new PatternImpl(i, pattern, mask, transformer, stoneType,
-        getDefensiveMoves(i, j, movePattern, transformer.reverse()), patternType);
+        PatternsUtil.getDefensiveMoves(i, j, movePattern, transformer.reverse()));
   }
 
   private ImmutableSet<Pattern> createStraitFourPatterns(StoneType stoneType) {
     return ImmutableSet.<Pattern>builder()
-        .addAll(createPatterns(stoneType, new MoveType[] {D1, X, X, X, X, D1}, PatternType.STRAIT_FOUR))
+        .addAll(createPatterns(stoneType, new MoveType[] {D, X, X, X, X, D}))
         .build();
   }
 
   private ImmutableSet<Pattern> createThreePatterns(StoneType stoneType) {
     return ImmutableSet.<Pattern>builder()
-        .addAll(createPatterns(stoneType, new MoveType[] {D2, X, X, D1, X, D2}, PatternType.THREE))
-        .addAll(createPatterns(stoneType, new MoveType[] {D2, X, D1, X, X, D2}, PatternType.THREE))
-        .addAll(createPatterns(stoneType, new MoveType[] {E, D1, X, X, X, D1}, PatternType.THREE))
-        .addAll(createPatterns(stoneType, new MoveType[] {D1, X, X, X, D1, E}, PatternType.THREE))
+        .addAll(createPatterns(stoneType, new MoveType[] {D, X, X, D, X, D}))
+        .addAll(createPatterns(stoneType, new MoveType[] {D, X, D, X, X, D}))
+        .addAll(createPatterns(stoneType, new MoveType[] {E, D, X, X, X, D}))
+        .addAll(createPatterns(stoneType, new MoveType[] {D, X, X, X, D, E}))
         .build();
   }
 
   private ImmutableSet<Pattern> createFourPatterns(StoneType stoneType) {
     return ImmutableSet.<Pattern>builder()
-        .addAll(createPatterns(stoneType, new MoveType[] {D1, X, X, X, X}, PatternType.FOUR))
-        .addAll(createPatterns(stoneType, new MoveType[] {X, D1, X, X, X}, PatternType.FOUR))
-        .addAll(createPatterns(stoneType, new MoveType[] {X, X, D1, X, X}, PatternType.FOUR))
-        .addAll(createPatterns(stoneType, new MoveType[] {X, X, X, D1, X}, PatternType.FOUR))
-        .addAll(createPatterns(stoneType, new MoveType[] {X, X, X, X, D1}, PatternType.FOUR))
+        .addAll(createPatterns(stoneType, new MoveType[] {D, X, X, X, X}))
+        .addAll(createPatterns(stoneType, new MoveType[] {X, D, X, X, X}))
+        .addAll(createPatterns(stoneType, new MoveType[] {X, X, D, X, X}))
+        .addAll(createPatterns(stoneType, new MoveType[]{X, X, X, D, X}))
+        .addAll(createPatterns(stoneType, new MoveType[] {X, X, X, X, D}))
         .build();
   }
 
-  private ImmutableSet<Pattern> createGoalPatterns(StoneType stoneType) {
+  private ImmutableSet<Pattern> createFivePatterns(StoneType stoneType) {
     return ImmutableSet.<Pattern>builder()
-        .addAll(createPatterns(stoneType, new MoveType[] {X, X, X, X, X}, PatternType.FIVE))
+        .addAll(createPatterns(stoneType, new MoveType[] {X, X, X, X, X}))
         .build();
-  }
-
-  private static ImmutableList<Position> getDefensiveMoves(int i, int j, MoveType[] movePattern,
-      PositionTransformer transformer) {
-    List<Position> defensiveMoves = new ArrayList<>();
-    for (int k = 0; k < movePattern.length; k++) {
-      Position p = Position.create(i, j + k).transform(transformer);
-      if (movePattern[k] == MoveType.D1) {
-        defensiveMoves.add(0, p); // insert to head
-      } else if (movePattern[k] == MoveType.D2) {
-        defensiveMoves.add(p);
-      }
-    }
-    return ImmutableList.copyOf(defensiveMoves);
   }
 
   private Iterable<Pattern> createPatterns(
       StoneType stoneType,
-      MoveType[] movePattern,
-      PatternType patternType) {
-    int originalPattern = generatePattern(movePattern, stoneType.getBits());
+      MoveType[] movePattern) {
+    int originalPattern = PatternsUtil.generatePattern(movePattern, stoneType.getBits());
     int patternLength = movePattern.length;
     List<Pattern> result = new ArrayList<>();
     for (int i = 0; i < Constants.BOARD_SIZE; i++) {
@@ -108,9 +92,9 @@ class Patterns implements Pattern.Factory {
       int pattern = originalPattern;
       for (int j = 0; j <= Constants.BOARD_SIZE - patternLength; j++) {
         result.add(createPattern(i, j, pattern, mask, PositionTransformer.IDENTITY,
-            stoneType, movePattern, patternType));
+            stoneType, movePattern));
         result.add(createPattern(i, j, pattern, mask, PositionTransformer.CLOCK_90,
-            stoneType, movePattern, patternType));
+            stoneType, movePattern));
         mask <<= 2;
         pattern <<= 2;
       }
@@ -122,26 +106,14 @@ class Patterns implements Pattern.Factory {
       int mask = ((1 << (2 * patternLength)) - 1) << (2 * start);
       for (int j = start; j <= maxCol - patternLength; j++) {
         result.add(createPattern(i, j, pattern, mask, PositionTransformer.RIGHT_DIAGONAL,
-            stoneType, movePattern, patternType));
+            stoneType, movePattern));
         result.add(createPattern(i, j, pattern, mask, PositionTransformer.LEFT_DIAGONAL,
-            stoneType, movePattern, patternType));
+            stoneType, movePattern));
         mask <<= 2;
         pattern <<= 2;
       }
     }
     return result;
-  }
-
-  private static int generatePattern(MoveType[] moves, int bits) {
-    int pattern = 0;
-    int i = 0;
-    for (MoveType move : moves) {
-      if (move == MoveType.X) {
-        pattern |= (bits << i);
-      }
-      i += 2;
-    }
-    return pattern;
   }
 
   public ImmutableSet<Pattern> get(StoneType stoneType, PatternType patternType) {
