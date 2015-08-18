@@ -21,7 +21,7 @@ public class HashEvaluationTable<T extends Transformable<T>> extends TransitionT
   private final Multimap<Integer, BitBoard> hashBucket = ArrayListMultimap.create();
 
   @Override
-  public void put(BoardClass boardClass, T node) {
+  public void put(BoardClass<?> boardClass, T node) {
     for (PositionTransformer transformer : IDENTICAL_TRANSFORMERS) {
       BitBoard bitBoard = boardClass.getBoard(transformer);
       if (!cache.containsKey(bitBoard)) {

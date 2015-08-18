@@ -11,7 +11,7 @@ import common.boardclass.BoardClass;
 public class SmartTransitionTable<T extends Transformable<T>> extends TransitionTableImpl<T> {
 
   @Override
-  public void put(BoardClass boardClass, T node) {
+  public void put(BoardClass<?> boardClass, T node) {
     if (boardClass.getStoneCount() < 6) {
       super.put(boardClass, node);
     } else {

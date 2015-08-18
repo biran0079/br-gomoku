@@ -9,9 +9,9 @@ import common.boardclass.BoardClass;
  */
 public interface TransitionTable<T extends Transformable<T>> {
 
-  T get(BoardClass boardClass);
+  T get(BoardClass<?> boardClass);
 
-  void put(BoardClass boardClass, T node);
+  void put(BoardClass<?> boardClass, T node);
 
   interface Factory<T extends Transformable<T>> {
     TransitionTable<T> create();

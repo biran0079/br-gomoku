@@ -8,7 +8,7 @@ import common.boardclass.BoardClass;
  * Collection of hard-coded boards.
  */
 public class BoardClassSamples {
-  public static final ImmutableList<BoardClass> INITIAL_10 =
+  public static final ImmutableList<BoardClass<?>> INITIAL_10 =
       ImmutableList.of(
           BoardClassUtil.fromString(
               "_______________\n" +

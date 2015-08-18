@@ -5,7 +5,7 @@ import common.boardclass.BoardClass;
 
 public interface TransitionSet {
 
-  boolean contains(BoardClass boardClass);
+  boolean contains(BoardClass<?> boardClass);
 
-  void add(BoardClass boardClass);
+  void add(BoardClass<?> boardClass);
 }

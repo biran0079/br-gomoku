@@ -10,12 +10,12 @@ public class TransitionSetImpl implements TransitionSet {
   private final TransitionTable<DummyValue> transitionTable = new TransitionTableImpl<>();
 
   @Override
-  public boolean contains(BoardClass boardClass) {
+  public boolean contains(BoardClass<?> boardClass) {
     return transitionTable.get(boardClass) != null;
   }
 
   @Override
-  public void add(BoardClass boardClass) {
+  public void add(BoardClass<?> boardClass) {
     transitionTable.put(boardClass, DummyValue.INSTANCE);
   }
 

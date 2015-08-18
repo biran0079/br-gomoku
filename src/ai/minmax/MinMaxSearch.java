@@ -109,8 +109,8 @@ public class MinMaxSearch<T extends Pattern> implements AI {
   }
 
 
-  private MinMaxNode save(TransitionTable<MinMaxNode> transitionTable, BoardClass boardClass, MinMaxNode
-      node) {
+  private MinMaxNode save(TransitionTable<MinMaxNode> transitionTable,
+      BoardClass<T> boardClass, MinMaxNode node) {
     transitionTable.put(boardClass, node);
     return node;
   }

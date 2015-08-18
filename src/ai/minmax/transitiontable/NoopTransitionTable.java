@@ -9,12 +9,12 @@ import common.boardclass.BoardClass;
 public class NoopTransitionTable<T extends Transformable<T>> implements TransitionTable<T> {
 
   @Override
-  public T get(BoardClass boardClass) {
+  public T get(BoardClass<?> boardClass) {
     return null;
   }
 
   @Override
-  public void put(BoardClass boardClass, T node) {
+  public void put(BoardClass<?> boardClass, T node) {
 
   }
 }

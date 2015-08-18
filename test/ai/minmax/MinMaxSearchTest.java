@@ -19,7 +19,7 @@ import model.Position;
 
 public class MinMaxSearchTest {
 
-  private final BoardClass emptyBoard =
+  private final BoardClass<?> emptyBoard =
       BoardFactories.BOARD_CLASS_WITH_MATCHING_PATTERNS_FACTORY.getEmptyBoard();
 
   private final AI d3 = MinMaxSearch.defaultBuilderForPattern()
@@ -48,7 +48,7 @@ public class MinMaxSearchTest {
         play(emptyBoard, new AI[]{d4, d4}, new StoneType[]{StoneType.BLACK, StoneType.WHITE}));
   }
 
-  private String play(BoardClass boardClass, AI[] ai, StoneType[] stoneType) {
+  private String play(BoardClass<?> boardClass, AI[] ai, StoneType[] stoneType) {
     int i = 0;
     List<Position> result = new ArrayList<>();
     while (!boardClass.wins(StoneType.BLACK)

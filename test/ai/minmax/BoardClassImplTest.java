@@ -16,7 +16,7 @@ public class BoardClassImplTest {
 
   @Test
   public void testSample() {
-    BoardClass boardClass = BoardClassUtil.fromString(
+    BoardClass<?> boardClass = BoardClassUtil.fromString(
         "_______________\n" +
             "_______________\n" +
             "_______________\n" +

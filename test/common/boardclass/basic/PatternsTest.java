@@ -230,7 +230,7 @@ public class PatternsTest {
   private void testSinglePattern(StoneType[][] board,
                                  StoneType stoneType,
                                  PatternType patternType) {
-    BoardClass boardClass = createBoard(board);
+    BoardClass<?> boardClass = createBoard(board);
     PatternImpl pattern = (PatternImpl)
         Iterables.getOnlyElement(boardClass.getMatchingPatterns(stoneType, patternType));
     assertEquals(stoneType, pattern.getStoneType());

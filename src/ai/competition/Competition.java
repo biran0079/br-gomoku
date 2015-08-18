@@ -18,9 +18,9 @@ import model.Position;
  */
 public class Competition {
 
-  private final Collection<BoardClass> boardClasses;
+  private final Collection<BoardClass<?>> boardClasses;
 
-  public Competition(Collection<BoardClass> boardClasses) {
+  public Competition(Collection<BoardClass<?>> boardClasses) {
     this.boardClasses = boardClasses;
   }
 
@@ -38,7 +38,7 @@ public class Competition {
     CompetitionAI competitionAI2 = new CompetitionAI(ai2);
 
     Stopwatch stopwatch = Stopwatch.createStarted();
-    Stream<BoardClass> gameStream = boardClasses.stream();
+    Stream<BoardClass<?>> gameStream = boardClasses.stream();
     if (runInParallel) {
       gameStream = gameStream.parallel();
     }
@@ -64,7 +64,7 @@ public class Competition {
   }
 
   private void competeSingleGameWithMoveOrder(
-      BoardClass boardClass,
+      BoardClass<?> boardClass,
       CompetitionAI[] ai,
       StoneType[] stoneType) {
     int i = 0;

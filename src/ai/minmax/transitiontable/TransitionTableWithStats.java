@@ -17,7 +17,7 @@ public class TransitionTableWithStats<T extends Transformable<T>> implements Tra
   }
 
   @Override
-  public T get(BoardClass boardClass) {
+  public T get(BoardClass<?> boardClass) {
     T result = delegate.get(boardClass);
     if (result == null) {
       stats.incMiss();
@@ -28,7 +28,7 @@ public class TransitionTableWithStats<T extends Transformable<T>> implements Tra
   }
 
   @Override
-  public void put(BoardClass boardClass, T node) {
+  public void put(BoardClass<?> boardClass, T node) {
     delegate.put(boardClass, node);
   }
 

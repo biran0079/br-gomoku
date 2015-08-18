@@ -16,7 +16,7 @@ public class BoardClassGeneratorTest {
     assertEquals(1, Iterables.size(boardClassGenerator.generateBoardWithStones(1)));
     assertEquals(2, Iterables.size(boardClassGenerator.generateBoardWithStones(2)));
     assertEquals(13, Iterables.size(boardClassGenerator.generateBoardWithStones(3)));
-    for (BoardClass boardClass : boardClassGenerator.generateBoardWithStones(4)) {
+    for (BoardClass<?> boardClass : boardClassGenerator.generateBoardWithStones(4)) {
       assertEquals(4, boardClass.getStoneCount());
     }
   }

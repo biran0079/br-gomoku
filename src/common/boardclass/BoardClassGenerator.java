@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 
 import common.Constants;
 import common.StoneType;
+import common.pattern.Pattern;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -19,7 +20,7 @@ import model.Position;
  */
 public class BoardClassGenerator {
 
-  public Iterable<BoardClass> generateBoardWithStones(int n) {
+  public Iterable<BoardClass<?>> generateBoardWithStones(int n) {
     if (n == 0) {
       return Collections.singletonList(
           BoardFactories.BOARD_CLASS_WITH_MATCHING_PATTERNS_FACTORY.getEmptyBoard());
@@ -33,20 +34,20 @@ public class BoardClassGenerator {
     return () -> new UniqueBoardIterator(new BoardGeneratingIterator(n));
   }
 
-  private class UniqueBoardIterator implements Iterator<BoardClass> {
+  private class UniqueBoardIterator implements Iterator<BoardClass<?>> {
 
     private final TransitionSet transitionSet = new TransitionSetImpl();
-    private final Iterator<BoardClass> boardIterator;
-    private BoardClass nextBoardClass;
+    private final Iterator<BoardClass<?>> boardIterator;
+    private BoardClass<?> nextBoardClass;
 
-    UniqueBoardIterator(Iterator<BoardClass> boardIterator) {
+    UniqueBoardIterator(Iterator<BoardClass<?>> boardIterator) {
       this.boardIterator = boardIterator;
     }
 
     @Override
     public boolean hasNext() {
       while (nextBoardClass == null && boardIterator.hasNext()) {
-        BoardClass t = boardIterator.next();
+        BoardClass<?> t = boardIterator.next();
         if (!transitionSet.contains(t)) {
           nextBoardClass = t;
         }
@@ -55,7 +56,7 @@ public class BoardClassGenerator {
     }
 
     @Override
-    public BoardClass next() {
+    public BoardClass<?> next() {
       try {
         transitionSet.add(nextBoardClass);
         return nextBoardClass;
@@ -65,11 +66,11 @@ public class BoardClassGenerator {
     }
   }
 
-  private class BoardGeneratingIterator implements Iterator<BoardClass> {
+  private class BoardGeneratingIterator implements Iterator<BoardClass<?>> {
 
-    private final Iterator<BoardClass> boardIterator;
+    private final Iterator<BoardClass<?>> boardIterator;
     private Iterator<Position> moveIterator = Collections.emptyIterator();
-    private BoardClass baseBoard;
+    private BoardClass<?> baseBoard;
 
     BoardGeneratingIterator(int n) {
       this.boardIterator = generateBoardWithStones(n - 1).iterator();
@@ -85,7 +86,7 @@ public class BoardClassGenerator {
     }
 
     @Override
-    public BoardClass next() {
+    public BoardClass<?> next() {
       Position move = moveIterator.next();
       return baseBoard.withPositionSet(
           move.getRowIndex(),

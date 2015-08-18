@@ -38,12 +38,12 @@ public class TransitionTableImpl<T extends Transformable<T>> implements Transiti
   final Map<BitBoard, T> cache = Maps.newHashMap();
 
   @Override
-  public T get(BoardClass boardClass) {
+  public T get(BoardClass<?> boardClass) {
     return cache.get(boardClass.getBoard(PositionTransformer.IDENTITY));
   }
 
   @Override
-  public void put(BoardClass boardClass, T node) {
+  public void put(BoardClass<?> boardClass, T node) {
     for (PositionTransformer transformer : IDENTICAL_TRANSFORMERS) {
       BitBoard bitBoard = boardClass.getBoard(transformer);
       if (!cache.containsKey(bitBoard)) {

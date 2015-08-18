@@ -29,7 +29,7 @@ class AIConvergeExperiment {
         .withMaxDepth(3)
         .build();
 
-    Collection<BoardClass> games = Lists.newArrayList(
+    Collection<BoardClass<?>> games = Lists.newArrayList(
         new BoardClassGenerator().generateBoardWithStones(4));
 
     new Competition(games).competeParallel(ai1, ai2, StoneType.BLACK);

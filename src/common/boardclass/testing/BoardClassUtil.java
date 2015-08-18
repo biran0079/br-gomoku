@@ -4,6 +4,7 @@ import common.Constants;
 import common.StoneType;
 import common.boardclass.BoardClass;
 import common.boardclass.BoardFactories;
+import common.pattern.Pattern;
 
 import model.GameBoard;
 
@@ -16,7 +17,7 @@ public class BoardClassUtil {
   public static final StoneType W = StoneType.WHITE;
   public static final StoneType B = StoneType.BLACK;
 
-  public static BoardClass fromString(String s) {
+  public static BoardClass<Pattern> fromString(String s) {
     final String[] b = s.split("\n");
     return BoardFactories.BOARD_CLASS_WITH_MATCHING_PATTERNS_FACTORY
         .fromGameBoard(new AbstractGameBoard() {
@@ -50,7 +51,7 @@ public class BoardClassUtil {
     };
   }
 
-  public static BoardClass createBoard(StoneType[][] board) {
+  public static BoardClass<Pattern> createBoard(StoneType[][] board) {
     return BoardFactories.BOARD_CLASS_WITH_MATCHING_PATTERNS_FACTORY.fromGameBoard(fromArray(board));
   }
 
