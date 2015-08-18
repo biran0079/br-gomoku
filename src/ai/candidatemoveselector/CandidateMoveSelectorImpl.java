@@ -16,17 +16,15 @@ public class CandidateMoveSelectorImpl implements CandidateMovesSelector {
   public CandidateMoveSelectorImpl(int randomSampleBranchCandidate) {
     this.randomSampleBranchCandidate = randomSampleBranchCandidate;
   }
-
   @Override
   public Collection<Position> getCandidateMoves(BoardClass boardClass, StoneType stoneType) {
-    if (boardClass.isEmpty()) {
       return singleton(Position.of(Constants.BOARD_SIZE / 2, Constants.BOARD_SIZE / 2));
-    }
-    Optional<Position> candidate = CandidateMoveSelectorUtil.anyOffendFour(boardClass, stoneType);
+/*
+    Optional<Position> candidate = CandidateMoveSelectorUtil.minOffendFour(boardClass, stoneType);
     if (candidate.isPresent()) {
       return singleton(candidate.get());
     }
-    candidate = CandidateMoveSelectorUtil.anyDefendFour(boardClass, stoneType);
+    candidate = CandidateMoveSelectorUtil.minDefendFour(boardClass, stoneType);
     if (candidate.isPresent()) {
       return singleton(candidate.get());
     }
@@ -35,19 +33,11 @@ public class CandidateMoveSelectorImpl implements CandidateMovesSelector {
     if (!candidateList.isEmpty()) {
       return candidateList;
     }
-    candidateList = CandidateMoveSelectorUtil.defendThree(boardClass, stoneType);
-    if (!candidateList.isEmpty()) {
-      return candidateList;
+    candidate = CandidateMoveSelectorUtil.mostFrequentDefendThree(boardClass, stoneType);
+    if (candidate.isPresent()) {
+      return singleton(candidate.get());
     }
     return randomSample(CandidateMoveSelectorUtil.getNeighboringMoves(boardClass), randomSampleBranchCandidate);
-  }
-
-  public static <T> Collection<T> randomSample(Collection<T> c, int n) {
-    if (n > c.size()) {
-      return c;
-    }
-    List<T> sample = new ArrayList<>(c);
-    Collections.shuffle(sample);
-    return sample.subList(0, n);
+*/
   }
 }

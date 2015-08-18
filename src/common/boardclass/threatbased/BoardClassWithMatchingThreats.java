@@ -1,13 +1,13 @@
-package common.boardclass;
+package common.boardclass.threatbased;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
-import common.PatternType;
+import common.pattern.PatternType;
 import common.StoneType;
-import common.pattern.Pattern;
+import common.boardclass.AbstractBoardClass;
+import common.boardclass.BoardClass;
 import common.pattern.Threat;
-import common.pattern.Threats;
 import model.GameBoard;
 
 import java.util.Set;
@@ -15,11 +15,11 @@ import java.util.Set;
 /**
  * TODO share code with BoardClassWithMatchingPatterns.
  */
-public class BoardClassWithMatchingThreats extends AbstractBoardClass {
+public class BoardClassWithMatchingThreats extends AbstractBoardClass<Threat> {
 
   private static final Threats THREATS_WITH_INDEX = new Threats();
   private static final BoardClassWithMatchingThreats EMPTY_BOARD = new BoardClassWithMatchingThreats();
-  private final Set<Threat> matchingThreats;
+  private final Set<ThreatImpl> matchingThreats;
 
   private BoardClassWithMatchingThreats() {
     super();
@@ -29,7 +29,7 @@ public class BoardClassWithMatchingThreats extends AbstractBoardClass {
   public BoardClassWithMatchingThreats(BoardClassWithMatchingThreats boardClass,
                                        int i, int j, StoneType stoneType) {
     super(boardClass, i, j, stoneType);
-    this.matchingThreats = ImmutableSet.<Threat>builder()
+    this.matchingThreats = ImmutableSet.<ThreatImpl>builder()
         .addAll(Iterables.filter(
             boardClass.matchingThreats, p -> p.matches(this)))
         .addAll(Iterables.filter(
@@ -42,8 +42,8 @@ public class BoardClassWithMatchingThreats extends AbstractBoardClass {
     this.matchingThreats = computeMatchingPatterns();
   }
 
-  private Set<Threat> computeMatchingPatterns() {
-    ImmutableSet.Builder<Threat> builder = ImmutableSet.builder();
+  private Set<ThreatImpl> computeMatchingPatterns() {
+    ImmutableSet.Builder<ThreatImpl> builder = ImmutableSet.builder();
     for (StoneType stoneType : new StoneType[] {StoneType.BLACK, StoneType.WHITE}) {
       for (PatternType patternType : PatternType.values()) {
         builder.addAll(Iterables.filter(
@@ -59,7 +59,7 @@ public class BoardClassWithMatchingThreats extends AbstractBoardClass {
   }
 
   @Override
-  public Iterable<Threat> getMatchingPatterns(StoneType stoneType, PatternType patternType) {
+  public Iterable<ThreatImpl> getMatchingPatterns(StoneType stoneType, PatternType patternType) {
     return Sets.intersection(matchingThreats, THREATS_WITH_INDEX.get(stoneType, patternType));
   }
 
@@ -68,19 +68,10 @@ public class BoardClassWithMatchingThreats extends AbstractBoardClass {
     return new BoardClassWithMatchingThreats(this, i, j, stoneType);
   }
 
-  private final Pattern.Factory patterns = Pattern.DEFAULT_FACTORY;
+  public static class Factory implements BoardClass.Factory<BoardClass<Threat>> {
 
-  @Override
-  public boolean wins(StoneType stoneType) {
-    for (Pattern p : patterns.get(stoneType, PatternType.FIVE))
-      if (p.matches(this))
-        return true;
-    return false;
-  }
-
-  public static class Factory implements BoardClass.Factory<BoardClassWithMatchingThreats> {
     @Override
-    public BoardClassWithMatchingThreats fromGameBoard(GameBoard gameBoard) {
+    public BoardClass<Threat> fromGameBoard(GameBoard gameBoard) {
       if (gameBoard instanceof BoardClassWithMatchingThreats) {
         return (BoardClassWithMatchingThreats) gameBoard;
       }
@@ -88,7 +79,7 @@ public class BoardClassWithMatchingThreats extends AbstractBoardClass {
     }
 
     @Override
-    public BoardClassWithMatchingThreats getEmptyBoard() {
+    public BoardClass<Threat> getEmptyBoard() {
       return EMPTY_BOARD;
     }
   }

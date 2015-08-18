@@ -1,13 +1,14 @@
-package common.boardclass;
+package common.boardclass.basic;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 
 import com.google.common.collect.Sets;
-import common.PatternType;
-import common.StoneType;
 import common.pattern.Pattern;
-import common.pattern.PatternsWithIndex;
+import common.pattern.PatternType;
+import common.StoneType;
+import common.boardclass.AbstractBoardClass;
+import common.boardclass.BoardClass;
 
 import java.util.Set;
 
@@ -16,12 +17,13 @@ import model.GameBoard;
 /**
  * BoardClass with matching patterns pre-computed.
  */
-class BoardClassWithMatchingPatterns extends AbstractBoardClass {
+public class BoardClassWithMatchingPatterns extends AbstractBoardClass<Pattern> {
 
-  private static final PatternsWithIndex PATTERNS_WITH_INDEX = new PatternsWithIndex();
-  private static final BoardClassWithMatchingPatterns EMPTY_BOARD = new BoardClassWithMatchingPatterns();
+  private static final Patterns PATTERNS = new Patterns();
+  private static final BoardClassWithMatchingPatterns EMPTY_BOARD =
+      new BoardClassWithMatchingPatterns();
 
-  private final Set<Pattern> matchingPatterns;
+  private final Set<PatternImpl> matchingPatterns;
 
   private BoardClassWithMatchingPatterns() {
     super();
@@ -33,11 +35,11 @@ class BoardClassWithMatchingPatterns extends AbstractBoardClass {
                                          int j,
                                          StoneType stoneType) {
     super(boardClass, i, j, stoneType);
-    this.matchingPatterns = ImmutableSet.<Pattern>builder()
+    this.matchingPatterns = ImmutableSet.<PatternImpl>builder()
         .addAll(Iterables.filter(
             boardClass.matchingPatterns, p -> p.matches(this)))
         .addAll(Iterables.filter(
-            PATTERNS_WITH_INDEX.get(i, j, stoneType), p -> p.matches(this)))
+            PATTERNS.get(i, j, stoneType), p -> p.matches(this)))
         .build();
   }
 
@@ -46,12 +48,12 @@ class BoardClassWithMatchingPatterns extends AbstractBoardClass {
     this.matchingPatterns = computeMatchingPatterns();
   }
 
-  private Set<Pattern> computeMatchingPatterns() {
-    ImmutableSet.Builder<Pattern> builder = ImmutableSet.builder();
+  private Set<PatternImpl> computeMatchingPatterns() {
+    ImmutableSet.Builder<PatternImpl> builder = ImmutableSet.builder();
     for (StoneType stoneType : new StoneType[] {StoneType.BLACK, StoneType.WHITE}) {
       for (PatternType patternType : PatternType.values()) {
         builder.addAll(Iterables.filter(
-            PATTERNS_WITH_INDEX.get(stoneType, patternType), p -> p.matches(this)));
+            PATTERNS.get(stoneType, patternType), p -> p.matches(this)));
       }
     }
     return builder.build();
@@ -68,14 +70,14 @@ class BoardClassWithMatchingPatterns extends AbstractBoardClass {
   }
 
   @Override
-  public Iterable<Pattern> getMatchingPatterns(StoneType stoneType, PatternType patternType) {
-    return Sets.intersection(matchingPatterns, PATTERNS_WITH_INDEX.get(stoneType, patternType));
+  public Iterable<PatternImpl> getMatchingPatterns(StoneType stoneType, PatternType patternType) {
+    return Sets.intersection(matchingPatterns, PATTERNS.get(stoneType, patternType));
   }
 
-  static class Factory implements BoardClass.Factory<BoardClassWithMatchingPatterns> {
+  public static class Factory implements BoardClass.Factory<BoardClass<Pattern>> {
 
     @Override
-    public BoardClassWithMatchingPatterns fromGameBoard(GameBoard gameBoard) {
+    public BoardClass<Pattern> fromGameBoard(GameBoard gameBoard) {
       if (gameBoard instanceof BoardClassWithMatchingPatterns) {
         return (BoardClassWithMatchingPatterns) gameBoard;
       }
@@ -83,7 +85,7 @@ class BoardClassWithMatchingPatterns extends AbstractBoardClass {
     }
 
     @Override
-    public BoardClassWithMatchingPatterns getEmptyBoard() {
+    public BoardClass<Pattern> getEmptyBoard() {
       return EMPTY_BOARD;
     }
   }

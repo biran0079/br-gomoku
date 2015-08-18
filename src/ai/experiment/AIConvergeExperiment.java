@@ -1,6 +1,7 @@
 package ai.experiment;
 
 import ai.AI;
+import ai.candidatemoveselector.CandidateMovesSelectors;
 import ai.competition.Competition;
 import ai.minmax.MinMaxSearch;
 import com.google.common.collect.Lists;
@@ -17,12 +18,13 @@ public class AIConvergeExperiment {
 
   public static void main(String[] args) {
     AI ai1 = MinMaxSearch.newBuilder()
-        .withName("d4")
-        .withMaxDepth(4)
+        .withName("d3-test")
+        .withCandidateMoveSelector(CandidateMovesSelectors.FOR_TEST)
+        .withMaxDepth(3)
         .build();
     AI ai2 = MinMaxSearch.newBuilder()
-        .withName("d5")
-        .withMaxDepth(5)
+        .withName("d3")
+        .withMaxDepth(3)
         .build();
 
     Collection<BoardClass> games = Lists.newArrayList(

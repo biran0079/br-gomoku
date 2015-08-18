@@ -1,11 +1,9 @@
 package common.pattern;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
-import common.PatternType;
+import common.PositionTransformer;
 import common.StoneType;
-import common.boardclass.BoardClass;
 
 import model.Position;
 
@@ -16,14 +14,13 @@ public interface Pattern {
 
   ImmutableSet<Position> getDefensiveMoves();
 
-  boolean matches(BoardClass boardClass);
-
   StoneType getStoneType();
 
-  interface Factory {
+  interface Factory<T extends Pattern> {
 
-    ImmutableSet<Pattern> get(StoneType stoneType, PatternType patternType);
+    T create(int i, int j, int pattern, int mask,
+             PositionTransformer transformer,
+             StoneType stoneType,
+             MoveType[] movePattern);
   }
-
-  Factory DEFAULT_FACTORY = new Patterns();
 }

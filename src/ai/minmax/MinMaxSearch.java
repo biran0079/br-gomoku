@@ -1,6 +1,6 @@
 package ai.minmax;
 
-import ai.candidatemoveselector.CandidateMoveSelectorImpl;
+import ai.candidatemoveselector.CandidateMovesSelectors;
 import com.google.common.collect.Iterables;
 
 import common.Constants;
@@ -183,8 +183,7 @@ public class MinMaxSearch implements AI {
 
     private int maxDepth = 4;
     private String name = "min_max_search";
-    private CandidateMovesSelector candidateMoveSelector =
-        new CandidateMoveSelectorImpl(Integer.MAX_VALUE);
+    private CandidateMovesSelector candidateMoveSelector = CandidateMovesSelectors.DEFAULT;
     private boolean alphaBetaPruning = true;
     private Evaluator evaluator = new DefaultEvaluator();
     private TransitionTable.Factory transitionTableFactory =

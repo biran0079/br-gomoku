@@ -12,20 +12,21 @@ import static common.PositionTransformer.LEFT_DIAGONAL;
 import static common.PositionTransformer.RIGHT_DIAGONAL;
 
 import common.Constants;
-import common.PatternType;
+import common.pattern.Pattern;
+import common.pattern.PatternType;
 import common.PositionTransformer;
 import common.StoneType;
 
 import java.util.EnumMap;
 import java.util.Map;
 
-import common.pattern.Pattern;
 import model.GameBoard;
 
 /**
  * Shared logic for all BoardClass implementations.
  */
-abstract class AbstractBoardClass implements BoardClass {
+public abstract class AbstractBoardClass<T extends Pattern>
+    implements BoardClass<T> {
 
   private static final PositionTransformer[] TRACKING_TRANSFORMERS =
       new PositionTransformer[] {
@@ -43,14 +44,14 @@ abstract class AbstractBoardClass implements BoardClass {
 
   private final Map<PositionTransformer, BitBoard> map;
 
-  AbstractBoardClass() {
+  protected AbstractBoardClass() {
     map = new EnumMap(PositionTransformer.class);
     for (PositionTransformer transformer : TRACKING_TRANSFORMERS) {
       map.put(transformer, BitBoard.emptyBoard(transformer.getBoardRowNumber()));
     }
   }
 
-  AbstractBoardClass(AbstractBoardClass boardClass, int i, int j, StoneType stoneType) {
+  protected AbstractBoardClass(AbstractBoardClass<T> boardClass, int i, int j, StoneType stoneType) {
     map = new EnumMap(PositionTransformer.class);
     for (PositionTransformer transformer : TRACKING_TRANSFORMERS) {
       int ti = transformer.getI(i, j);
@@ -59,7 +60,7 @@ abstract class AbstractBoardClass implements BoardClass {
     }
   }
 
-  AbstractBoardClass(GameBoard gameBoard) {
+  protected AbstractBoardClass(GameBoard gameBoard) {
     map = new EnumMap(PositionTransformer.class);
     for (PositionTransformer transformer : TRACKING_TRANSFORMERS) {
       map.put(transformer, BitBoard.fromGameBoard(gameBoard, transformer));
@@ -88,7 +89,7 @@ abstract class AbstractBoardClass implements BoardClass {
 
   @Override
   public boolean wins(StoneType stoneType) {
-    return matchesAny(stoneType, PatternType.FIVE);
+    return matchesAny(stoneType, PatternType.GOAL);
   }
 
   @Override

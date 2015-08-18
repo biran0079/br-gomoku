@@ -1,6 +1,5 @@
 package common.pattern;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import common.Constants;
 import common.PositionTransformer;
@@ -9,14 +8,12 @@ import model.Position;
 
 import java.util.*;
 
-import static common.pattern.MoveType.O;
-
 /**
  * Utility methods for patterns.
  */
-class PatternsUtil {
+public class PatternsUtil {
 
-  static int generatePattern(MoveType[] moves, int bits) {
+  public static int generatePattern(MoveType[] moves, int bits) {
     int pattern = 0;
     int i = 0;
     for (MoveType move : moves) {
@@ -28,7 +25,7 @@ class PatternsUtil {
     return pattern;
   }
 
-  static ImmutableSet<Position> getDefensiveMoves(int i,
+  public static ImmutableSet<Position> getDefensiveMoves(int i,
                                                   int j,
                                                   MoveType[] movePattern,
                                                   PositionTransformer transformer) {
@@ -41,16 +38,16 @@ class PatternsUtil {
     return builder.build();
   }
 
-  static Position getOffensiveMove(int i, int j, MoveType[] movePattern, PositionTransformer transformer) {
+  public static Position getOffensiveMove(int i, int j, MoveType[] movePattern, PositionTransformer transformer) {
     for (int k = 0; k < movePattern.length; k++) {
       if (movePattern[k] == MoveType.O) {
         return Position.of(i, j + k).transform(transformer);
       }
     }
-    throw new IllegalStateException("No offensive move found");
+    return null;
   }
 
-  static <T> Map<StoneType, Map<Position, Set<T>>> emptyIndex() {
+  public static <T> Map<StoneType, Map<Position, Set<T>>> emptyIndex() {
     Map<StoneType, Map<Position, Set<T>>> result = new EnumMap<>(StoneType.class);
     for (StoneType stoneType : new StoneType[] {StoneType.BLACK, StoneType.WHITE}) {
       Map<Position, Set<T>> innerMap = new HashMap<>();
@@ -59,6 +56,42 @@ class PatternsUtil {
         for (int j = 0; j < Constants.BOARD_SIZE; j++) {
           innerMap.put(Position.of(i, j), new HashSet<>());
         }
+      }
+    }
+    return result;
+  }
+
+  public static <T extends Pattern> Iterable<T> createPatterns(
+      StoneType stoneType,
+      MoveType[] movePattern,
+      Pattern.Factory<T> factory) {
+    int originalPattern = PatternsUtil.generatePattern(movePattern, stoneType.getBits());
+    int patternLength = movePattern.length;
+    List<T> result = new ArrayList<>();
+    for (int i = 0; i < Constants.BOARD_SIZE; i++) {
+      int mask = (1 << (2 * patternLength)) - 1;
+      int pattern = originalPattern;
+      for (int j = 0; j <= Constants.BOARD_SIZE - patternLength; j++) {
+        result.add(factory.create(i, j, pattern, mask, PositionTransformer.IDENTITY,
+            stoneType, movePattern));
+        result.add(factory.create(i, j, pattern, mask, PositionTransformer.CLOCK_90,
+            stoneType, movePattern));
+        mask <<= 2;
+        pattern <<= 2;
+      }
+    }
+    for (int i = 0; i < Constants.BOARD_SIZE * 2 - 1; i++) {
+      int start = Math.max(0, i - Constants.BOARD_SIZE + 1);
+      int maxCol = Math.min(i + 1, Constants.BOARD_SIZE);
+      int pattern = originalPattern << (2 * start);
+      int mask = ((1 << (2 * patternLength)) - 1) << (2 * start);
+      for (int j = start; j <= maxCol - patternLength; j++) {
+        result.add(factory.create(i, j, pattern, mask, PositionTransformer.RIGHT_DIAGONAL,
+            stoneType, movePattern));
+        result.add(factory.create(i, j, pattern, mask, PositionTransformer.LEFT_DIAGONAL,
+            stoneType, movePattern));
+        mask <<= 2;
+        pattern <<= 2;
       }
     }
     return result;

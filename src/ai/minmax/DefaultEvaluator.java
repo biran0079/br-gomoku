@@ -2,7 +2,7 @@ package ai.minmax;
 
 import com.google.common.collect.Iterables;
 
-import common.PatternType;
+import common.pattern.PatternType;
 import common.StoneType;
 import common.boardclass.BoardClass;
 

@@ -1,26 +1,26 @@
-package common.pattern;
+package common.boardclass.threatbased;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import common.PatternType;
 import common.PositionTransformer;
 import common.StoneType;
+import common.pattern.AbstractPattern;
+import common.pattern.Threat;
 import model.Position;
 
 /**
  * Implementation of threat backed by PatternImpl.
  */
-class ThreatImpl extends PatternImpl implements Threat {
+class ThreatImpl extends AbstractPattern implements Threat {
 
   private final Position offensiveMove;
 
   ThreatImpl(int rowIndex,
-              int pattern,
-              int mask,
-              PositionTransformer transformer,
-              StoneType stoneType,
-              ImmutableSet<Position> defensiveMoves,
-              Position offensiveMove) {
+             int pattern,
+             int mask,
+             PositionTransformer transformer,
+             StoneType stoneType,
+             ImmutableSet<Position> defensiveMoves,
+             Position offensiveMove) {
     super(rowIndex, pattern, mask, transformer,
         stoneType, defensiveMoves);
     this.offensiveMove = offensiveMove;

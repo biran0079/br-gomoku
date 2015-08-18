@@ -1,4 +1,4 @@
-package common.pattern;
+package common.boardclass.basic;
 
 import static common.boardclass.testing.BoardClassUtil.B;
 import static common.boardclass.testing.BoardClassUtil.E;
@@ -8,11 +8,11 @@ import static org.junit.Assert.assertEquals;
 
 import com.google.common.collect.Iterables;
 
-import common.PatternType;
 import common.PositionTransformer;
 import common.StoneType;
 import common.boardclass.BoardClass;
 
+import common.pattern.PatternType;
 import org.junit.Test;
 
 /**
@@ -22,8 +22,9 @@ public class PatternsTest {
 
   @Test
   public void testGoalNumber() {
-    assertEquals(572, Pattern.DEFAULT_FACTORY.get(StoneType.BLACK, PatternType.FIVE).size());
-    assertEquals(572, Pattern.DEFAULT_FACTORY.get(StoneType.WHITE, PatternType.FIVE).size());
+    Patterns patterns = new Patterns();
+    assertEquals(572, patterns.get(StoneType.BLACK, PatternType.FIVE).size());
+    assertEquals(572, patterns.get(StoneType.WHITE, PatternType.FIVE).size());
   }
 
   @Test
@@ -32,7 +33,6 @@ public class PatternsTest {
         new StoneType[][]{
             {B, B, B, B, B},
         },
-        PositionTransformer.IDENTITY,
         StoneType.BLACK,
         PatternType.FIVE);
 
@@ -41,7 +41,6 @@ public class PatternsTest {
             {B, B, W, B, B},
             {E, E, W, W, W, W, W},
         },
-        PositionTransformer.IDENTITY,
         StoneType.WHITE,
         PatternType.FIVE);
   }
@@ -56,7 +55,6 @@ public class PatternsTest {
             {B},
             {B},
         },
-        PositionTransformer.CLOCK_90,
         StoneType.BLACK,
         PatternType.FIVE);
 
@@ -70,7 +68,6 @@ public class PatternsTest {
             {E, W},
             {E, W},
         },
-        PositionTransformer.CLOCK_90,
         StoneType.WHITE,
         PatternType.FIVE);
   }
@@ -85,7 +82,6 @@ public class PatternsTest {
             {E, E, E, B},
             {E, E, E, E, B},
         },
-        PositionTransformer.LEFT_DIAGONAL,
         StoneType.BLACK,
         PatternType.FIVE);
 
@@ -97,7 +93,6 @@ public class PatternsTest {
             {E, W},
             {W},
         },
-        PositionTransformer.RIGHT_DIAGONAL,
         StoneType.WHITE,
         PatternType.FIVE);
   }
@@ -108,7 +103,6 @@ public class PatternsTest {
         new StoneType[][]{
             {B, B, B, B, E},
         },
-        PositionTransformer.IDENTITY,
         StoneType.BLACK,
         PatternType.FOUR);
 
@@ -117,7 +111,6 @@ public class PatternsTest {
             {B, B, W, B, B},
             {E, E, E, W, W, W, W, B},
         },
-        PositionTransformer.IDENTITY,
         StoneType.WHITE,
         PatternType.FOUR);
   }
@@ -131,7 +124,6 @@ public class PatternsTest {
             {B},
             {B},
         },
-        PositionTransformer.CLOCK_90,
         StoneType.BLACK,
         PatternType.FOUR);
 
@@ -142,7 +134,6 @@ public class PatternsTest {
             {E, W},
             {E, W},
         },
-        PositionTransformer.CLOCK_90,
         StoneType.WHITE,
         PatternType.FOUR);
   }
@@ -156,7 +147,6 @@ public class PatternsTest {
             {E, E, B},
             {E, E, E, B},
         },
-        PositionTransformer.LEFT_DIAGONAL,
         StoneType.BLACK,
         PatternType.FOUR);
 
@@ -168,7 +158,6 @@ public class PatternsTest {
             {E, W},
             {E},
         },
-        PositionTransformer.RIGHT_DIAGONAL,
         StoneType.WHITE,
         PatternType.FOUR);
   }
@@ -179,7 +168,6 @@ public class PatternsTest {
         new StoneType[][]{
             {E, B, B, B, E, E},
         },
-        PositionTransformer.IDENTITY,
         StoneType.BLACK,
         PatternType.THREE);
 
@@ -188,7 +176,6 @@ public class PatternsTest {
             {B, B, W, B, B},
             {E, E, E, W, W, W, E, B},
         },
-        PositionTransformer.IDENTITY,
         StoneType.WHITE,
         PatternType.THREE);
   }
@@ -202,7 +189,6 @@ public class PatternsTest {
             {B},
             {B},
         },
-        PositionTransformer.CLOCK_90,
         StoneType.BLACK,
         PatternType.THREE);
 
@@ -213,7 +199,6 @@ public class PatternsTest {
             {E, W},
             {E, W},
         },
-        PositionTransformer.CLOCK_90,
         StoneType.WHITE,
         PatternType.THREE);
   }
@@ -227,7 +212,6 @@ public class PatternsTest {
             {E, E, B},
             {E, E, E, B},
         },
-        PositionTransformer.LEFT_DIAGONAL,
         StoneType.BLACK,
         PatternType.THREE);
 
@@ -240,19 +224,16 @@ public class PatternsTest {
             {E, W},
             {E},
         },
-        PositionTransformer.RIGHT_DIAGONAL,
         StoneType.WHITE,
         PatternType.THREE);
   }
 
   private void testSinglePattern(StoneType[][] board,
-                                 PositionTransformer orientation,
                                  StoneType stoneType,
                                  PatternType patternType) {
     BoardClass boardClass = createBoard(board);
     PatternImpl pattern = (PatternImpl)
         Iterables.getOnlyElement(boardClass.getMatchingPatterns(stoneType, patternType));
-    assertEquals(orientation, pattern.getTransformer());
     assertEquals(stoneType, pattern.getStoneType());
   }
 }

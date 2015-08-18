@@ -2,6 +2,7 @@ package ai.minmax;
 
 import static org.junit.Assert.assertEquals;
 
+import ai.candidatemoveselector.CandidateMovesSelectors;
 import com.google.common.base.MoreObjects;
 
 import common.StoneType;
@@ -23,11 +24,13 @@ public class MinMaxSearchTest {
 
   private final AI d3 = MinMaxSearch.newBuilder()
       .withName("d3")
+      .withCandidateMoveSelector(CandidateMovesSelectors.FOR_TEST)
       .withMaxDepth(3)
       .build();
 
   private final AI d4 = MinMaxSearch.newBuilder()
       .withName("d4")
+      .withCandidateMoveSelector(CandidateMovesSelectors.FOR_TEST)
       .withMaxDepth(4)
       .build();
 

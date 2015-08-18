@@ -1,7 +1,7 @@
-package common.pattern;
+package common.boardclass.threatbased;
 
-import common.PatternType;
 import common.StoneType;
+import common.pattern.PatternType;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -17,7 +17,8 @@ public class ThreatsTest {
   public void testGet() throws Exception {
     int ct = 0;
     for (StoneType stoneType : new StoneType[] {StoneType.BLACK, StoneType.WHITE}) {
-      for (PatternType patternType : PatternType.values()) {
+      for (PatternType patternType :
+          new PatternType[] {PatternType.THREE, PatternType.FOUR, PatternType.STRAIT_FOUR, PatternType.FIVE}) {
         ct += threats.get(stoneType, patternType).size();
       }
     }

@@ -1,20 +1,16 @@
 package common.pattern;
 
-import com.google.common.collect.ImmutableList;
-
 import com.google.common.collect.ImmutableSet;
 import common.Constants;
-import common.PatternType;
 import common.PositionTransformer;
 import common.StoneType;
 import common.boardclass.BoardClass;
-
 import model.Position;
 
 /**
- * Defines a BitBoard pattern.
+ * Basic implementation of pattern.
  */
-class PatternImpl implements Pattern {
+public abstract class AbstractPattern implements Pattern {
 
   private final int rowIndex;
   private final int pattern;
@@ -23,7 +19,7 @@ class PatternImpl implements Pattern {
   private final StoneType stoneType;
   private final ImmutableSet<Position> defensiveMoves;
 
-  PatternImpl(int rowIndex,
+  protected AbstractPattern(int rowIndex,
               int pattern,
               int mask,
               PositionTransformer transformer,
@@ -42,18 +38,9 @@ class PatternImpl implements Pattern {
     return defensiveMoves;
   }
 
-  PositionTransformer getTransformer() {
-    return transformer;
-  }
-
   @Override
   public StoneType getStoneType() {
     return stoneType;
-  }
-
-  @Override
-  public boolean matches(BoardClass boardClass) {
-    return (boardClass.getBoard(transformer).getRow(rowIndex) & mask) == pattern;
   }
 
   @Override
@@ -72,5 +59,9 @@ class PatternImpl implements Pattern {
       sb.append("\n");
     }
     return sb.toString();
+  }
+
+  public boolean matches(BoardClass boardClass) {
+    return (boardClass.getBoard(transformer).getRow(rowIndex) & mask) == pattern;
   }
 }

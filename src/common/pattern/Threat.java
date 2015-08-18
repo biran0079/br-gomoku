@@ -1,19 +1,11 @@
 package common.pattern;
 
-import com.google.common.collect.ImmutableSet;
-import common.PatternType;
-import common.StoneType;
 import model.Position;
 
 /**
- * Interface for Threat that is used in threat based search.
+ * A threat to make a winning pattern with a offensive move.
  */
 public interface Threat extends Pattern {
 
   Position getOffensiveMove();
-
-  interface Factory {
-
-    ImmutableSet<Threat> get(StoneType stoneType, PatternType patternType);
-  }
 }

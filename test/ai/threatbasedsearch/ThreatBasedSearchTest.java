@@ -1,8 +1,11 @@
 package ai.threatbasedsearch;
 
 import common.StoneType;
-import common.boardclass.BoardClassWithMatchingThreats;
+import common.boardclass.BoardClass;
+import common.boardclass.BoardFactories;
+import common.boardclass.threatbased.BoardClassWithMatchingThreats;
 import common.boardclass.testing.BoardClassUtil;
+import common.pattern.Threat;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
@@ -12,13 +15,13 @@ import static org.junit.Assert.assertTrue;
  */
 public class ThreatBasedSearchTest {
 
-  private final BoardClassWithMatchingThreats.Factory factory =
-      new BoardClassWithMatchingThreats.Factory();
+  private final  BoardClass.Factory<BoardClass<Threat>> factory =
+      BoardFactories.BOARD_CLASS_WITH_MATCHING_THREATS_FACTORY;
   private final ThreatBasedSearch threatBasedSearch = new ThreatBasedSearch();
 
   @Test
   public void testWinningPathExists() throws Exception {
-    BoardClassWithMatchingThreats boardClass = createBoard(""
+    BoardClass<Threat> boardClass = createBoard(""
         + "_______________\n"
         + "_______________\n"
         + "_______________\n"
@@ -38,7 +41,7 @@ public class ThreatBasedSearchTest {
     assertTrue(threatBasedSearch.winningPathExists(boardClass, StoneType.BLACK));
   }
 
-  private BoardClassWithMatchingThreats createBoard(String s) {
+  private BoardClass<Threat> createBoard(String s) {
     return factory.fromGameBoard(BoardClassUtil.fromString(s));
   }
 }
