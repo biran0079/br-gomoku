@@ -4,15 +4,16 @@ import com.google.common.collect.Iterables;
 
 import common.StoneType;
 import common.boardclass.BoardClass;
+import common.pattern.Pattern;
 import common.pattern.PatternType;
 
 /**
  * Default implementation of evaluator.
  */
-public class DefaultEvaluator implements Evaluator {
+public class DefaultEvaluator implements Evaluator<Pattern> {
 
   @Override
-  public int eval(BoardClass boardClass, StoneType nextToMove) {
+  public int eval(BoardClass<Pattern> boardClass, StoneType nextToMove) {
     if (boardClass.matchesAny(nextToMove, PatternType.FOUR)
         || boardClass.matchesAny(nextToMove, PatternType.THREE)) {
       return nextToMove == StoneType.BLACK ? 10 : -10;

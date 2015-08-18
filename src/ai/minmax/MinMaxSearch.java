@@ -25,7 +25,7 @@ public class MinMaxSearch<T extends Pattern> implements AI {
   private final TransitionTable.Factory<MinMaxNode> transitionTableFactory;
   private final String name;
   private final boolean alphaBetaPruning;
-  private final Evaluator evaluator;
+  private final Evaluator<T> evaluator;
   private final CandidateMovesSelector<T> candidateMovesSelector;
   private final BoardClass.Factory<T> boardClassFactory;
 
@@ -49,7 +49,8 @@ public class MinMaxSearch<T extends Pattern> implements AI {
   public static Builder<Pattern> defaultBuilderForPattern() {
     return newBuilder()
         .withCandidateMoveSelector(CandidateMovesSelectors.DEFAULT)
-        .withBoardClassFactory(BoardFactories.BOARD_CLASS_WITH_MATCHING_PATTERNS_FACTORY);
+        .withBoardClassFactory(BoardFactories.BOARD_CLASS_WITH_MATCHING_PATTERNS_FACTORY)
+        .withEvaluator(new DefaultEvaluator());
   }
 
   @Override
@@ -86,7 +87,7 @@ public class MinMaxSearch<T extends Pattern> implements AI {
     }
   }
 
-  private int eval(BoardClass boardClass, StoneType stoneType) {
+  private int eval(BoardClass<T> boardClass, StoneType stoneType) {
     evalCount++;
     StoneType nextToMove = maxDepth % 2 == 0 ? stoneType : stoneType.getOpponent();
     return evaluator.eval(boardClass, nextToMove);
@@ -191,10 +192,10 @@ public class MinMaxSearch<T extends Pattern> implements AI {
     private int maxDepth = 4;
     private String name = "min_max_search";
     private boolean alphaBetaPruning = true;
-    private Evaluator evaluator = new DefaultEvaluator();
     private TransitionTable.Factory<MinMaxNode> transitionTableFactory = TransitionTableImpl::new;
     private CandidateMovesSelector<T> candidateMoveSelector;
     private BoardClass.Factory<T> boardClassFactory;
+    private Evaluator<T> evaluator;
 
     private Builder() {
     }
@@ -208,7 +209,7 @@ public class MinMaxSearch<T extends Pattern> implements AI {
       return this;
     }
 
-    public Builder<T> withEvaluator(Evaluator evaluator) {
+    public Builder<T> withEvaluator(Evaluator<T> evaluator) {
       this.evaluator = evaluator;
       return this;
     }
