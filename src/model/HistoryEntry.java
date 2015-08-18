@@ -28,5 +28,4 @@ public class HistoryEntry {
   public GameBoard getGameBoard() {
     return gameBoard;
   }
-
 }

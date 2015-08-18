@@ -2,27 +2,35 @@ package ai.candidatemoveselector;
 
 import common.StoneType;
 import common.boardclass.BoardClass;
-import model.Position;
+import common.pattern.Pattern;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import model.Position;
+
 /**
  * Builder for CandidateMovesSelector.
  */
-public class CandidateMovesSelectorBuilder {
+public class CandidateMovesSelectorBuilder<T extends Pattern> {
 
-  private final List<MoveSelector> moveSelectors = new ArrayList<>();
+  private final List<MoveSelector<T>> moveSelectors = new ArrayList<>();
 
-  public CandidateMovesSelectorBuilder add(MoveSelector moveSelector) {
+  private CandidateMovesSelectorBuilder() {}
+
+  public static <T extends Pattern> CandidateMovesSelectorBuilder<T> newBuilder() {
+    return new CandidateMovesSelectorBuilder<>();
+  }
+
+  public CandidateMovesSelectorBuilder<T> add(MoveSelector<T> moveSelector) {
     moveSelectors.add(moveSelector);
     return this;
   }
 
-  public CandidateMovesSelector build() {
+  public CandidateMovesSelector<T> build() {
     return (boardClass, stoneType) -> {
-      for (MoveSelector moveSelector : moveSelectors) {
+      for (MoveSelector<T> moveSelector : moveSelectors) {
         Collection<Position> candidateMoves = moveSelector.select(boardClass, stoneType);
         if (!candidateMoves.isEmpty()) {
           return candidateMoves;
@@ -32,8 +40,8 @@ public class CandidateMovesSelectorBuilder {
     };
   }
 
-  public interface MoveSelector {
+  public interface MoveSelector<T extends Pattern> {
 
-    Collection<Position> select(BoardClass<?> boardClass, StoneType stoneType);
+    Collection<Position> select(BoardClass<T> boardClass, StoneType stoneType);
   }
 }

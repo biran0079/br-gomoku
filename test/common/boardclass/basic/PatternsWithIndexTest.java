@@ -4,13 +4,13 @@ import static org.junit.Assert.assertEquals;
 
 import common.Constants;
 import common.StoneType;
-
 import common.pattern.Pattern;
+
 import org.junit.Test;
 
 public class PatternsWithIndexTest {
 
-  private Patterns patterns = new Patterns();
+  private final Patterns patterns = new Patterns();
 
   @Test
   public void testGet() {

@@ -6,7 +6,7 @@ import javax.inject.Inject;
 import javax.swing.JFrame;
 
 
-public class GameFrame extends JFrame{
+class GameFrame extends JFrame{
 
   @Inject
 	public  GameFrame(GamePanel gamePanel, ControlPanel controlPanel){

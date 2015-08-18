@@ -22,7 +22,7 @@ public class TransitionSetImpl implements TransitionSet {
 
   private static class DummyValue implements Transformable<DummyValue> {
 
-    private static DummyValue INSTANCE = new DummyValue();
+    private static final DummyValue INSTANCE = new DummyValue();
 
     @Override
     public DummyValue transform(PositionTransformer transformer) {

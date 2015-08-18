@@ -56,10 +56,8 @@ public class TransitionTableWithStats<T extends Transformable<T>> implements Tra
 
     @Override
     public synchronized String toString() {
-      return new StringBuilder(name)
-          .append(" hit rate: ")
-          .append(String.format("%.2f (%d/%d)", hit * 1.0 / (hit + miss + 1e-6), hit, (hit + miss)))
-          .toString();
+      return name + " hit rate: " + String
+          .format("%.2f (%d/%d)", hit * 1.0 / (hit + miss + 1e-6), hit, (hit + miss));
     }
   }
 }

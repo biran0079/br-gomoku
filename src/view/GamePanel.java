@@ -9,14 +9,14 @@ import java.awt.GridLayout;
 import javax.inject.Inject;
 import javax.swing.JPanel;
 
-public class GamePanel extends JPanel {
+class GamePanel extends JPanel {
 
-	private final int panel_height = Constants.BOARD_SIZE * UIConstants.SQUARE_HEIGHT;
-	private final int panel_width = Constants.BOARD_SIZE * UIConstants.SQUARE_WIDTH;
 	private final GameSquare[][] square;
 
   @Inject
 	public GamePanel(GameSquareFactory gameSquareFactory) {
+		int panel_height = Constants.BOARD_SIZE * UIConstants.SQUARE_HEIGHT;
+		int panel_width = Constants.BOARD_SIZE * UIConstants.SQUARE_WIDTH;
 		this.setPreferredSize(new Dimension(panel_width, panel_height));
 		this.setLayout(new GridLayout(Constants.BOARD_SIZE, Constants.BOARD_SIZE));
 		square = new GameSquare[Constants.BOARD_SIZE][Constants.BOARD_SIZE];

@@ -107,13 +107,10 @@ public class BitBoard {
 
   @Override
   public boolean equals(Object o) {
-    if (!(o instanceof BitBoard)) {
-      return false;
-    }
-    return Arrays.equals(board, ((BitBoard) o).board);
+    return o instanceof BitBoard && Arrays.equals(board, ((BitBoard) o).board);
   }
 
-  static void setBits(int[] board, int i, int j, StoneType stoneType) {
+  private static void setBits(int[] board, int i, int j, StoneType stoneType) {
     if (Constants.DEBUG && ((board[i] >> (j * 2)) & 3) != 0) {
       throw new IllegalArgumentException("Cannot set an non-empty position on board!");
     }

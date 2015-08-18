@@ -37,7 +37,7 @@ public class BoardClassUtil {
     });
   }
 
-  public static GameBoard fromArray(StoneType[][] board) {
+  private static GameBoard fromArray(StoneType[][] board) {
     return new AbstractGameBoard() {
 
       @Override

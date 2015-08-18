@@ -1,10 +1,11 @@
 package common.boardclass.threatbased;
 
+import static org.junit.Assert.assertEquals;
+
 import common.StoneType;
 import common.pattern.PatternType;
-import org.junit.Test;
 
-import static org.junit.Assert.*;
+import org.junit.Test;
 
 /**
  * Unit test for Threats.

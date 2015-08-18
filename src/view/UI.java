@@ -25,7 +25,7 @@ public class UI {
   }
 
   public void clearBoard() {
-    SwingUtilities.invokeLater(() -> gamePanel.clearBoard());
+    SwingUtilities.invokeLater(gamePanel::clearBoard);
   }
 
   public PlayerType[] getSelectedPlayerTypes() {

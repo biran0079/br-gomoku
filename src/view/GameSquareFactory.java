@@ -5,7 +5,7 @@ import javax.inject.Inject;
 /**
  * Factory for GameSquare object.
  */
-public class GameSquareFactory {
+class GameSquareFactory {
 
   private final ClickCallback clickClickCallback;
 

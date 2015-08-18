@@ -8,11 +8,10 @@ import static org.junit.Assert.assertEquals;
 
 import com.google.common.collect.Iterables;
 
-import common.PositionTransformer;
 import common.StoneType;
 import common.boardclass.BoardClass;
-
 import common.pattern.PatternType;
+
 import org.junit.Test;
 
 /**

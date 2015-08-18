@@ -12,10 +12,10 @@ import static common.PositionTransformer.LEFT_DIAGONAL;
 import static common.PositionTransformer.RIGHT_DIAGONAL;
 
 import common.Constants;
-import common.pattern.Pattern;
-import common.pattern.PatternType;
 import common.PositionTransformer;
 import common.StoneType;
+import common.pattern.Pattern;
+import common.pattern.PatternType;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -45,14 +45,14 @@ public abstract class AbstractBoardClass<T extends Pattern>
   private final Map<PositionTransformer, BitBoard> map;
 
   protected AbstractBoardClass() {
-    map = new EnumMap(PositionTransformer.class);
+    map = new EnumMap<>(PositionTransformer.class);
     for (PositionTransformer transformer : TRACKING_TRANSFORMERS) {
       map.put(transformer, BitBoard.emptyBoard(transformer.getBoardRowNumber()));
     }
   }
 
   protected AbstractBoardClass(AbstractBoardClass<T> boardClass, int i, int j, StoneType stoneType) {
-    map = new EnumMap(PositionTransformer.class);
+    map = new EnumMap<>(PositionTransformer.class);
     for (PositionTransformer transformer : TRACKING_TRANSFORMERS) {
       int ti = transformer.getI(i, j);
       int tj = transformer.getJ(i, j);
@@ -61,7 +61,7 @@ public abstract class AbstractBoardClass<T extends Pattern>
   }
 
   protected AbstractBoardClass(GameBoard gameBoard) {
-    map = new EnumMap(PositionTransformer.class);
+    map = new EnumMap<>(PositionTransformer.class);
     for (PositionTransformer transformer : TRACKING_TRANSFORMERS) {
       map.put(transformer, BitBoard.fromGameBoard(gameBoard, transformer));
     }

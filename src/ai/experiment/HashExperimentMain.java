@@ -6,13 +6,13 @@ import common.boardclass.testing.BoardClassSamples;
 import ai.minmax.MinMaxSearch;
 import ai.minmax.transitiontable.HashEvaluationTable;
 
-public class HashExperimentMain {
+class HashExperimentMain {
 
   public static void main(String[] args) {
     BoardClassSamples.INITIAL_10.stream()
         .forEach(boardClass -> {
           HashEvaluationTable table = new HashEvaluationTable();
-          MinMaxSearch.newBuilder()
+          MinMaxSearch.defaultBuilderForPattern()
               .withName("d6")
               .withTransitionTableFactory(() -> table)
               .withMaxDepth(6)

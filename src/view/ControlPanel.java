@@ -10,7 +10,7 @@ import javax.swing.JPanel;
 
 import controller.PlayerType;
 
-public class ControlPanel extends JPanel {
+class ControlPanel extends JPanel {
 
 	private final JButton newGame, undo;
 	private final JComboBox<PlayerType> player1, player2;
@@ -20,8 +20,8 @@ public class ControlPanel extends JPanel {
 		newGame = new JButton("new game");
 		undo = new JButton("undo");
 		PlayerType[] types = { PlayerType.HUMAN, PlayerType.AI };
-		player1 = new JComboBox(types);
-		player2 = new JComboBox(types);
+		player1 = new JComboBox<>(types);
+		player2 = new JComboBox<>(types);
 		this.setLayout(new FlowLayout());
 		this.add(newGame);
 		this.add(undo);

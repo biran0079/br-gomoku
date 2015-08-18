@@ -2,13 +2,13 @@ package common.boardclass.basic;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
-
 import com.google.common.collect.Sets;
-import common.pattern.Pattern;
-import common.pattern.PatternType;
+
 import common.StoneType;
 import common.boardclass.AbstractBoardClass;
 import common.boardclass.BoardClass;
+import common.pattern.Pattern;
+import common.pattern.PatternType;
 
 import java.util.Set;
 
@@ -60,7 +60,7 @@ public class BoardClassWithMatchingPatterns extends AbstractBoardClass<Pattern> 
   }
 
   @Override
-  public BoardClass withPositionSet(int i, int j, StoneType stoneType) {
+  public BoardClass<Pattern> withPositionSet(int i, int j, StoneType stoneType) {
     return new BoardClassWithMatchingPatterns(this, i, j, stoneType);
   }
 
@@ -74,7 +74,7 @@ public class BoardClassWithMatchingPatterns extends AbstractBoardClass<Pattern> 
     return Sets.intersection(matchingPatterns, PATTERNS.get(stoneType, patternType));
   }
 
-  public static class Factory implements BoardClass.Factory<BoardClass<Pattern>> {
+  public static class Factory implements BoardClass.Factory<Pattern> {
 
     @Override
     public BoardClass<Pattern> fromGameBoard(GameBoard gameBoard) {

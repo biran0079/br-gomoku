@@ -2,10 +2,10 @@ package ai.minmax;
 
 import static org.junit.Assert.assertTrue;
 
-import common.pattern.PatternType;
 import common.StoneType;
 import common.boardclass.BoardClass;
 import common.boardclass.testing.BoardClassUtil;
+import common.pattern.PatternType;
 
 import org.junit.Test;
 

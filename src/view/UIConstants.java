@@ -5,7 +5,7 @@ import javax.swing.ImageIcon;
 /**
  * Constants for GUI.
  */
-public class UIConstants {
+class UIConstants {
 
   public static final int SQUARE_HEIGHT = 30;
 

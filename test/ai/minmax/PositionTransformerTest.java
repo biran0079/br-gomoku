@@ -10,7 +10,7 @@ import org.junit.Test;
 import model.Position;
 
 /**
- * Created by biran on 8/9/2015.
+ * Unit test for PositionTransformer.
  */
 public class PositionTransformerTest {
 

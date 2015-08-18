@@ -2,7 +2,6 @@ package ai.minmax;
 
 import static org.junit.Assert.assertEquals;
 
-import ai.candidatemoveselector.CandidateMovesSelectors;
 import com.google.common.base.MoreObjects;
 
 import common.StoneType;
@@ -15,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ai.AI;
+import ai.candidatemoveselector.CandidateMovesSelectors;
 import model.Position;
 
 public class MinMaxSearchTest {
@@ -22,13 +22,13 @@ public class MinMaxSearchTest {
   private final BoardClass emptyBoard =
       BoardFactories.BOARD_CLASS_WITH_MATCHING_PATTERNS_FACTORY.getEmptyBoard();
 
-  private final AI d3 = MinMaxSearch.newBuilder()
+  private final AI d3 = MinMaxSearch.defaultBuilderForPattern()
       .withName("d3")
       .withCandidateMoveSelector(CandidateMovesSelectors.FOR_TEST)
       .withMaxDepth(3)
       .build();
 
-  private final AI d4 = MinMaxSearch.newBuilder()
+  private final AI d4 = MinMaxSearch.defaultBuilderForPattern()
       .withName("d4")
       .withCandidateMoveSelector(CandidateMovesSelectors.FOR_TEST)
       .withMaxDepth(4)

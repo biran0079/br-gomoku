@@ -10,9 +10,9 @@ import common.pattern.Threat;
  */
 public class BoardFactories {
 
-  public static final BoardClass.Factory<BoardClass<Pattern>>
+  public static final BoardClass.Factory<Pattern>
       BOARD_CLASS_WITH_MATCHING_PATTERNS_FACTORY = new BoardClassWithMatchingPatterns.Factory();
 
-  public static final BoardClass.Factory<BoardClass<Threat>>
+  public static final BoardClass.Factory<Threat>
       BOARD_CLASS_WITH_MATCHING_THREATS_FACTORY = new BoardClassWithMatchingThreats.Factory();
 }

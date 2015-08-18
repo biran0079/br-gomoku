@@ -1,21 +1,21 @@
 package ai.threatbasedsearch;
 
+import static org.junit.Assert.assertTrue;
+
 import common.StoneType;
 import common.boardclass.BoardClass;
 import common.boardclass.BoardFactories;
-import common.boardclass.threatbased.BoardClassWithMatchingThreats;
 import common.boardclass.testing.BoardClassUtil;
 import common.pattern.Threat;
-import org.junit.Test;
 
-import static org.junit.Assert.assertTrue;
+import org.junit.Test;
 
 /**
  * Unit test for ThreatBasedSearch.
  */
 public class ThreatBasedSearchTest {
 
-  private final  BoardClass.Factory<BoardClass<Threat>> factory =
+  private final  BoardClass.Factory<Threat> factory =
       BoardFactories.BOARD_CLASS_WITH_MATCHING_THREATS_FACTORY;
   private final ThreatBasedSearch threatBasedSearch = new ThreatBasedSearch();
 

@@ -9,7 +9,7 @@ import javax.swing.JButton;
 
 import model.Position;
 
-public class GameSquare extends JButton implements ActionListener {
+class GameSquare extends JButton implements ActionListener {
 
 	private final Position position;
 	private final ClickCallback clickClickCallback;

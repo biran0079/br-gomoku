@@ -2,9 +2,9 @@ package ai.minmax;
 
 import com.google.common.collect.Iterables;
 
-import common.pattern.PatternType;
 import common.StoneType;
 import common.boardclass.BoardClass;
+import common.pattern.PatternType;
 
 /**
  * Default implementation of evaluator.

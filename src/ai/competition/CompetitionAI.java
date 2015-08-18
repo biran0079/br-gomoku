@@ -7,7 +7,7 @@ import ai.AI;
 /**
  * Holder of competition AI and competition results for the AI.
  */
-public class CompetitionAI {
+class CompetitionAI {
 
   private volatile int win, lose, draw;
   private final Vector<Long> moveTimeCostMs = new Vector<>();
@@ -21,28 +21,28 @@ public class CompetitionAI {
     return ai;
   }
 
-  public int getWin() {
+  int getWin() {
     return win;
   }
 
-  public synchronized int incWin() {
-    return win++;
+  public synchronized void incWin() {
+    win++;
   }
 
-  public int getLose() {
+  int getLose() {
     return lose;
   }
 
-  public synchronized int incLose() {
-    return lose++;
+  public synchronized void incLose() {
+    lose++;
   }
 
-  public int getDraw() {
+  int getDraw() {
     return draw;
   }
 
-  public synchronized int incDraw() {
-    return draw++;
+  public synchronized void incDraw() {
+    draw++;
   }
 
   public void recordMoveTimeCost(long ms) {
@@ -52,22 +52,10 @@ public class CompetitionAI {
   @Override
   public String toString() {
     synchronized (moveTimeCostMs) {
-      return new StringBuilder()
-          .append(getAI())
-          .append( " ")
-          .append(getWin())
-          .append("(")
-          .append(String.format("%.2f%%", getWin() * 100.0 / (getDraw() + getWin() + getLose())))
-          .append(") wins, ")
-          .append(getLose())
-          .append(" loses, ")
-          .append(getDraw())
-          .append(" draw, ")
-          .append("duration(ms): ")
-          .append(moveTimeCostMs.stream()
-              .mapToLong(v -> v)
-              .summaryStatistics())
-          .toString();
+      return getAI() + " " + getWin() + "("
+          + String.format("%.2f%%", getWin() * 100.0 / (getDraw() + getWin() + getLose()))
+          + ") wins, " + getLose() + " loses, " + getDraw() + " draw, " + "duration(ms): "
+          + moveTimeCostMs.stream().mapToLong(v -> v).summaryStatistics();
     }
   }
 }

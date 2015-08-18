@@ -1,37 +1,38 @@
 package ai.minmax;
 
-import ai.candidatemoveselector.CandidateMovesSelectors;
 import com.google.common.collect.Iterables;
 
 import common.Constants;
 import common.StoneType;
 import common.boardclass.BoardClass;
 import common.boardclass.BoardFactories;
+import common.pattern.Pattern;
 
 import java.util.Collection;
 
 import ai.AI;
 import ai.candidatemoveselector.CandidateMovesSelector;
+import ai.candidatemoveselector.CandidateMovesSelectors;
 import ai.minmax.transitiontable.NoopTransitionTable;
 import ai.minmax.transitiontable.TransitionTable;
 import ai.minmax.transitiontable.TransitionTableImpl;
 import model.GameBoard;
 import model.Position;
 
-public class MinMaxSearch implements AI {
+public class MinMaxSearch<T extends Pattern> implements AI {
 
   private final int maxDepth;
-  private final TransitionTable.Factory transitionTableFactory;
-  private final CandidateMovesSelector candidateMovesSelector;
+  private final TransitionTable.Factory<MinMaxNode> transitionTableFactory;
   private final String name;
   private final boolean alphaBetaPruning;
   private final Evaluator evaluator;
-  private final BoardClass.Factory<BoardClass> boardClassFactory;
+  private final CandidateMovesSelector<T> candidateMovesSelector;
+  private final BoardClass.Factory<T> boardClassFactory;
 
   private int evalCount;
   private int cacheHit;
 
-  private MinMaxSearch(Builder builder) {
+  private MinMaxSearch(Builder<T> builder) {
     this.name = builder.name;
     this.maxDepth = builder.maxDepth;
     this.alphaBetaPruning = builder.alphaBetaPruning;
@@ -41,8 +42,14 @@ public class MinMaxSearch implements AI {
     this.boardClassFactory = builder.boardClassFactory;
   }
 
-  public static Builder newBuilder() {
-    return new Builder();
+  private static <T extends Pattern> Builder<T> newBuilder() {
+    return new Builder<>();
+  }
+
+  public static Builder<Pattern> defaultBuilderForPattern() {
+    return newBuilder()
+        .withCandidateMoveSelector(CandidateMovesSelectors.DEFAULT)
+        .withBoardClassFactory(BoardFactories.BOARD_CLASS_WITH_MATCHING_PATTERNS_FACTORY);
   }
 
   @Override
@@ -54,7 +61,7 @@ public class MinMaxSearch implements AI {
   public Position nextMove(GameBoard gameBoard, StoneType stoneType) {
     evalCount = 0;
     cacheHit = 0;
-    BoardClass boardClass = boardClassFactory.fromGameBoard(gameBoard);
+    BoardClass<T> boardClass = boardClassFactory.fromGameBoard(gameBoard);
     if (boardClass.wins(StoneType.BLACK) || boardClass.wins(StoneType.WHITE)) {
       throw new IllegalStateException("Already won.");
     }
@@ -62,7 +69,7 @@ public class MinMaxSearch implements AI {
       throw new IllegalStateException("Already won.");
     }
     MinMax minMax = stoneType == StoneType.BLACK ? MinMax.MAX : MinMax.MIN;
-    MinMaxNode result = null;
+    MinMaxNode result;
     try {
       result = minMaxSearch(boardClass, Integer.MIN_VALUE, Integer.MAX_VALUE,
           maxDepth, minMax, stoneType, transitionTableFactory.create());
@@ -107,7 +114,7 @@ public class MinMaxSearch implements AI {
     return node;
   }
 
-  private MinMaxNode minMaxSearch(BoardClass boardClass,
+  private MinMaxNode minMaxSearch(BoardClass<T> boardClass,
                                   int alpha,
                                   int beta,
                                   int depth,
@@ -137,7 +144,7 @@ public class MinMaxSearch implements AI {
     for (Position position : candidateMoves) {
       int i = position.getRowIndex();
       int j = position.getColumnIndex();
-      BoardClass newBoardClass = boardClass.withPositionSet(i, j, minMax.getStoneType());
+      BoardClass<T> newBoardClass = boardClass.withPositionSet(i, j, minMax.getStoneType());
       if (minMax == MinMax.MAX) {
         int curMax = res == null ? alpha : res.getScore();
         int v = minMaxSearch(newBoardClass, curMax, beta, depth - 1,
@@ -179,63 +186,61 @@ public class MinMaxSearch implements AI {
     }
   }
 
-  public static class Builder {
+  public static class Builder<T extends Pattern> {
 
     private int maxDepth = 4;
     private String name = "min_max_search";
-    private CandidateMovesSelector candidateMoveSelector = CandidateMovesSelectors.DEFAULT;
     private boolean alphaBetaPruning = true;
     private Evaluator evaluator = new DefaultEvaluator();
-    private TransitionTable.Factory transitionTableFactory =
-        () -> new TransitionTableImpl();
-    private BoardClass.Factory boardClassFactory = BoardFactories.BOARD_CLASS_WITH_MATCHING_PATTERNS_FACTORY;
+    private TransitionTable.Factory<MinMaxNode> transitionTableFactory = TransitionTableImpl::new;
+    private CandidateMovesSelector<T> candidateMoveSelector;
+    private BoardClass.Factory<T> boardClassFactory;
 
     private Builder() {
     }
 
-    public MinMaxSearch build() {
-      return new MinMaxSearch(this);
+    public MinMaxSearch<T> build() {
+      return new MinMaxSearch<>(this);
     }
 
-    public Builder withBoardClassFactory(BoardClass.Factory boardClassFactory) {
+    public Builder<T> withBoardClassFactory(BoardClass.Factory<T> boardClassFactory) {
       this.boardClassFactory = boardClassFactory;
       return this;
     }
 
-    public Builder withEvaluator(Evaluator evaluator) {
+    public Builder<T> withEvaluator(Evaluator evaluator) {
       this.evaluator = evaluator;
       return this;
     }
 
-    public Builder withName(String name) {
+    public Builder<T> withName(String name) {
       this.name = name;
       return this;
     }
 
-    public Builder withMaxDepth(int maxDepth) {
+    public Builder<T> withMaxDepth(int maxDepth) {
       this.maxDepth = maxDepth;
       return this;
     }
 
-    public Builder withCandidateMoveSelector(CandidateMovesSelector candidateMoveSelector) {
+    public Builder<T> withCandidateMoveSelector(CandidateMovesSelector<T> candidateMoveSelector) {
       this.candidateMoveSelector = candidateMoveSelector;
       return this;
     }
 
-    public Builder withAlphaBetaPruning(boolean alphaBetaPruning) {
+    public Builder<T> withAlphaBetaPruning(boolean alphaBetaPruning) {
       this.alphaBetaPruning = alphaBetaPruning;
       return this;
     }
 
-    public Builder withTransitionTableFactory(
-        TransitionTable.Factory transitionTableFactory) {
+    public Builder<T> withTransitionTableFactory(
+        TransitionTable.Factory<MinMaxNode> transitionTableFactory) {
       this.transitionTableFactory = transitionTableFactory;
       return this;
     }
 
-    public Builder noTransitionTable() {
-      return withTransitionTableFactory(() -> new NoopTransitionTable());
+    public Builder<T> noTransitionTable() {
+      return withTransitionTableFactory(NoopTransitionTable::new);
     }
   }
-
 }

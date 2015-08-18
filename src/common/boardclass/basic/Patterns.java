@@ -7,16 +7,16 @@ import static common.pattern.PatternsUtil.createPatterns;
 
 import com.google.common.collect.ImmutableSet;
 
-import common.Constants;
-import common.pattern.Pattern;
-import common.pattern.PatternType;
 import common.PositionTransformer;
 import common.StoneType;
-
-import java.util.*;
-
 import common.pattern.MoveType;
+import common.pattern.PatternType;
 import common.pattern.PatternsUtil;
+
+import java.util.EnumMap;
+import java.util.Map;
+import java.util.Set;
+
 import model.Position;
 
 /**
@@ -43,9 +43,10 @@ class Patterns {
 
   private Map<StoneType, Map<PatternType, ImmutableSet<PatternImpl>>>
       initializePatterns() {
-    Map<StoneType, Map<PatternType, ImmutableSet<PatternImpl>>> result = new EnumMap(StoneType.class);
+    Map<StoneType, Map<PatternType, ImmutableSet<PatternImpl>>> result =
+        new EnumMap<>(StoneType.class);
     for (StoneType stoneType : new StoneType[] {StoneType.BLACK, StoneType.WHITE}) {
-      Map<PatternType, ImmutableSet<PatternImpl>> innerMap = new EnumMap(PatternType.class);
+      Map<PatternType, ImmutableSet<PatternImpl>> innerMap = new EnumMap<>(PatternType.class);
       innerMap.put(PatternType.GOAL, createGoalPatterns(stoneType));
       innerMap.put(PatternType.FIVE, innerMap.get(PatternType.GOAL));
       innerMap.put(PatternType.FOUR, createFourPatterns(stoneType));

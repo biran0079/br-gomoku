@@ -36,7 +36,7 @@ class Human implements Player {
   }
 
 	private void afterMove() {
-    clickCallbackManager.disableClickCallbacl();
+    clickCallbackManager.disableClickCallback();
   }
 
 	@Override

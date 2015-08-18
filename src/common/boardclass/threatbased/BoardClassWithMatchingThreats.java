@@ -3,14 +3,16 @@ package common.boardclass.threatbased;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
-import common.pattern.PatternType;
+
 import common.StoneType;
 import common.boardclass.AbstractBoardClass;
 import common.boardclass.BoardClass;
+import common.pattern.PatternType;
 import common.pattern.Threat;
-import model.GameBoard;
 
 import java.util.Set;
+
+import model.GameBoard;
 
 /**
  * TODO share code with BoardClassWithMatchingPatterns.
@@ -26,8 +28,8 @@ public class BoardClassWithMatchingThreats extends AbstractBoardClass<Threat> {
     this.matchingThreats = computeMatchingPatterns();
   }
 
-  public BoardClassWithMatchingThreats(BoardClassWithMatchingThreats boardClass,
-                                       int i, int j, StoneType stoneType) {
+  private BoardClassWithMatchingThreats(BoardClassWithMatchingThreats boardClass,
+      int i, int j, StoneType stoneType) {
     super(boardClass, i, j, stoneType);
     this.matchingThreats = ImmutableSet.<ThreatImpl>builder()
         .addAll(Iterables.filter(
@@ -68,7 +70,7 @@ public class BoardClassWithMatchingThreats extends AbstractBoardClass<Threat> {
     return new BoardClassWithMatchingThreats(this, i, j, stoneType);
   }
 
-  public static class Factory implements BoardClass.Factory<BoardClass<Threat>> {
+  public static class Factory implements BoardClass.Factory<Threat> {
 
     @Override
     public BoardClass<Threat> fromGameBoard(GameBoard gameBoard) {

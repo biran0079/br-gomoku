@@ -1,19 +1,20 @@
 package ai.threatbasedsearch;
 
-import ai.minmax.transitiontable.TransitionSet;
-import ai.minmax.transitiontable.TransitionSetImpl;
 import com.google.common.collect.Iterables;
+
+import common.StoneType;
 import common.boardclass.BoardClass;
 import common.pattern.PatternType;
-import common.StoneType;
-import common.boardclass.threatbased.BoardClassWithMatchingThreats;
 import common.pattern.Threat;
+
+import ai.minmax.transitiontable.TransitionSet;
+import ai.minmax.transitiontable.TransitionSetImpl;
 import model.Position;
 
 /**
  * Threat based search.
  */
-public class ThreatBasedSearch {
+class ThreatBasedSearch {
 
   public boolean winningPathExists(
       BoardClass<Threat> boardClass,

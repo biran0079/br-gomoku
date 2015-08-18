@@ -7,5 +7,5 @@ public interface ClickCallbackManager extends ClickCallback {
 
   void setClickCallback(final ClickCallback callback);
 
-  void disableClickCallbacl();
+  void disableClickCallback();
 }

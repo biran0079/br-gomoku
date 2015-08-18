@@ -1,21 +1,26 @@
 package common.boardclass.threatbased;
 
+import static common.pattern.MoveType.D;
+import static common.pattern.MoveType.E;
+import static common.pattern.MoveType.O;
+import static common.pattern.MoveType.X;
+import static common.pattern.PatternsUtil.createPatterns;
+import static common.pattern.PatternsUtil.getDefensiveMoves;
+import static common.pattern.PatternsUtil.getOffensiveMove;
+
 import com.google.common.collect.ImmutableSet;
-import common.Constants;
-import common.pattern.PatternType;
+
 import common.PositionTransformer;
 import common.StoneType;
 import common.pattern.MoveType;
+import common.pattern.PatternType;
 import common.pattern.PatternsUtil;
+
+import java.util.EnumMap;
+import java.util.Map;
+import java.util.Set;
+
 import model.Position;
-
-import java.util.*;
-
-import static common.pattern.MoveType.E;
-import static common.pattern.MoveType.O;
-import static common.pattern.MoveType.D;
-import static common.pattern.MoveType.X;
-import static common.pattern.PatternsUtil.*;
 
 /**
  * Default threat factory.
@@ -40,9 +45,10 @@ class Threats {
   }
 
   private Map<StoneType, Map<PatternType, ImmutableSet<ThreatImpl>>> initializeThreats() {
-    Map<StoneType, Map<PatternType, ImmutableSet<ThreatImpl>>> result = new EnumMap(StoneType.class);
+    Map<StoneType, Map<PatternType, ImmutableSet<ThreatImpl>>> result =
+        new EnumMap<>(StoneType.class);
     for (StoneType stoneType : new StoneType[] {StoneType.BLACK, StoneType.WHITE}) {
-      Map<PatternType, ImmutableSet<ThreatImpl>> innerMap = new EnumMap(PatternType.class);
+      Map<PatternType, ImmutableSet<ThreatImpl>> innerMap = new EnumMap<>(PatternType.class);
       innerMap.put(PatternType.GOAL, createGoalThreats(stoneType));
       innerMap.put(PatternType.FIVE, createFiveThreats(stoneType));
       innerMap.put(PatternType.STRAIT_FOUR, createStraitFourThreats(stoneType));

@@ -1,9 +1,9 @@
 package common.boardclass;
 
-import common.pattern.PatternType;
 import common.PositionTransformer;
 import common.StoneType;
 import common.pattern.Pattern;
+import common.pattern.PatternType;
 
 import model.GameBoard;
 
@@ -17,15 +17,15 @@ public interface BoardClass<T extends Pattern> extends GameBoard {
   Iterable<? extends T> getMatchingPatterns(StoneType stoneType, PatternType patternType);
 
   @Override
-  BoardClass withPositionSet(int i, int j, StoneType stoneType);
+  BoardClass<T> withPositionSet(int i, int j, StoneType stoneType);
 
   BitBoard getBoard(PositionTransformer transformer);
 
-  interface Factory<T extends GameBoard> extends GameBoard.Factory {
+  interface Factory<T extends Pattern> extends GameBoard.Factory {
 
-    T fromGameBoard(GameBoard gameBoard);
+    BoardClass<T> fromGameBoard(GameBoard gameBoard);
 
     @Override
-    T getEmptyBoard();
+    BoardClass<T> getEmptyBoard();
   }
 }

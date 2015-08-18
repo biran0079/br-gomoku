@@ -23,7 +23,7 @@ public class ClickCallbackManagerImpl implements ClickCallbackManager {
   }
 
   @Override
-  public void disableClickCallbacl() {
+  public void disableClickCallback() {
     setClickCallback(null);
   }
 

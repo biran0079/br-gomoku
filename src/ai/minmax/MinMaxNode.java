@@ -38,11 +38,6 @@ public class MinMaxNode implements Transformable<MinMaxNode> {
 
   @Override
   public String toString() {
-    return new StringBuilder()
-        .append("position: ")
-        .append(bestMove)
-        .append(", store: ")
-        .append(score)
-        .toString();
+    return "position: " + bestMove + ", store: " + score;
   }
 }

@@ -1,19 +1,27 @@
 package common.pattern;
 
 import com.google.common.collect.ImmutableSet;
+
 import common.Constants;
 import common.PositionTransformer;
 import common.StoneType;
-import model.Position;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import model.Position;
 
 /**
  * Utility methods for patterns.
  */
 public class PatternsUtil {
 
-  public static int generatePattern(MoveType[] moves, int bits) {
+  private static int generatePattern(MoveType[] moves, int bits) {
     int pattern = 0;
     int i = 0;
     for (MoveType move : moves) {

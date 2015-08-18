@@ -1,14 +1,15 @@
 package common.boardclass.basic;
 
 import com.google.common.collect.ImmutableSet;
+
 import common.PositionTransformer;
 import common.StoneType;
-
 import common.pattern.AbstractPattern;
+
 import model.Position;
 
 /**
- * Basic implementatino of a pattern.
+ * Basic implementation of a pattern.
  */
 class PatternImpl extends AbstractPattern {
 

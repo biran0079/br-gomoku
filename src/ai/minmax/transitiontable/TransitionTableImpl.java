@@ -23,7 +23,7 @@ import java.util.Map;
  */
 public class TransitionTableImpl<T extends Transformable<T>> implements TransitionTable<T> {
 
-  protected static final PositionTransformer[] IDENTICAL_TRANSFORMERS =
+  static final PositionTransformer[] IDENTICAL_TRANSFORMERS =
       new PositionTransformer[] {
           IDENTITY,
           IDENTITY_M,
@@ -35,7 +35,7 @@ public class TransitionTableImpl<T extends Transformable<T>> implements Transiti
           CLOCK_270_M,
       };
 
-  protected final Map<BitBoard, T> cache = Maps.newHashMap();
+  final Map<BitBoard, T> cache = Maps.newHashMap();
 
   @Override
   public T get(BoardClass boardClass) {
