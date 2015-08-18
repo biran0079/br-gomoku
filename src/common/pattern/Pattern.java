@@ -4,6 +4,9 @@ import com.google.common.collect.ImmutableSet;
 
 import common.PositionTransformer;
 import common.StoneType;
+import common.boardclass.BoardClass;
+
+import java.util.Set;
 
 import model.Position;
 
@@ -16,11 +19,20 @@ public interface Pattern {
 
   StoneType getStoneType();
 
+  boolean matches(BoardClass<?> boardClass);
+
   interface Factory<T extends Pattern> {
 
     T create(int i, int j, int pattern, int mask,
              PositionTransformer transformer,
              StoneType stoneType,
              MoveType[] movePattern);
+  }
+
+  interface Corpus<T extends Pattern> {
+
+    ImmutableSet<T> get(StoneType stoneType, PatternType PatternType);
+
+    Set<T> get(int i, int j, StoneType stoneType);
   }
 }

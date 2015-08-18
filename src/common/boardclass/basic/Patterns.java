@@ -10,6 +10,7 @@ import com.google.common.collect.ImmutableSet;
 import common.PositionTransformer;
 import common.StoneType;
 import common.pattern.MoveType;
+import common.pattern.Pattern;
 import common.pattern.PatternType;
 import common.pattern.PatternsUtil;
 
@@ -23,30 +24,32 @@ import model.Position;
  * Predefined patterns.
  * Index included.
  */
-class Patterns {
+class Patterns implements Pattern.Corpus<Pattern> {
 
-  private final Map<StoneType, Map<Position, Set<PatternImpl>>> index;
-  private final Map<StoneType, Map<PatternType, ImmutableSet<PatternImpl>>> patterns;
+  private final Map<StoneType, Map<Position, Set<Pattern>>> index;
+  private final Map<StoneType, Map<PatternType, ImmutableSet<Pattern>>> patterns;
 
   Patterns() {
     this.index = PatternsUtil.emptyIndex();
     this.patterns = initializePatterns();
   }
 
-  ImmutableSet<PatternImpl> get(StoneType stoneType, PatternType patternType) {
+  @Override
+  public ImmutableSet<Pattern> get(StoneType stoneType, PatternType patternType) {
     return patterns.get(stoneType).get(patternType);
   }
 
-  Set<PatternImpl> get(int i, int j, StoneType stoneType) {
+  @Override
+  public Set<Pattern> get(int i, int j, StoneType stoneType) {
     return index.get(stoneType).get(Position.of(i, j));
   }
 
-  private Map<StoneType, Map<PatternType, ImmutableSet<PatternImpl>>>
+  private Map<StoneType, Map<PatternType, ImmutableSet<Pattern>>>
       initializePatterns() {
-    Map<StoneType, Map<PatternType, ImmutableSet<PatternImpl>>> result =
+    Map<StoneType, Map<PatternType, ImmutableSet<Pattern>>> result =
         new EnumMap<>(StoneType.class);
     for (StoneType stoneType : new StoneType[] {StoneType.BLACK, StoneType.WHITE}) {
-      Map<PatternType, ImmutableSet<PatternImpl>> innerMap = new EnumMap<>(PatternType.class);
+      Map<PatternType, ImmutableSet<Pattern>> innerMap = new EnumMap<>(PatternType.class);
       innerMap.put(PatternType.GOAL, createGoalPatterns(stoneType));
       innerMap.put(PatternType.FIVE, innerMap.get(PatternType.GOAL));
       innerMap.put(PatternType.FOUR, createFourPatterns(stoneType));
@@ -57,10 +60,10 @@ class Patterns {
     return result;
   }
 
-  private PatternImpl createPattern(int i, int j, int pattern, int mask,
+  private Pattern createPattern(int i, int j, int pattern, int mask,
                         PositionTransformer transformer, StoneType stoneType,
                         MoveType[] movePattern) {
-    PatternImpl result = new PatternImpl(i, pattern, mask, transformer, stoneType,
+    Pattern result = new PatternImpl(i, pattern, mask, transformer, stoneType,
         PatternsUtil.getDefensiveMoves(i, j, movePattern, transformer.reverse()));
     PositionTransformer reverseTransform = transformer.reverse();
     for (int k = 0; k < movePattern.length; k++) {
@@ -72,20 +75,20 @@ class Patterns {
     return result;
   }
 
-  private ImmutableSet<PatternImpl> createGoalPatterns(StoneType stoneType) {
-    return ImmutableSet.<PatternImpl>builder()
+  private ImmutableSet<Pattern> createGoalPatterns(StoneType stoneType) {
+    return ImmutableSet.<Pattern>builder()
         .addAll(createPatterns(stoneType, new MoveType[]{X, X, X, X, X}, this::createPattern))
         .build();
   }
 
-  private ImmutableSet<PatternImpl> createStraitFourPatterns(StoneType stoneType) {
-    return ImmutableSet.<PatternImpl>builder()
+  private ImmutableSet<Pattern> createStraitFourPatterns(StoneType stoneType) {
+    return ImmutableSet.<Pattern>builder()
         .addAll(createPatterns(stoneType, new MoveType[] {D, X, X, X, X, D}, this::createPattern))
         .build();
   }
 
-  private ImmutableSet<PatternImpl> createThreePatterns(StoneType stoneType) {
-    return ImmutableSet.<PatternImpl>builder()
+  private ImmutableSet<Pattern> createThreePatterns(StoneType stoneType) {
+    return ImmutableSet.<Pattern>builder()
         .addAll(createPatterns(stoneType, new MoveType[] {D, X, X, D, X, D}, this::createPattern))
         .addAll(createPatterns(stoneType, new MoveType[] {D, X, D, X, X, D}, this::createPattern))
         .addAll(createPatterns(stoneType, new MoveType[] {E, D, X, X, X, D}, this::createPattern))
@@ -93,8 +96,8 @@ class Patterns {
         .build();
   }
 
-  private ImmutableSet<PatternImpl> createFourPatterns(StoneType stoneType) {
-    return ImmutableSet.<PatternImpl>builder()
+  private ImmutableSet<Pattern> createFourPatterns(StoneType stoneType) {
+    return ImmutableSet.<Pattern>builder()
         .addAll(createPatterns(stoneType, new MoveType[] {D, X, X, X, X}, this::createPattern))
         .addAll(createPatterns(stoneType, new MoveType[] {X, D, X, X, X}, this::createPattern))
         .addAll(createPatterns(stoneType, new MoveType[] {X, X, D, X, X}, this::createPattern))

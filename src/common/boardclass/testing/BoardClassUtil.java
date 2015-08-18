@@ -16,6 +16,37 @@ public class BoardClassUtil {
   public static final StoneType E = StoneType.NOTHING;
   public static final StoneType W = StoneType.WHITE;
   public static final StoneType B = StoneType.BLACK;
+  public static final GameBoard EMPTY_GAME_BOARD = new GameBoard() {
+    @Override
+    public StoneType get(int i, int j) {
+      return StoneType.NOTHING;
+    }
+
+    @Override
+    public boolean isFull() {
+      return false;
+    }
+
+    @Override
+    public boolean isEmpty() {
+      return true;
+    }
+
+    @Override
+    public GameBoard withPositionSet(int i, int j, StoneType stoneType) {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean wins(StoneType stoneType) {
+      return false;
+    }
+
+    @Override
+    public int getStoneCount() {
+      return 0;
+    }
+  };
 
   public static BoardClass<Pattern> fromString(String s) {
     final String[] b = s.split("\n");

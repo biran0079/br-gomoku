@@ -13,8 +13,10 @@ import com.google.common.collect.ImmutableSet;
 import common.PositionTransformer;
 import common.StoneType;
 import common.pattern.MoveType;
+import common.pattern.Pattern;
 import common.pattern.PatternType;
 import common.pattern.PatternsUtil;
+import common.pattern.Threat;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -26,29 +28,31 @@ import model.Position;
  * Default threat factory.
  * Index included.
  */
-class Threats {
+class Threats implements Pattern.Corpus<Threat> {
 
-  private final Map<StoneType, Map<PatternType, ImmutableSet<ThreatImpl>>> threats;
-  private final Map<StoneType, Map<Position, Set<ThreatImpl>>> index;
+  private final Map<StoneType, Map<PatternType, ImmutableSet<Threat>>> threats;
+  private final Map<StoneType, Map<Position, Set<Threat>>> index;
 
   Threats() {
     this.index = PatternsUtil.emptyIndex();
     this.threats = initializeThreats();
   }
 
-  ImmutableSet<ThreatImpl> get(StoneType stoneType, PatternType PatternType) {
+  @Override
+  public ImmutableSet<Threat> get(StoneType stoneType, PatternType PatternType) {
     return threats.get(stoneType).get(PatternType);
   }
 
-  Set<ThreatImpl> get(int i, int j, StoneType stoneType) {
+  @Override
+  public Set<Threat> get(int i, int j, StoneType stoneType) {
     return index.get(stoneType).get(Position.of(i, j));
   }
 
-  private Map<StoneType, Map<PatternType, ImmutableSet<ThreatImpl>>> initializeThreats() {
-    Map<StoneType, Map<PatternType, ImmutableSet<ThreatImpl>>> result =
+  private Map<StoneType, Map<PatternType, ImmutableSet<Threat>>> initializeThreats() {
+    Map<StoneType, Map<PatternType, ImmutableSet<Threat>>> result =
         new EnumMap<>(StoneType.class);
     for (StoneType stoneType : new StoneType[] {StoneType.BLACK, StoneType.WHITE}) {
-      Map<PatternType, ImmutableSet<ThreatImpl>> innerMap = new EnumMap<>(PatternType.class);
+      Map<PatternType, ImmutableSet<Threat>> innerMap = new EnumMap<>(PatternType.class);
       innerMap.put(PatternType.GOAL, createGoalThreats(stoneType));
       innerMap.put(PatternType.FIVE, createFiveThreats(stoneType));
       innerMap.put(PatternType.STRAIT_FOUR, createStraitFourThreats(stoneType));
@@ -59,14 +63,14 @@ class Threats {
     return result;
   }
 
-  private ImmutableSet<ThreatImpl> createGoalThreats(StoneType stoneType) {
-    return ImmutableSet.<ThreatImpl>builder()
+  private ImmutableSet<Threat> createGoalThreats(StoneType stoneType) {
+    return ImmutableSet.<Threat>builder()
       .addAll(createPatterns(stoneType, new MoveType[] {X, X, X, X, X}, this::createThreat))
       .build();
   }
 
-  private ImmutableSet<ThreatImpl> createFiveThreats(StoneType stoneType) {
-    ImmutableSet.Builder<ThreatImpl> builder = ImmutableSet.builder();
+  private ImmutableSet<Threat> createFiveThreats(StoneType stoneType) {
+    ImmutableSet.Builder<Threat> builder = ImmutableSet.builder();
     for (int i = 0; i < 5; i++) {
       MoveType[] moves = new MoveType[] {X, X, X, X, X};
       moves[i] = O;
@@ -75,8 +79,8 @@ class Threats {
     return builder.build();
   }
 
-  private ImmutableSet<ThreatImpl> createStraitFourThreats(StoneType stoneType) {
-    ImmutableSet.Builder<ThreatImpl> builder = ImmutableSet.builder();
+  private ImmutableSet<Threat> createStraitFourThreats(StoneType stoneType) {
+    ImmutableSet.Builder<Threat> builder = ImmutableSet.builder();
     for (int i = 1; i < 5; i++) {
       MoveType[] moves = new MoveType[] {E, X, X, X, X, E};
       moves[i] = O;
@@ -85,8 +89,8 @@ class Threats {
     return builder.build();
   }
 
-  private ImmutableSet<ThreatImpl> createFourThreats(StoneType stoneType) {
-    ImmutableSet.Builder<ThreatImpl> builder = ImmutableSet.builder();
+  private ImmutableSet<Threat> createFourThreats(StoneType stoneType) {
+    ImmutableSet.Builder<Threat> builder = ImmutableSet.builder();
     for (int i = 0; i < 5; i++) {
       for (int j = i + 1; j < 5; j++) {
         MoveType[] moves = new MoveType[] {X, X, X, X, X};
@@ -101,8 +105,8 @@ class Threats {
     return builder.build();
   }
 
-  private ImmutableSet<ThreatImpl> createThreeWithThreats(StoneType stoneType) {
-    ImmutableSet.Builder<ThreatImpl> builder = ImmutableSet.builder();
+  private ImmutableSet<Threat> createThreeWithThreats(StoneType stoneType) {
+    ImmutableSet.Builder<Threat> builder = ImmutableSet.builder();
     for (int i = 1; i < 5; i++) {
       for (int j = i + 1; j < 5; j++) {
         MoveType[] moves = new MoveType[] {D, X, X, X, X, D};
@@ -123,10 +127,10 @@ class Threats {
     return builder.build();
   }
 
-  private ThreatImpl createThreat(int i, int j, int pattern, int mask,
+  private Threat createThreat(int i, int j, int pattern, int mask,
                       PositionTransformer transformer, StoneType stoneType,
                       MoveType[] movePattern) {
-    ThreatImpl result = new ThreatImpl(i, pattern, mask, transformer, stoneType,
+    Threat result = new ThreatImpl(i, pattern, mask, transformer, stoneType,
         getDefensiveMoves(i, j, movePattern, transformer.reverse()),
         getOffensiveMove(i, j, movePattern, transformer.reverse()));
     PositionTransformer reverseTransform = transformer.reverse();

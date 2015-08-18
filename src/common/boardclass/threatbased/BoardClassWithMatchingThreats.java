@@ -1,88 +1,35 @@
 package common.boardclass.threatbased;
 
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Sets;
-
 import common.StoneType;
 import common.boardclass.AbstractBoardClass;
-import common.boardclass.BoardClass;
-import common.pattern.PatternType;
+import common.pattern.Pattern;
 import common.pattern.Threat;
-
-import java.util.Set;
 
 import model.GameBoard;
 
 /**
- * TODO share code with BoardClassWithMatchingPatterns.
+ * Implements board class with matching threats.
  */
-public class BoardClassWithMatchingThreats extends AbstractBoardClass<Threat> {
+final class BoardClassWithMatchingThreats extends AbstractBoardClass<Threat> {
 
-  private static final Threats THREATS_WITH_INDEX = new Threats();
-  private static final BoardClassWithMatchingThreats EMPTY_BOARD = new BoardClassWithMatchingThreats();
-  private final Set<ThreatImpl> matchingThreats;
-
-  private BoardClassWithMatchingThreats() {
-    super();
-    this.matchingThreats = computeMatchingPatterns();
-  }
+  private static final Threats THREATS = new Threats();
 
   private BoardClassWithMatchingThreats(BoardClassWithMatchingThreats boardClass,
       int i, int j, StoneType stoneType) {
     super(boardClass, i, j, stoneType);
-    this.matchingThreats = ImmutableSet.<ThreatImpl>builder()
-        .addAll(Iterables.filter(
-            boardClass.matchingThreats, p -> p.matches(this)))
-        .addAll(Iterables.filter(
-            THREATS_WITH_INDEX.get(i, j, stoneType), p -> p.matches(this)))
-        .build();
   }
 
-  private BoardClassWithMatchingThreats(GameBoard gameBoard) {
+  BoardClassWithMatchingThreats(GameBoard gameBoard) {
     super(gameBoard);
-    this.matchingThreats = computeMatchingPatterns();
-  }
-
-  private Set<ThreatImpl> computeMatchingPatterns() {
-    ImmutableSet.Builder<ThreatImpl> builder = ImmutableSet.builder();
-    for (StoneType stoneType : new StoneType[] {StoneType.BLACK, StoneType.WHITE}) {
-      for (PatternType patternType : PatternType.values()) {
-        builder.addAll(Iterables.filter(
-            THREATS_WITH_INDEX.get(stoneType, patternType), p -> p.matches(this)));
-      }
-    }
-    return builder.build();
   }
 
   @Override
-  public boolean matchesAny(StoneType stoneType, PatternType patternType) {
-    return !Iterables.isEmpty(getMatchingPatterns(stoneType, patternType));
-  }
-
-  @Override
-  public Iterable<ThreatImpl> getMatchingPatterns(StoneType stoneType, PatternType patternType) {
-    return Sets.intersection(matchingThreats, THREATS_WITH_INDEX.get(stoneType, patternType));
+  protected Pattern.Corpus<Threat> getCorpus() {
+    return THREATS;
   }
 
   @Override
   public BoardClassWithMatchingThreats withPositionSet(int i, int j, StoneType stoneType) {
     return new BoardClassWithMatchingThreats(this, i, j, stoneType);
-  }
-
-  public static class Factory implements BoardClass.Factory<Threat> {
-
-    @Override
-    public BoardClass<Threat> fromGameBoard(GameBoard gameBoard) {
-      if (gameBoard instanceof BoardClassWithMatchingThreats) {
-        return (BoardClassWithMatchingThreats) gameBoard;
-      }
-      return new BoardClassWithMatchingThreats(gameBoard);
-    }
-
-    @Override
-    public BoardClass<Threat> getEmptyBoard() {
-      return EMPTY_BOARD;
-    }
   }
 }

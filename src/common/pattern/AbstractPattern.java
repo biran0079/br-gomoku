@@ -63,6 +63,7 @@ public abstract class AbstractPattern implements Pattern {
     return sb.toString();
   }
 
+  @Override
   public boolean matches(BoardClass<?> boardClass) {
     return (boardClass.getBoard(transformer).getRow(rowIndex) & mask) == pattern;
   }

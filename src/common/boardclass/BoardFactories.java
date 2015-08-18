@@ -1,7 +1,7 @@
 package common.boardclass;
 
-import common.boardclass.basic.BoardClassWithMatchingPatterns;
-import common.boardclass.threatbased.BoardClassWithMatchingThreats;
+import common.boardclass.basic.FactoryForBoardWithPattern;
+import common.boardclass.threatbased.FactoryForBoardWithThreat;
 import common.pattern.Pattern;
 import common.pattern.Threat;
 
@@ -11,8 +11,8 @@ import common.pattern.Threat;
 public class BoardFactories {
 
   public static final BoardClass.Factory<Pattern>
-      BOARD_CLASS_WITH_MATCHING_PATTERNS_FACTORY = new BoardClassWithMatchingPatterns.Factory();
+      BOARD_CLASS_WITH_MATCHING_PATTERNS_FACTORY = new FactoryForBoardWithPattern();
 
   public static final BoardClass.Factory<Threat>
-      BOARD_CLASS_WITH_MATCHING_THREATS_FACTORY = new BoardClassWithMatchingThreats.Factory();
+      BOARD_CLASS_WITH_MATCHING_THREATS_FACTORY = new FactoryForBoardWithThreat();
 }
