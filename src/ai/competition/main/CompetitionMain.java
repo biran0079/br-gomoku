@@ -14,7 +14,7 @@ class CompetitionMain {
   public static void main(String[] args) {
     AI ai1 = MinMaxSearch.defaultBuilderForPattern()
         .withName("d3")
-        .withMaxDepth(4)
+        .withMaxDepth(3)
         .build();
     AI ai2 = MinMaxSearch.defaultBuilderForPattern()
         .withName("d3-killer")

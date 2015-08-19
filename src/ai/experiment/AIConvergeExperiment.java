@@ -17,13 +17,14 @@ class AIConvergeExperiment {
 
   public static void main(String[] args) {
     AI ai1 = MinMaxSearch.defaultBuilderForPattern()
-        .withName("d4")
-        .withMaxDepth(4)
-        .build();
-    AI ai2 = MinMaxSearch.defaultBuilderForPattern()
         .withName("d4-killer")
         .useKillerHeuristic()
         .withMaxDepth(4)
+        .build();
+    AI ai2 = MinMaxSearch.defaultBuilderForPattern()
+        .withName("d5-killer")
+        .useKillerHeuristic()
+        .withMaxDepth(5)
         .build();
 
     Collection<BoardClass<?>> games = Lists.newArrayList(
