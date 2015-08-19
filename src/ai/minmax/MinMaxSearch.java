@@ -6,7 +6,7 @@ import ai.candidatemoveselector.CandidateMovesSelectors;
 import ai.minmax.transitiontable.NoopTransitionTable;
 import ai.minmax.transitiontable.TransitionTable;
 import ai.minmax.transitiontable.TransitionTableImpl;
-import com.google.common.collect.Iterables;
+
 import common.Constants;
 import common.StoneType;
 import common.boardclass.BoardClass;
@@ -18,9 +18,13 @@ import model.Position;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class MinMaxSearch<T extends Pattern> implements AI {
+
+  private static final int MAX_VALUE = 1_000_000;
+  private static final int MIN_VALUE = -1_000_000;
 
   private final int maxDepth;
   private final TransitionTable.Factory<MinMaxNode> transitionTableFactory;
@@ -30,6 +34,7 @@ public class MinMaxSearch<T extends Pattern> implements AI {
   private final CandidateMovesSelector<T> candidateMovesSelector;
   private final BoardClass.Factory<T> boardClassFactory;
   private final boolean useKillerHeuristic;
+  private final Algorithm algorithm;
 
   private int evalCount;
   private int cacheHit;
@@ -43,6 +48,7 @@ public class MinMaxSearch<T extends Pattern> implements AI {
     this.evaluator = builder.evaluator;
     this.boardClassFactory = builder.boardClassFactory;
     this.useKillerHeuristic = builder.useKillerHeuristic;
+    this.algorithm = builder.algorithm;
   }
 
   private static <T extends Pattern> Builder<T> newBuilder() {
@@ -75,10 +81,22 @@ public class MinMaxSearch<T extends Pattern> implements AI {
     MinMax minMax = stoneType == StoneType.BLACK ? MinMax.MAX : MinMax.MIN;
     MinMaxNode result;
     try {
-      result = minMaxSearch(boardClass, Integer.MIN_VALUE, Integer.MAX_VALUE,
-          maxDepth, minMax, stoneType,
-          transitionTableFactory.create(),
-          new Position[maxDepth + 1]);
+      switch (algorithm) {
+        case MINMAX:
+          result = minMaxSearch(boardClass, MIN_VALUE, MAX_VALUE,
+              maxDepth, minMax, stoneType,
+              transitionTableFactory.create(),
+              new Position[maxDepth + 1]);
+          break;
+        case NEGAMAX:
+          result = negaMax(boardClass, MIN_VALUE, MAX_VALUE,
+              maxDepth, minMax, stoneType,
+              transitionTableFactory.create(),
+              new Position[maxDepth + 1]);
+          break;
+        default:
+          throw new IllegalArgumentException("Unsupported algorithm: " + algorithm);
+      }
       return result.getBestMove();
     } catch (Throwable e) {
       e.printStackTrace();
@@ -99,25 +117,62 @@ public class MinMaxSearch<T extends Pattern> implements AI {
   }
 
   private enum MinMax {
-    MIN(StoneType.WHITE),
-    MAX(StoneType.BLACK);
+    MIN(StoneType.WHITE, -1),
+    MAX(StoneType.BLACK, 1);
 
     private final StoneType stoneType;
+    private final int color;
 
-    MinMax(StoneType stoneType) {
+    MinMax(StoneType stoneType, int color) {
       this.stoneType = stoneType;
+      this.color = color;
     }
 
-    public StoneType getStoneType() {
-      return stoneType;
+    public MinMax opposite() {
+      return this == MIN ? MAX : MIN;
     }
   }
-
 
   private MinMaxNode save(TransitionTable<MinMaxNode> transitionTable,
       BoardClass<T> boardClass, MinMaxNode node) {
     transitionTable.put(boardClass, node);
     return node;
+  }
+
+  private Optional<MinMaxNode> evaluateTerminalNode(
+      BoardClass<T> boardClass,
+      int depth,
+      StoneType stoneType) {
+    MinMaxNode result = null;
+    if (boardClass.wins(StoneType.BLACK)) {
+      result = new MinMaxNode(null, MAX_VALUE);
+    } else if (boardClass.wins(StoneType.WHITE)) {
+      result = new MinMaxNode(null, MIN_VALUE);
+    } else if (boardClass.isFull()) {
+      result = new MinMaxNode(null, 0);
+    } else if (depth == 0) {
+      result = new MinMaxNode(null, eval(boardClass, stoneType));
+    }
+    return Optional.ofNullable(result);
+  }
+
+  private Iterable<Position> getCandidateMoves(
+      BoardClass<T> boardClass,
+      MinMax minMax,
+      Position killer) {
+    Collection<Position> candidateMoves =
+        candidateMovesSelector.getCandidateMoves(boardClass, minMax.stoneType);
+    if (useKillerHeuristic) {
+      if (killer != null
+          && boardClass.get(killer.getRowIndex(), killer.getColumnIndex()) == StoneType.NOTHING) {
+        List<Position> l = new ArrayList<>();
+        l.add(killer);
+        l.addAll(candidateMoves.stream().filter(t -> !t.equals(killer))
+            .collect(Collectors.toList()));
+        candidateMoves = l;
+      }
+    }
+    return candidateMoves;
   }
 
   private MinMaxNode minMaxSearch(BoardClass<T> boardClass,
@@ -133,34 +188,14 @@ public class MinMaxSearch<T extends Pattern> implements AI {
       cacheHit++;
       return fromCache;
     }
-    if (boardClass.wins(StoneType.BLACK)) {
-      return save(transitionTable, boardClass, new MinMaxNode(null, Integer.MAX_VALUE));
-    } else if (boardClass.wins(StoneType.WHITE)) {
-      return save(transitionTable, boardClass, new MinMaxNode(null, Integer.MIN_VALUE));
-    } else if (boardClass.isFull()) {
-      return save(transitionTable, boardClass, new MinMaxNode(null, 0));
-    } else if (depth == 0) {
-      return save(transitionTable, boardClass, new MinMaxNode(null, eval(boardClass, stoneType)));
+    MinMaxNode res = evaluateTerminalNode(boardClass, depth, stoneType).orElse(null);
+    if (res != null) {
+      return save(transitionTable, boardClass, res);
     }
-    MinMaxNode res = null;
-    Collection<Position> candidateMoves =
-        candidateMovesSelector.getCandidateMoves(boardClass, minMax.getStoneType());
-    if (depth == maxDepth && Iterables.size(candidateMoves) == 1) {
-      return new MinMaxNode(Iterables.getOnlyElement(candidateMoves), 0);
-    }
-    if (useKillerHeuristic) {
-      Position p = killers[depth];
-      if (p != null && boardClass.get(p.getRowIndex(), p.getColumnIndex()) == StoneType.NOTHING) {
-        List<Position> l = new ArrayList<>();
-        l.add(p);
-        l.addAll(candidateMoves.stream().filter(t -> !t.equals(p)).collect(Collectors.toList()));
-        candidateMoves = l;
-      }
-    }
-    for (Position position : candidateMoves) {
+    for (Position position : getCandidateMoves(boardClass, minMax, killers[depth])) {
       int i = position.getRowIndex();
       int j = position.getColumnIndex();
-      BoardClass<T> newBoardClass = boardClass.withPositionSet(i, j, minMax.getStoneType());
+      BoardClass<T> newBoardClass = boardClass.withPositionSet(i, j, minMax.stoneType);
       if (minMax == MinMax.MAX) {
         int curMax = res == null ? alpha : res.getScore();
         int v = minMaxSearch(newBoardClass, curMax, beta, depth - 1,
@@ -170,7 +205,7 @@ public class MinMaxSearch<T extends Pattern> implements AI {
           if (useKillerHeuristic) {
             killers[depth] = position;
           }
-          return save(transitionTable, boardClass, res);
+          break;
         }
       } else {
         int curMin = res == null ? beta : res.getScore();
@@ -181,8 +216,50 @@ public class MinMaxSearch<T extends Pattern> implements AI {
           if (useKillerHeuristic) {
             killers[depth] = position;
           }
-          return save(transitionTable, boardClass, res);
+          break;
         }
+      }
+    }
+    return save(transitionTable, boardClass, res);
+  }
+
+  private MinMaxNode negaMax(BoardClass<T> boardClass,
+      int alpha,
+      int beta,
+      int depth,
+      MinMax minMax,
+      StoneType stoneType,
+      TransitionTable<MinMaxNode> transitionTable,
+      Position[] killers) {
+    MinMaxNode fromCache = transitionTable.get(boardClass);
+    if (fromCache != null) {
+      cacheHit++;
+      return fromCache;
+    }
+    MinMaxNode res = evaluateTerminalNode(boardClass, depth, stoneType).orElse(null);
+    if (res != null) {
+      if (minMax.color == -1) {
+        res = new MinMaxNode(res.getBestMove(), -res.getScore());
+      }
+      return save(transitionTable, boardClass, res);
+    }
+    int bestScore = MIN_VALUE;
+    for (Position position : getCandidateMoves(boardClass, minMax, killers[depth])) {
+      int i = position.getRowIndex();
+      int j = position.getColumnIndex();
+      BoardClass<T> newBoardClass = boardClass.withPositionSet(i, j, minMax.stoneType);
+      int v = -negaMax(newBoardClass, -beta, -alpha, depth - 1,
+          minMax.opposite(), stoneType, transitionTable, killers).getScore();
+      if (res == null || v > bestScore) {
+        bestScore = v;
+        res = new MinMaxNode(position, v);
+      }
+      alpha = Math.max(alpha, v);
+      if (alphaBetaPruning && alpha >= beta) {
+        if (useKillerHeuristic) {
+          killers[depth] = position;
+        }
+        break;
       }
     }
     return save(transitionTable, boardClass, res);
@@ -218,6 +295,7 @@ public class MinMaxSearch<T extends Pattern> implements AI {
     private BoardClass.Factory<T> boardClassFactory;
     private Evaluator<T> evaluator;
     private boolean useKillerHeuristic = false;
+    private Algorithm algorithm = Algorithm.MINMAX;
 
     private Builder() {
     }
@@ -228,6 +306,11 @@ public class MinMaxSearch<T extends Pattern> implements AI {
 
     public Builder<T> useKillerHeuristic() {
       useKillerHeuristic = true;
+      return this;
+    }
+
+    public Builder<T> withAlgorithm(Algorithm algorithm) {
+      this.algorithm = algorithm;
       return this;
     }
 
@@ -270,5 +353,10 @@ public class MinMaxSearch<T extends Pattern> implements AI {
     public Builder<T> noTransitionTable() {
       return withTransitionTableFactory(NoopTransitionTable::new);
     }
+  }
+
+  public enum Algorithm {
+    MINMAX,
+    NEGAMAX,
   }
 }
