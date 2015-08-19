@@ -3,6 +3,7 @@ package ai.candidatemoveselector;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singleton;
 
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 
 import common.Constants;
@@ -47,6 +48,15 @@ public class CandidateMoveSelectorUtil {
       candidates.addAll(p.getDefensiveMoves());
     }
     return candidates;
+  }
+
+  public static Collection<Position> anyDefendFour(
+      BoardClass<Pattern> boardClass, StoneType stoneType) {
+    for (Pattern p : boardClass.getMatchingPatterns(stoneType.getOpponent(),
+        PatternType.FOUR)) {
+      return p.getDefensiveMoves();
+    }
+    return emptyList();
   }
 
   public static Collection<Position> minDefendFour(

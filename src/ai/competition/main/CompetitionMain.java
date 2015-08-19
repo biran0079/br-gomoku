@@ -14,12 +14,13 @@ class CompetitionMain {
 
   public static void main(String[] args) {
     AI ai1 = MinMaxSearch.defaultBuilderForPattern()
-        .withName("d4")
+        .withName("d3")
         .withMaxDepth(4)
         .build();
     AI ai2 = MinMaxSearch.defaultBuilderForPattern()
-        .withName("d5")
-        .withMaxDepth(5)
+        .withName("d3-killer")
+        .useKillerHeuristic()
+        .withMaxDepth(3)
         .build();
     new Competition(BoardClassSamples.INITIAL_10).competeSequential(ai1, ai2, StoneType.BLACK);
   }

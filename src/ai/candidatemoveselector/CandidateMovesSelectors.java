@@ -21,7 +21,7 @@ public class CandidateMovesSelectors {
       CandidateMovesSelectorBuilder.newBuilder()
           .add(CandidateMoveSelectorUtil::centerIfEmptyBoard)
           .add(CandidateMoveSelectorUtil::allOffendFour)
-          .add(CandidateMoveSelectorUtil::allDefendFour)
+          .add(CandidateMoveSelectorUtil::anyDefendFour)
           .add(CandidateMoveSelectorUtil::allOffendThree)
           .add(CandidateMoveSelectorUtil::defendThreeIntersections)
           .add(CandidateMoveSelectorUtil::allDefendThree)
