@@ -1,50 +1,54 @@
 package common.boardclass;
 
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
 import common.Constants;
 import common.PositionTransformer;
 import common.StoneType;
 import model.GameBoard;
 
 import java.util.Arrays;
-import java.util.concurrent.ExecutionException;
+import java.util.Random;
 
 /**
  * Implement board efficiently with bit wise operations.
  */
 public class BitBoard {
 
-  private static final LoadingCache<Integer, BitBoard> EMPTY_BOARD_CACHE =
-      CacheBuilder.newBuilder()
-          .build(new CacheLoader<Integer, BitBoard>() {
-            @Override
-            public BitBoard load(Integer boardRowNumber) throws Exception {
-              return new BitBoard(boardRowNumber);
-            }
-          });
-
   private static final int MASK_BITS = 3;
 
   private final int[] board;
   private final int stoneCount;
+  private final int hashValue;
 
-  private BitBoard(int rowNumber) {
-    board = new int[rowNumber];
-    stoneCount = 0;
+  private static final int[][][] ZOBRIST = initializeZobristHash();
+
+  private static final int[][][] initializeZobristHash() {
+    Random random = new Random();
+    int[][][] a = new int[2][Constants.BOARD_SIZE * 2 - 1][Constants.BOARD_SIZE];
+    for (int i = 0; i < a.length; i++) {
+      for (int j = 0; j < a[i].length; j++) {
+        for (int k = 0; k < a[i][j].length; k++) {
+          a[i][j][k] = random.nextInt();
+        }
+      }
+    }
+    return a;
   }
 
   private BitBoard(GameBoard gameBoard, PositionTransformer transformer) {
     this.board = new int[transformer.getBoardRowNumber()];
+    int h = 0;
     for (int i = 0; i < Constants.BOARD_SIZE; i++) {
       for (int j = 0; j < Constants.BOARD_SIZE; j++) {
         StoneType stoneType = gameBoard.get(i, j);
         if (stoneType != StoneType.NOTHING) {
-          setBits(board, transformer.getI(i, j), transformer.getJ(i, j), stoneType);
+          int localI = transformer.getI(i, j);
+          int localJ = transformer.getJ(i, j);
+          setBits(board, localI, localJ, stoneType);
+          h ^= ZOBRIST[stoneType == StoneType.BLACK ? 0 : 1][localI][localJ];
         }
       }
     }
+    this.hashValue = h;
     this.stoneCount = gameBoard.getStoneCount();
   }
 
@@ -52,18 +56,12 @@ public class BitBoard {
     this.board = Arrays.copyOf(bitBoard.board, bitBoard.board.length);
     setBits(this.board, i, j, stoneType);
     this.stoneCount = bitBoard.stoneCount + 1;
+    this.hashValue =
+        bitBoard.hashValue ^ ZOBRIST[stoneType == StoneType.BLACK ? 0 : 1][i][j];
   }
 
   public static BitBoard fromGameBoard(GameBoard gameBoard, PositionTransformer transformer) {
     return new BitBoard(gameBoard, transformer);
-  }
-
-  public static BitBoard emptyBoard(int boardRowNumber) {
-    try {
-      return EMPTY_BOARD_CACHE.get(boardRowNumber);
-    } catch (ExecutionException e) {
-      throw new RuntimeException("should never happen", e);
-    }
   }
 
   public BitBoard set(int i, int j, StoneType stoneType) {
@@ -95,12 +93,7 @@ public class BitBoard {
 
   @Override
   public int hashCode() {
-    int res = 0;
-    for (int t : board) {
-      res *= 121;
-      res += t;
-    }
-    return res;
+    return hashValue;
   }
 
   @Override

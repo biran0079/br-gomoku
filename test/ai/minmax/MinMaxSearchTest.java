@@ -21,12 +21,14 @@ public class MinMaxSearchTest {
 
   private final AI d3 = MinMaxSearch.defaultBuilderForPattern()
       .withName("d3")
+      .withEvaluator(new SimplePatternEvaluator())
       .withCandidateMoveSelector(CandidateMovesSelectors.FOR_TEST)
       .withMaxDepth(3)
       .build();
 
   private final AI d4 = MinMaxSearch.defaultBuilderForPattern()
       .withName("d4")
+      .withEvaluator(new SimplePatternEvaluator())
       .withCandidateMoveSelector(CandidateMovesSelectors.FOR_TEST)
       .withMaxDepth(4)
       .build();

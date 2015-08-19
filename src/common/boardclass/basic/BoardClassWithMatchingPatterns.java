@@ -31,5 +31,4 @@ final class BoardClassWithMatchingPatterns extends AbstractBoardClass<Pattern> {
   public BoardClass<Pattern> withPositionSet(int i, int j, StoneType stoneType) {
     return new BoardClassWithMatchingPatterns(this, i, j, stoneType);
   }
-
 }
