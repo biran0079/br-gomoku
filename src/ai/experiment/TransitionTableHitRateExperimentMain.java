@@ -1,8 +1,5 @@
 package ai.experiment;
 
-import common.StoneType;
-import common.boardclass.testing.BoardClassSamples;
-
 import ai.AI;
 import ai.competition.Competition;
 import ai.minmax.MinMaxNode;
@@ -10,6 +7,8 @@ import ai.minmax.MinMaxSearch;
 import ai.minmax.transitiontable.SmartTransitionTable;
 import ai.minmax.transitiontable.TransitionTableImpl;
 import ai.minmax.transitiontable.TransitionTableWithStats;
+import common.StoneType;
+import common.boardclass.testing.BoardClassSamples;
 
 /**
  * Compare cache hit rate between smart and default transition tables.

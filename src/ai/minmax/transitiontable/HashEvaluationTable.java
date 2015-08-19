@@ -3,7 +3,6 @@ package ai.minmax.transitiontable;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.math.DoubleMath;
-
 import common.PositionTransformer;
 import common.Transformable;
 import common.boardclass.BitBoard;

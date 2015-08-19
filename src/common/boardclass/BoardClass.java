@@ -4,7 +4,6 @@ import common.PositionTransformer;
 import common.StoneType;
 import common.pattern.Pattern;
 import common.pattern.PatternType;
-
 import model.GameBoard;
 
 /**

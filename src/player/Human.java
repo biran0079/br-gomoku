@@ -1,7 +1,6 @@
 package player;
 
 import common.StoneType;
-
 import model.GameBoard;
 import model.Position;
 import view.ClickCallbackManager;

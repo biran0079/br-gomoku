@@ -1,21 +1,18 @@
 package ai.minmax;
 
-import static org.junit.Assert.assertEquals;
-
+import ai.AI;
+import ai.candidatemoveselector.CandidateMovesSelectors;
 import com.google.common.base.MoreObjects;
-
 import common.StoneType;
 import common.boardclass.BoardClass;
 import common.boardclass.BoardFactories;
-
+import model.Position;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import ai.AI;
-import ai.candidatemoveselector.CandidateMovesSelectors;
-import model.Position;
+import static org.junit.Assert.assertEquals;
 
 public class MinMaxSearchTest {
 

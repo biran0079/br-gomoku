@@ -1,11 +1,6 @@
 package ai.candidatemoveselector;
 
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singleton;
-
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
-
 import common.Constants;
 import common.PositionTransformer;
 import common.StoneType;
@@ -13,17 +8,12 @@ import common.boardclass.BitBoard;
 import common.boardclass.BoardClass;
 import common.pattern.Pattern;
 import common.pattern.PatternType;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import model.Position;
+
+import java.util.*;
+
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singleton;
 
 /**
  * Utility methods for candidate selector.
@@ -48,6 +38,15 @@ public class CandidateMoveSelectorUtil {
       candidates.addAll(p.getDefensiveMoves());
     }
     return candidates;
+  }
+
+  public static Collection<Position> anyOffendFour(
+      BoardClass<Pattern> boardClass, StoneType stoneType) {
+    for (Pattern p : boardClass.getMatchingPatterns(stoneType,
+        PatternType.FOUR)) {
+      return p.getDefensiveMoves();
+    }
+    return emptyList();
   }
 
   public static Collection<Position> anyDefendFour(

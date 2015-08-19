@@ -1,9 +1,9 @@
 package controller;
 
-import javax.inject.Inject;
-
 import model.Position;
 import player.Player;
+
+import javax.inject.Inject;
 
 /**
  * Represents session of a single game.

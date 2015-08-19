@@ -4,7 +4,6 @@ import common.StoneType;
 import common.boardclass.AbstractBoardClass;
 import common.pattern.Pattern;
 import common.pattern.Threat;
-
 import model.GameBoard;
 
 /**

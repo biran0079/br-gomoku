@@ -1,10 +1,9 @@
 package player;
 
 import common.StoneType;
+import view.ClickCallbackManager;
 
 import javax.inject.Inject;
-
-import view.ClickCallbackManager;
 
 /**
  * Factory for players.

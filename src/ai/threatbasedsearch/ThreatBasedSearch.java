@@ -1,14 +1,12 @@
 package ai.threatbasedsearch;
 
+import ai.minmax.transitiontable.TransitionSet;
+import ai.minmax.transitiontable.TransitionSetImpl;
 import com.google.common.collect.Iterables;
-
 import common.StoneType;
 import common.boardclass.BoardClass;
 import common.pattern.PatternType;
 import common.pattern.Threat;
-
-import ai.minmax.transitiontable.TransitionSet;
-import ai.minmax.transitiontable.TransitionSetImpl;
 import model.Position;
 
 /**

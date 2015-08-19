@@ -3,7 +3,6 @@ package common.boardclass.threatbased;
 import common.boardclass.BoardClass;
 import common.boardclass.testing.BoardClassUtil;
 import common.pattern.Threat;
-
 import model.GameBoard;
 
 /**

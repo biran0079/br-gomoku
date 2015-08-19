@@ -1,11 +1,10 @@
 package ai.minmax;
 
-import static common.PositionTransformer.IDENTITY;
-
 import common.PositionTransformer;
 import common.Transformable;
-
 import model.Position;
+
+import static common.PositionTransformer.IDENTITY;
 
 /**
  * Node of min-max search tree.

@@ -1,18 +1,16 @@
 package common.boardclass;
 
+import ai.candidatemoveselector.CandidateMoveSelectorUtil;
+import ai.minmax.transitiontable.TransitionSet;
+import ai.minmax.transitiontable.TransitionSetImpl;
 import com.google.common.collect.Lists;
-
 import common.Constants;
 import common.StoneType;
+import model.Position;
 
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-
-import ai.candidatemoveselector.CandidateMoveSelectorUtil;
-import ai.minmax.transitiontable.TransitionSet;
-import ai.minmax.transitiontable.TransitionSetImpl;
-import model.Position;
 
 /**
  * Generator of BoardClass objects.

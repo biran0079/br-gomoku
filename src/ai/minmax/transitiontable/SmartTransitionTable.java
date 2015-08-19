@@ -1,9 +1,9 @@
 package ai.minmax.transitiontable;
 
-import static common.PositionTransformer.IDENTITY;
-
 import common.Transformable;
 import common.boardclass.BoardClass;
+
+import static common.PositionTransformer.IDENTITY;
 
 /**
  * Be smart about transition to safe space.

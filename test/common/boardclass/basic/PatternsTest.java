@@ -1,18 +1,13 @@
 package common.boardclass.basic;
 
-import static common.boardclass.testing.BoardClassUtil.B;
-import static common.boardclass.testing.BoardClassUtil.E;
-import static common.boardclass.testing.BoardClassUtil.W;
-import static common.boardclass.testing.BoardClassUtil.createBoard;
-import static org.junit.Assert.assertEquals;
-
 import com.google.common.collect.Iterables;
-
 import common.StoneType;
 import common.boardclass.BoardClass;
 import common.pattern.PatternType;
-
 import org.junit.Test;
+
+import static common.boardclass.testing.BoardClassUtil.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Unit tests for Patterns class.

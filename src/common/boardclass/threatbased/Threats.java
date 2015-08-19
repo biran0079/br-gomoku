@@ -1,28 +1,17 @@
 package common.boardclass.threatbased;
 
-import static common.pattern.MoveType.D;
-import static common.pattern.MoveType.E;
-import static common.pattern.MoveType.O;
-import static common.pattern.MoveType.X;
-import static common.pattern.PatternsUtil.createPatterns;
-import static common.pattern.PatternsUtil.getDefensiveMoves;
-import static common.pattern.PatternsUtil.getOffensiveMove;
-
 import com.google.common.collect.ImmutableSet;
-
 import common.PositionTransformer;
 import common.StoneType;
-import common.pattern.MoveType;
-import common.pattern.Pattern;
-import common.pattern.PatternType;
-import common.pattern.PatternsUtil;
-import common.pattern.Threat;
+import common.pattern.*;
+import model.Position;
 
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Set;
 
-import model.Position;
+import static common.pattern.MoveType.*;
+import static common.pattern.PatternsUtil.*;
 
 /**
  * Default threat factory.

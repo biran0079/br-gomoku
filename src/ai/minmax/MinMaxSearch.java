@@ -1,38 +1,24 @@
 package ai.minmax;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.SetMultimap;
-import com.google.common.collect.Sets;
-
-import common.Constants;
-import common.StoneType;
-import common.boardclass.BoardClass;
-import common.boardclass.BoardFactories;
-import common.pattern.Pattern;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import ai.AI;
 import ai.candidatemoveselector.CandidateMovesSelector;
 import ai.candidatemoveselector.CandidateMovesSelectors;
 import ai.minmax.transitiontable.NoopTransitionTable;
 import ai.minmax.transitiontable.TransitionTable;
 import ai.minmax.transitiontable.TransitionTableImpl;
+import com.google.common.collect.Iterables;
+import common.Constants;
+import common.StoneType;
+import common.boardclass.BoardClass;
+import common.boardclass.BoardFactories;
+import common.pattern.Pattern;
 import model.GameBoard;
 import model.Position;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class MinMaxSearch<T extends Pattern> implements AI {
 
@@ -67,7 +53,7 @@ public class MinMaxSearch<T extends Pattern> implements AI {
     return newBuilder()
         .withCandidateMoveSelector(CandidateMovesSelectors.DEFAULT)
         .withBoardClassFactory(BoardFactories.BOARD_CLASS_WITH_MATCHING_PATTERNS_FACTORY)
-        .withEvaluator(new DefaultEvaluator());
+        .withEvaluator(new EnhancedEvaluator());
   }
 
   @Override
@@ -79,7 +65,6 @@ public class MinMaxSearch<T extends Pattern> implements AI {
   public Position nextMove(GameBoard gameBoard, StoneType stoneType) {
     evalCount = 0;
     cacheHit = 0;
-    SetMultimap<Integer, Position> killer = HashMultimap.create();
     BoardClass<T> boardClass = boardClassFactory.fromGameBoard(gameBoard);
     if (boardClass.wins(StoneType.BLACK) || boardClass.wins(StoneType.WHITE)) {
       throw new IllegalStateException("Already won.");
@@ -93,7 +78,7 @@ public class MinMaxSearch<T extends Pattern> implements AI {
       result = minMaxSearch(boardClass, Integer.MIN_VALUE, Integer.MAX_VALUE,
           maxDepth, minMax, stoneType,
           transitionTableFactory.create(),
-          killer);
+          new Position[maxDepth + 1]);
       return result.getBestMove();
     } catch (Throwable e) {
       e.printStackTrace();
@@ -142,7 +127,7 @@ public class MinMaxSearch<T extends Pattern> implements AI {
                                   MinMax minMax,
                                   StoneType stoneType,
                                   TransitionTable<MinMaxNode> transitionTable,
-                                  SetMultimap<Integer, Position> killer) {
+                                  Position[] killers) {
     MinMaxNode fromCache = transitionTable.get(boardClass);
     if (fromCache != null) {
       cacheHit++;
@@ -164,19 +149,12 @@ public class MinMaxSearch<T extends Pattern> implements AI {
       return new MinMaxNode(Iterables.getOnlyElement(candidateMoves), 0);
     }
     if (useKillerHeuristic) {
-      Set<Position> cutoffMoves = new LinkedHashSet<>();
-      for (Position p : killer.get(depth)) {
-        if (boardClass.get(p.getRowIndex(), p.getColumnIndex()) == StoneType.NOTHING) {
-          cutoffMoves.add(p);
-        }
-      }
-      if (!cutoffMoves.isEmpty()) {
-        for (Position p : candidateMoves) {
-          if (!cutoffMoves.contains(p)) {
-            cutoffMoves.add(p);
-          }
-        }
-        candidateMoves = cutoffMoves;
+      Position p = killers[depth];
+      if (p != null && boardClass.get(p.getRowIndex(), p.getColumnIndex()) == StoneType.NOTHING) {
+        List<Position> l = new ArrayList<>();
+        l.add(p);
+        l.addAll(candidateMoves.stream().filter(t -> !t.equals(p)).collect(Collectors.toList()));
+        candidateMoves = l;
       }
     }
     for (Position position : candidateMoves) {
@@ -186,22 +164,22 @@ public class MinMaxSearch<T extends Pattern> implements AI {
       if (minMax == MinMax.MAX) {
         int curMax = res == null ? alpha : res.getScore();
         int v = minMaxSearch(newBoardClass, curMax, beta, depth - 1,
-            MinMax.MIN, stoneType, transitionTable, killer).getScore();
+            MinMax.MIN, stoneType, transitionTable, killers).getScore();
         res = update(minMax, res, position, v);
         if (alphaBetaPruning && res.getScore() >= beta) {
           if (useKillerHeuristic) {
-            killer.put(depth, position);
+            killers[depth] = position;
           }
           return save(transitionTable, boardClass, res);
         }
       } else {
         int curMin = res == null ? beta : res.getScore();
         int v = minMaxSearch(newBoardClass, alpha, curMin, depth - 1,
-            MinMax.MAX, stoneType, transitionTable, killer).getScore();
+            MinMax.MAX, stoneType, transitionTable, killers).getScore();
         res = update(minMax, res, position, v);
         if (alphaBetaPruning && res.getScore() <= alpha) {
           if (useKillerHeuristic) {
-            killer.put(depth, position);
+            killers[depth] = position;
           }
           return save(transitionTable, boardClass, res);
         }

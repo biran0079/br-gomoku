@@ -20,7 +20,7 @@ public class CandidateMovesSelectors {
   public static final CandidateMovesSelector<Pattern> DEFAULT =
       CandidateMovesSelectorBuilder.newBuilder()
           .add(CandidateMoveSelectorUtil::centerIfEmptyBoard)
-          .add(CandidateMoveSelectorUtil::allOffendFour)
+          .add(CandidateMoveSelectorUtil::anyOffendFour)
           .add(CandidateMoveSelectorUtil::anyDefendFour)
           .add(CandidateMoveSelectorUtil::allOffendThree)
           .add(CandidateMoveSelectorUtil::defendThreeIntersections)

@@ -2,7 +2,6 @@ package main;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-
 import controller.ControllerModule;
 import controller.GameController;
 import model.ModelModule;

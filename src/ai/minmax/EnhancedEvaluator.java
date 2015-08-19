@@ -1,7 +1,6 @@
 package ai.minmax;
 
 import com.google.common.collect.Iterables;
-
 import common.StoneType;
 import common.boardclass.BoardClass;
 import common.pattern.Pattern;

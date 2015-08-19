@@ -1,14 +1,13 @@
 package ai.threatbasedsearch;
 
-import static org.junit.Assert.assertTrue;
-
 import common.StoneType;
 import common.boardclass.BoardClass;
 import common.boardclass.BoardFactories;
 import common.boardclass.testing.BoardClassUtil;
 import common.pattern.Threat;
-
 import org.junit.Test;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * Unit test for ThreatBasedSearch.

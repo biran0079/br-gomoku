@@ -3,12 +3,11 @@ package ai.candidatemoveselector;
 import common.StoneType;
 import common.boardclass.BoardClass;
 import common.pattern.Pattern;
+import model.Position;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
-import model.Position;
 
 /**
  * Builder for CandidateMovesSelector.

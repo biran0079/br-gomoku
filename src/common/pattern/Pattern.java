@@ -1,14 +1,12 @@
 package common.pattern;
 
 import com.google.common.collect.ImmutableSet;
-
 import common.PositionTransformer;
 import common.StoneType;
 import common.boardclass.BoardClass;
+import model.Position;
 
 import java.util.Set;
-
-import model.Position;
 
 /**
  * Abstract interface for Pattern.

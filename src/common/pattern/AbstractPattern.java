@@ -1,12 +1,10 @@
 package common.pattern;
 
 import com.google.common.collect.ImmutableSet;
-
 import common.Constants;
 import common.PositionTransformer;
 import common.StoneType;
 import common.boardclass.BoardClass;
-
 import model.Position;
 
 /**

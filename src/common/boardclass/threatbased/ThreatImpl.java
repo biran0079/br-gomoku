@@ -1,12 +1,10 @@
 package common.boardclass.threatbased;
 
 import com.google.common.collect.ImmutableSet;
-
 import common.PositionTransformer;
 import common.StoneType;
 import common.pattern.AbstractPattern;
 import common.pattern.Threat;
-
 import model.Position;
 
 /**

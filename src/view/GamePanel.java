@@ -3,11 +3,9 @@ package view;
 import common.Constants;
 import common.StoneType;
 
-import java.awt.Dimension;
-import java.awt.GridLayout;
-
 import javax.inject.Inject;
-import javax.swing.JPanel;
+import javax.swing.*;
+import java.awt.*;
 
 class GamePanel extends JPanel {
 

@@ -2,9 +2,8 @@ package model;
 
 import common.StoneType;
 
-import java.util.Stack;
-
 import javax.inject.Inject;
+import java.util.Stack;
 
 /**
  * Implementation of history.

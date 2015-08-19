@@ -1,9 +1,9 @@
 package view;
 
-import javax.inject.Inject;
-import javax.swing.SwingUtilities;
-
 import model.Position;
+
+import javax.inject.Inject;
+import javax.swing.*;
 
 /**
  * Manager of game board click event call back.

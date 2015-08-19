@@ -1,8 +1,8 @@
 package ai.competition;
 
-import java.util.Vector;
-
 import ai.AI;
+
+import java.util.Vector;
 
 /**
  * Holder of competition AI and competition results for the AI.

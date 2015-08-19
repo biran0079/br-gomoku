@@ -3,10 +3,9 @@ package ai.candidatemoveselector;
 import common.StoneType;
 import common.boardclass.BoardClass;
 import common.pattern.Pattern;
+import model.Position;
 
 import java.util.Collection;
-
-import model.Position;
 
 /**
  * Class that selects candidate moves.

@@ -1,31 +1,20 @@
 package common.boardclass;
 
-import static common.PositionTransformer.CLOCK_180;
-import static common.PositionTransformer.CLOCK_180_M;
-import static common.PositionTransformer.CLOCK_270;
-import static common.PositionTransformer.CLOCK_270_M;
-import static common.PositionTransformer.CLOCK_90;
-import static common.PositionTransformer.CLOCK_90_M;
-import static common.PositionTransformer.IDENTITY;
-import static common.PositionTransformer.IDENTITY_M;
-import static common.PositionTransformer.LEFT_DIAGONAL;
-import static common.PositionTransformer.RIGHT_DIAGONAL;
-
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
-
 import common.Constants;
 import common.PositionTransformer;
 import common.StoneType;
 import common.pattern.Pattern;
 import common.pattern.PatternType;
+import model.GameBoard;
 
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Set;
 
-import model.GameBoard;
+import static common.PositionTransformer.*;
 
 /**
  * Shared logic for all BoardClass implementations.

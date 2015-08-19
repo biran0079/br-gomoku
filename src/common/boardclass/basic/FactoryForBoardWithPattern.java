@@ -3,7 +3,6 @@ package common.boardclass.basic;
 import common.boardclass.BoardClass;
 import common.boardclass.testing.BoardClassUtil;
 import common.pattern.Pattern;
-
 import model.GameBoard;
 
 /**

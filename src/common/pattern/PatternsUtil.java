@@ -1,20 +1,12 @@
 package common.pattern;
 
 import com.google.common.collect.ImmutableSet;
-
 import common.Constants;
 import common.PositionTransformer;
 import common.StoneType;
-
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import model.Position;
+
+import java.util.*;
 
 /**
  * Utility methods for patterns.

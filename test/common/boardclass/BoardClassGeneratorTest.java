@@ -1,10 +1,9 @@
 package common.boardclass;
 
-import static org.junit.Assert.assertEquals;
-
 import com.google.common.collect.Iterables;
-
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class BoardClassGeneratorTest {
 
