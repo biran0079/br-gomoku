@@ -94,6 +94,12 @@ public class MinMaxSearch<T extends Pattern> implements AI {
               transitionTableFactory.create(),
               new Position[maxDepth + 1]);
           break;
+        case PVS:
+          result = pvs(boardClass, MIN_VALUE, MAX_VALUE,
+              maxDepth, minMax, stoneType,
+              transitionTableFactory.create(),
+              new Position[maxDepth + 1]);
+          break;
         default:
           throw new IllegalArgumentException("Unsupported algorithm: " + algorithm);
       }
@@ -139,7 +145,7 @@ public class MinMaxSearch<T extends Pattern> implements AI {
     return node;
   }
 
-  private Optional<MinMaxNode> evaluateTerminalNode(
+  private MinMaxNode evaluateTerminalNode(
       BoardClass<T> boardClass,
       int depth,
       StoneType stoneType) {
@@ -153,7 +159,7 @@ public class MinMaxSearch<T extends Pattern> implements AI {
     } else if (depth == 0) {
       result = new MinMaxNode(null, eval(boardClass, stoneType));
     }
-    return Optional.ofNullable(result);
+    return result;
   }
 
   private Iterable<Position> getCandidateMoves(
@@ -188,7 +194,7 @@ public class MinMaxSearch<T extends Pattern> implements AI {
       cacheHit++;
       return fromCache;
     }
-    MinMaxNode res = evaluateTerminalNode(boardClass, depth, stoneType).orElse(null);
+    MinMaxNode res = evaluateTerminalNode(boardClass, depth, stoneType);
     if (res != null) {
       return save(transitionTable, boardClass, res);
     }
@@ -236,7 +242,7 @@ public class MinMaxSearch<T extends Pattern> implements AI {
       cacheHit++;
       return fromCache;
     }
-    MinMaxNode res = evaluateTerminalNode(boardClass, depth, stoneType).orElse(null);
+    MinMaxNode res = evaluateTerminalNode(boardClass, depth, stoneType);
     if (res != null) {
       if (minMax.color == -1) {
         res = new MinMaxNode(res.getBestMove(), -res.getScore());
@@ -250,6 +256,60 @@ public class MinMaxSearch<T extends Pattern> implements AI {
       BoardClass<T> newBoardClass = boardClass.withPositionSet(i, j, minMax.stoneType);
       int v = -negaMax(newBoardClass, -beta, -alpha, depth - 1,
           minMax.opposite(), stoneType, transitionTable, killers).getScore();
+      if (res == null || v > bestScore) {
+        bestScore = v;
+        res = new MinMaxNode(position, v);
+      }
+      alpha = Math.max(alpha, v);
+      if (alphaBetaPruning && alpha >= beta) {
+        if (useKillerHeuristic) {
+          killers[depth] = position;
+        }
+        break;
+      }
+    }
+    return save(transitionTable, boardClass, res);
+  }
+
+  private MinMaxNode pvs(BoardClass<T> boardClass,
+      int alpha,
+      int beta,
+      int depth,
+      MinMax minMax,
+      StoneType stoneType,
+      TransitionTable<MinMaxNode> transitionTable,
+      Position[] killers) {
+    MinMaxNode fromCache = transitionTable.get(boardClass);
+    if (fromCache != null) {
+      cacheHit++;
+      return fromCache;
+    }
+    MinMaxNode res = evaluateTerminalNode(boardClass, depth, stoneType);
+    if (res != null) {
+      if (minMax.color == -1) {
+        res = new MinMaxNode(res.getBestMove(), -res.getScore());
+      }
+      return save(transitionTable, boardClass, res);
+    }
+    int bestScore = MIN_VALUE;
+    boolean first = true;
+    for (Position position : getCandidateMoves(boardClass, minMax, killers[depth])) {
+      int i = position.getRowIndex();
+      int j = position.getColumnIndex();
+      BoardClass<T> newBoardClass = boardClass.withPositionSet(i, j, minMax.stoneType);
+      int v;
+      if (first) {
+        v = -pvs(newBoardClass, -beta, -alpha, depth - 1,
+            minMax.opposite(), stoneType, transitionTable, killers).getScore();
+        first = false;
+      } else {
+        v = -pvs(newBoardClass, -alpha - 1, -alpha, depth - 1,
+            minMax.opposite(), stoneType, transitionTable, killers).getScore();
+        if (alpha < v && v < beta) {
+          v = -pvs(newBoardClass, -beta, -v, depth - 1,
+              minMax.opposite(), stoneType, transitionTable, killers).getScore();
+        }
+      }
       if (res == null || v > bestScore) {
         bestScore = v;
         res = new MinMaxNode(position, v);
@@ -358,5 +418,6 @@ public class MinMaxSearch<T extends Pattern> implements AI {
   public enum Algorithm {
     MINMAX,
     NEGAMAX,
+    PVS,
   }
 }

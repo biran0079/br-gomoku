@@ -12,6 +12,7 @@ public class MinMaxSearchPlayer implements Player {
   private final StoneType stoneType;
   private final MinMaxSearch minMaxSearch = MinMaxSearch.defaultBuilderForPattern()
       .withTransitionTableFactory(SmartTransitionTable::new)
+      .withAlgorithm(MinMaxSearch.Algorithm.MINMAX)
       .withMaxDepth(6)
       .useKillerHeuristic()
       .build();

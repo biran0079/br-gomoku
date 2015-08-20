@@ -3,6 +3,8 @@ package ai.experiment;
 import ai.AI;
 import ai.competition.Competition;
 import ai.minmax.MinMaxSearch;
+import ai.minmax.transitiontable.SmartTransitionTable;
+
 import com.google.common.collect.Lists;
 import common.StoneType;
 import common.boardclass.BoardClass;
@@ -17,14 +19,18 @@ class AIConvergeExperiment {
 
   public static void main(String[] args) {
     AI ai1 = MinMaxSearch.defaultBuilderForPattern()
-        .withName("d4-killer")
-        .useKillerHeuristic()
+        .withName("d4-negamax-kill")
+        .withAlgorithm(MinMaxSearch.Algorithm.NEGAMAX)
+        .withTransitionTableFactory(SmartTransitionTable::new)
         .withMaxDepth(4)
+        .useKillerHeuristic()
         .build();
     AI ai2 = MinMaxSearch.defaultBuilderForPattern()
-        .withName("d5-killer")
+        .withName("d4-negamax-kill")
+        .withAlgorithm(MinMaxSearch.Algorithm.NEGAMAX)
+        .withTransitionTableFactory(SmartTransitionTable::new)
+        .withMaxDepth(4)
         .useKillerHeuristic()
-        .withMaxDepth(5)
         .build();
 
     Collection<BoardClass<?>> games = Lists.newArrayList(
