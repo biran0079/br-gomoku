@@ -19,8 +19,8 @@ class AIConvergeExperiment {
 
   public static void main(String[] args) {
     AI ai1 = MinMaxSearch.defaultBuilderForPattern()
-        .withName("d4-negamax-kill")
-        .withAlgorithm(MinMaxSearch.Algorithm.NEGAMAX)
+        .withName("d4-minmax-kill")
+        .withAlgorithm(MinMaxSearch.Algorithm.MINMAX)
         .withTransitionTableFactory(SmartTransitionTable::new)
         .withMaxDepth(4)
         .useKillerHeuristic()

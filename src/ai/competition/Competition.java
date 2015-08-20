@@ -41,17 +41,13 @@ public class Competition {
       gameStream = gameStream.parallel();
     }
     gameStream
-        .flatMap(boardClass ->
-            Lists.<Runnable>newArrayList(
-                () -> competeSingleGameWithMoveOrder(boardClass,
-                    new CompetitionAI[]{competitionAI1, competitionAI2},
-                    new StoneType[]{firstMove, secondMove}),
-                () -> competeSingleGameWithMoveOrder(boardClass,
-                    new CompetitionAI[]{competitionAI2, competitionAI1},
-                    new StoneType[]{firstMove, secondMove})
-            ).stream())
-        .forEach(runnable -> {
-          runnable.run();
+        .forEach(boardClass -> {
+          competeSingleGameWithMoveOrder(boardClass,
+              new CompetitionAI[]{competitionAI1, competitionAI2},
+              new StoneType[]{firstMove, secondMove});
+          competeSingleGameWithMoveOrder(boardClass,
+              new CompetitionAI[]{competitionAI2, competitionAI1},
+              new StoneType[]{firstMove, secondMove});
           System.out.println(competitionAI1);
           System.out.println(competitionAI2);
         });

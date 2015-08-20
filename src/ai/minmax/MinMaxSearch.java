@@ -198,27 +198,38 @@ public class MinMaxSearch<T extends Pattern> implements AI {
     if (res != null) {
       return save(transitionTable, boardClass, res);
     }
+    int min = MAX_VALUE, max = MIN_VALUE;
     for (Position position : getCandidateMoves(boardClass, minMax, killers[depth])) {
       int i = position.getRowIndex();
       int j = position.getColumnIndex();
       BoardClass<T> newBoardClass = boardClass.withPositionSet(i, j, minMax.stoneType);
       if (minMax == MinMax.MAX) {
-        int curMax = res == null ? alpha : res.getScore();
-        int v = minMaxSearch(newBoardClass, curMax, beta, depth - 1,
+        int v = minMaxSearch(newBoardClass, alpha, beta, depth - 1,
             MinMax.MIN, stoneType, transitionTable, killers).getScore();
-        res = update(minMax, res, position, v);
-        if (alphaBetaPruning && res.getScore() >= beta) {
+        alpha = Math.max(alpha, v);
+        if (v > max) {
+          max = v;
+        }
+        if (res == null || res.getScore() < max) {
+          res = new MinMaxNode(position, max);
+        }
+        if (alphaBetaPruning && alpha >= beta) {
           if (useKillerHeuristic) {
             killers[depth] = position;
           }
           break;
         }
       } else {
-        int curMin = res == null ? beta : res.getScore();
-        int v = minMaxSearch(newBoardClass, alpha, curMin, depth - 1,
+        int v = minMaxSearch(newBoardClass, alpha, beta, depth - 1,
             MinMax.MAX, stoneType, transitionTable, killers).getScore();
-        res = update(minMax, res, position, v);
-        if (alphaBetaPruning && res.getScore() <= alpha) {
+        beta = Math.min(beta, v);
+        if (v < min) {
+          min = v;
+        }
+        if (res == null || res.getScore() > min) {
+          res = new MinMaxNode(position, min);
+        }
+        if (alphaBetaPruning && alpha >= beta) {
           if (useKillerHeuristic) {
             killers[depth] = position;
           }
@@ -323,26 +334,6 @@ public class MinMaxSearch<T extends Pattern> implements AI {
       }
     }
     return save(transitionTable, boardClass, res);
-  }
-
-  private MinMaxNode update(MinMax minMax, MinMaxNode current, Position position, int f) {
-    if (current == null) {
-      return new MinMaxNode(position, f);
-    }
-    switch (minMax) {
-      case MAX:
-        if (f > current.getScore()) {
-          return new MinMaxNode(position, f);
-        }
-        return current;
-      case MIN:
-        if (f < current.getScore()) {
-          return new MinMaxNode(position, f);
-        }
-        return current;
-      default:
-        throw new IllegalArgumentException();
-    }
   }
 
   public static class Builder<T extends Pattern> {
