@@ -23,7 +23,7 @@ final class BoardClassWithMatchingThreats extends AbstractBoardClass<Threat> {
   }
 
   @Override
-  protected Pattern.Corpus<Threat> getCorpus() {
+  public Pattern.Corpus<Threat> getCorpus() {
     return THREATS;
   }
 

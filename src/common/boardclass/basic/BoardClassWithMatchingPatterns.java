@@ -23,7 +23,7 @@ final class BoardClassWithMatchingPatterns extends AbstractBoardClass<Pattern> {
   }
 
   @Override
-  protected Pattern.Corpus<Pattern> getCorpus() {
+  public Pattern.Corpus<Pattern> getCorpus() {
     return PATTERNS;
   }
 

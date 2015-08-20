@@ -80,11 +80,14 @@ public abstract class AbstractBoardClass<T extends Pattern>
   }
 
   @Override
-  public Iterable<T> getMatchingPatterns(StoneType stoneType, PatternType patternType) {
-    return Sets.intersection(matchingThreats, getCorpus().get(stoneType, patternType));
+  public Set<T> getMatchingPatterns(StoneType stoneType, PatternType patternType) {
+    return filterMatching(getCorpus().get(stoneType, patternType));
   }
 
-  protected abstract Pattern.Corpus<T> getCorpus();
+  @Override
+  public Set<T> filterMatching(Set<T> candidate) {
+    return Sets.intersection(matchingThreats, candidate);
+  }
 
   @Override
   public BitBoard getBoard(PositionTransformer transformer) {

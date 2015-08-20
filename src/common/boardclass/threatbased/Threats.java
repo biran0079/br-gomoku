@@ -104,7 +104,7 @@ class Threats implements Pattern.Corpus<Threat> {
         builder.addAll(createPatterns(stoneType, moves, this::createThreat));
 
         moves[i] = O;
-        moves[j] = X;
+        moves[j] = D;
         builder.addAll(createPatterns(stoneType, moves, this::createThreat));
       }
     }

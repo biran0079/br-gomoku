@@ -6,6 +6,8 @@ import common.pattern.Pattern;
 import common.pattern.PatternType;
 import model.GameBoard;
 
+import java.util.Set;
+
 /**
  * Interface for a equivalent class of game board.
  */
@@ -13,7 +15,11 @@ public interface BoardClass<T extends Pattern> extends GameBoard {
 
   boolean matchesAny(StoneType stoneType, PatternType patternType);
 
-  Iterable<T> getMatchingPatterns(StoneType stoneType, PatternType patternType);
+  Set<T> getMatchingPatterns(StoneType stoneType, PatternType patternType);
+
+  Set<T> filterMatching(Set<T> candidate);
+
+  Pattern.Corpus<T> getCorpus();
 
   @Override
   BoardClass<T> withPositionSet(int i, int j, StoneType stoneType);
