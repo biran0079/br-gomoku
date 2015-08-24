@@ -19,50 +19,36 @@ class GameControllerImpl implements GameController {
 
 	private final History history;
 	private final UI ui;
-  private final Provider<GameSession> gameSessionProvider;
-  private final ExecutorService gameSessionExecutor = Executors.newSingleThreadExecutor();
   private final PlayerFactory playerFactory;
   private final GameBoard.Factory gameBoardFactory;
+  private final SessionController sessionController;
 
   private GameBoard gameBoard;
-  // TODO introduce session scope.
-  private volatile GameSession currentSession;
-
-  private volatile Future<?> currentGameSessionFuture;
 
   @Inject
 	GameControllerImpl(History history,
                      GameBoard.Factory gameBoardFactory,
                      UI ui,
-                     Provider<GameSession> gameSessionProvider,
+                     SessionController sessionController,
                      PlayerFactory playerFactory) {
 		this.history = history;
 		this.gameBoardFactory = gameBoardFactory;
     this.ui = ui;
-    this.gameSessionProvider = gameSessionProvider;
+    this.sessionController = sessionController;
     this.playerFactory = playerFactory;
 		ui.addUndoActionListener((e) -> undo());
-		ui.addNewGameActionListener((e) -> restartGame());
+		ui.addNewGameActionListener((e) -> sessionController.startGame(initializeGame()));
 	}
 
   @Override
   public void startGame() {
-    currentGameSessionFuture = gameSessionExecutor.submit(() -> {
-      try {
-        currentSession = gameSessionProvider.get();
-        currentSession.newGameStart(initializeGame());
-      } catch (Throwable e) {
-        e.printStackTrace();
-        throw e;
-      }
-    });
+    sessionController.startGame(initializeGame());
   }
 
   @Override
   public void undo() {
     if (history.size() < 2
-        || currentSession == null
-        || !currentSession.isWaitingForHumanMove()) {
+        || !sessionController.isWaitingForHumanMove()) {
       return;
     }
     HistoryEntry historyEntry;
@@ -115,12 +101,5 @@ class GameControllerImpl implements GameController {
       default:
         throw new RuntimeException();
     }
-  }
-
-  private void restartGame() {
-    if (currentGameSessionFuture != null) {
-      currentGameSessionFuture.cancel(true);
-    }
-    startGame();
   }
 }
