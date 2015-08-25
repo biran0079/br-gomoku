@@ -52,6 +52,7 @@ class ThreatCandidateMoveSelectorUtil {
     for (Threat p : boardClass.getMatchingPatterns(stoneType.getOpponent(),
         PatternType.STRAIT_FOUR)) {
       moves.add(p.getOffensiveMove());
+      moves.addAll(p.getDefensiveMoves());
     }
     return moves;
   }

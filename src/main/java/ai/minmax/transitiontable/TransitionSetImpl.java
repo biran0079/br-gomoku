@@ -7,7 +7,15 @@ import common.boardclass.BoardClass;
 
 public class TransitionSetImpl implements TransitionSet {
 
-  private final TransitionTable<DummyValue> transitionTable = new TransitionTableImpl<>();
+  private final TransitionTable<DummyValue> transitionTable;
+
+  public TransitionSetImpl() {
+    this(TransitionTableImpl::new);
+  }
+
+  public TransitionSetImpl(TransitionTable.Factory<DummyValue> factory) {
+    transitionTable = factory.create();
+  }
 
   @Override
   public boolean contains(BoardClass<?> boardClass) {
