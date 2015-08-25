@@ -8,7 +8,6 @@ import common.pattern.Threat;
 import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Unit test for ThreatBasedSearch.
@@ -21,6 +20,29 @@ public class ThreatBasedSearchTest {
 
   @Test
   public void testWinningPathExists() throws Exception {
+    BoardClass<Threat> boardClass = createBoard(
+        "_______________\n" +
+            "_______________\n" +
+            "_______________\n" +
+            "______O________\n" +
+            "_______X_______\n" +
+            "_______OXXX____\n" +
+            "_______OOXO____\n" +
+            "_____XOOOOX____\n" +
+            "_______OXXXO___\n" +
+            "_______XXOX____\n" +
+            "_______O__O____\n" +
+            "_______________\n" +
+            "_______________\n" +
+            "_______________\n" +
+            "_______________\n");
+
+    System.err.println(threatBasedSearch.winningMove(boardClass, StoneType.WHITE));
+    assertNotNull(threatBasedSearch.winningMove(boardClass, StoneType.WHITE));
+  }
+
+  @Test
+  public void testWinningPathExists2() throws Exception {
     BoardClass<Threat> boardClass = createBoard(""
         + "_______________\n"
         + "_______________\n"
