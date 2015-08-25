@@ -2,6 +2,7 @@ package ai.minmax;
 
 import ai.AI;
 import ai.candidatemoveselector.CandidateMovesSelectors;
+import ai.evaluator.SimplePatternEvaluator;
 import com.google.common.base.MoreObjects;
 import common.StoneType;
 import common.boardclass.BoardClass;

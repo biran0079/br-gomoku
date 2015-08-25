@@ -1,4 +1,4 @@
-package ai.minmax;
+package ai.evaluator;
 
 import com.google.common.collect.Iterables;
 import common.StoneType;
@@ -9,7 +9,7 @@ import common.pattern.PatternType;
 /**
  * Better evaluator than default evaluator.
  */
-public class EnhancedEvaluator implements Evaluator<Pattern> {
+public class EnhancedPatternEvaluator implements Evaluator<Pattern> {
 
   @Override
   public int eval(BoardClass<Pattern> boardClass, StoneType nextToMove) {

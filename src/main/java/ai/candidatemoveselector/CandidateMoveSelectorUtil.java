@@ -10,6 +10,7 @@ import common.boardclass.BoardClass;
 import common.boardclass.BoardFactories;
 import common.pattern.Pattern;
 import common.pattern.PatternType;
+import common.pattern.Threat;
 import model.Position;
 
 import java.util.*;

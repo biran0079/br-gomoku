@@ -1,4 +1,4 @@
-package ai.minmax;
+package ai.evaluator;
 
 import com.google.common.collect.Iterables;
 import common.StoneType;

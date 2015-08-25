@@ -3,6 +3,9 @@ package ai.minmax;
 import ai.AI;
 import ai.candidatemoveselector.CandidateMovesSelector;
 import ai.candidatemoveselector.CandidateMovesSelectors;
+import ai.evaluator.EnhancedPatternEvaluator;
+import ai.evaluator.Evaluator;
+import ai.evaluator.SimpleThreatEvaluator;
 import ai.minmax.transitiontable.NoopTransitionTable;
 import ai.minmax.transitiontable.TransitionTable;
 import ai.minmax.transitiontable.TransitionTableImpl;
@@ -12,6 +15,7 @@ import common.StoneType;
 import common.boardclass.BoardClass;
 import common.boardclass.BoardFactories;
 import common.pattern.Pattern;
+import common.pattern.Threat;
 import model.GameBoard;
 import model.Position;
 
@@ -50,15 +54,22 @@ public class MinMaxSearch<T extends Pattern> implements AI {
     this.algorithm = builder.algorithm;
   }
 
-  private static <T extends Pattern> Builder<T> newBuilder() {
+  public static <T extends Pattern> Builder<T> newBuilder() {
     return new Builder<>();
   }
 
   public static Builder<Pattern> defaultBuilderForPattern() {
-    return newBuilder()
-        .withCandidateMoveSelector(CandidateMovesSelectors.DEFAULT)
+    return MinMaxSearch.newBuilder()
+        .withCandidateMoveSelector(CandidateMovesSelectors.FOR_PATTERN)
         .withBoardClassFactory(BoardFactories.FOR_PATTERN)
-        .withEvaluator(new EnhancedEvaluator());
+        .withEvaluator(new EnhancedPatternEvaluator());
+  }
+
+  public static Builder<Threat> defaultBuilderForThreat() {
+    return MinMaxSearch.<Threat>newBuilder()
+        .withCandidateMoveSelector(CandidateMovesSelectors.FOR_THREAT)
+        .withBoardClassFactory(BoardFactories.FOR_THREAT)
+        .withEvaluator(new SimpleThreatEvaluator());
   }
 
   @Override

@@ -1,4 +1,4 @@
-package ai.minmax;
+package ai.evaluator;
 
 import common.StoneType;
 import common.boardclass.BoardClass;

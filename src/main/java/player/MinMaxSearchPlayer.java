@@ -10,7 +10,7 @@ public class MinMaxSearchPlayer implements Player {
 
   private final String name;
   private final StoneType stoneType;
-  private final MinMaxSearch minMaxSearch = MinMaxSearch.defaultBuilderForPattern()
+  private final MinMaxSearch minMaxSearch = MinMaxSearch.defaultBuilderForThreat()
       .withTransitionTableFactory(SmartTransitionTable::new)
       .withAlgorithm(MinMaxSearch.Algorithm.MINMAX)
       .withMaxDepth(6)

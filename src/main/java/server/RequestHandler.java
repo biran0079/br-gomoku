@@ -40,21 +40,21 @@ class RequestHandler implements HttpHandler {
     return s1.toLowerCase().equals(s2.toLowerCase());
   }
 
-  private final AI novice = MinMaxSearch.defaultBuilderForPattern()
+  private final AI novice = MinMaxSearch.defaultBuilderForThreat()
       .withTransitionTableFactory(SmartTransitionTable::new)
       .withAlgorithm(MinMaxSearch.Algorithm.MINMAX)
       .withMaxDepth(4)
       .useKillerHeuristic()
       .build();
 
-  private final AI medium = MinMaxSearch.defaultBuilderForPattern()
+  private final AI medium = MinMaxSearch.defaultBuilderForThreat()
       .withTransitionTableFactory(SmartTransitionTable::new)
       .withAlgorithm(MinMaxSearch.Algorithm.MINMAX)
       .withMaxDepth(6)
       .useKillerHeuristic()
       .build();
 
-  private final AI expert = MinMaxSearch.defaultBuilderForPattern()
+  private final AI expert = MinMaxSearch.defaultBuilderForThreat()
       .withTransitionTableFactory(SmartTransitionTable::new)
       .withAlgorithm(MinMaxSearch.Algorithm.MINMAX)
       .withMaxDepth(8)
