@@ -1,8 +1,5 @@
 package ai.threatbasedsearch;
 
-import ai.minmax.transitiontable.SmartTransitionTable;
-import ai.minmax.transitiontable.TransitionSet;
-import ai.minmax.transitiontable.TransitionSetImpl;
 import com.google.common.collect.Iterables;
 import common.PositionTransformer;
 import common.StoneType;
@@ -12,9 +9,7 @@ import common.pattern.PatternType;
 import common.pattern.Threat;
 import model.Position;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -23,7 +18,14 @@ import java.util.Map;
 class CompleteThreatSearch {
 
   Position winningMove(BoardClass<Threat> boardClass, StoneType attacker, int depth) {
-    return offend(boardClass, attacker, new HashMap<>(), depth);
+    for (int i = 0; i <= depth; i++) {
+      // iterative depenning
+      Position position = offend(boardClass, attacker, new HashMap<>(), depth);
+      if (position != null) {
+        return position;
+      }
+    }
+    return null;
   }
 
   private Position offend(BoardClass<Threat> boardClass,

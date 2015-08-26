@@ -37,7 +37,6 @@ public class ThreatBasedSearchTest {
             "_______________\n" +
             "_______________\n");
 
-    System.err.println(threatBasedSearch.winningMove(boardClass, StoneType.WHITE));
     assertNotNull(threatBasedSearch.winningMove(boardClass, StoneType.WHITE));
   }
 
