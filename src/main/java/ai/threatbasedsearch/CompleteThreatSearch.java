@@ -20,7 +20,7 @@ class CompleteThreatSearch {
   Position winningMove(BoardClass<Threat> boardClass, StoneType attacker, int depth) {
     for (int i = 0; i <= depth; i++) {
       // iterative depenning
-      Position position = offend(boardClass, attacker, new HashMap<>(), depth);
+      Position position = offend(boardClass, attacker, new HashMap<>(), i);
       if (position != null) {
         return position;
       }

@@ -40,6 +40,29 @@ public class CompleteThreatSearchTest {
     assertNotNull(completeThreatSearch.winningMove(boardClass, StoneType.BLACK, 6));
   }
 
+  @Test
+  public void testWinningMove2() {
+    BoardClass<Threat> boardClass = createBoard("" +
+        "_______________\n" +
+        "_______________\n" +
+        "_______________\n" +
+        "_______________\n" +
+        "_______________\n" +
+        "__________X____\n" +
+        "______XXOXX____\n" +
+        "_______OXOO____\n" +
+        "______XOOOX____\n" +
+        "_______O_______\n" +
+        "_______________\n" +
+        "_______________\n" +
+        "_______________\n" +
+        "_______________\n" +
+        "_______________");
+    System.err.println(completeThreatSearch.winningMove(boardClass, StoneType.BLACK, 4));
+
+    assertNotNull(completeThreatSearch.winningMove(boardClass, StoneType.BLACK, 4));
+  }
+
   private BoardClass<Threat> createBoard(String s) {
     return factory.fromGameBoard(BoardClassUtil.fromString(s));
   }

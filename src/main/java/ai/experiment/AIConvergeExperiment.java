@@ -31,16 +31,16 @@ class AIConvergeExperiment {
             .useKillerHeuristic()
             .withMaxDepth(4)
             .build(),
-        3);
+        4);
     AI ai2 = new ThreatBasedAI(
         MinMaxSearch.defaultBuilderForThreat()
             .withName("d4-minmax")
             .withAlgorithm(MinMaxSearch.Algorithm.MINMAX)
             .withTransitionTableFactory(SmartTransitionTable::new)
             .useKillerHeuristic()
-            .withMaxDepth(4)
+            .withMaxDepth(3)
             .build(),
-        4);
+        5);
 
     Collection<BoardClass<?>> games = Lists.newArrayList(
         new BoardClassGenerator().generateBoardWithStones(4));
