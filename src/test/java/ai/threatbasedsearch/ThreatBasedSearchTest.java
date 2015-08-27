@@ -8,6 +8,7 @@ import common.pattern.Threat;
 import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 /**
  * Unit test for ThreatBasedSearch.
@@ -59,7 +60,7 @@ public class ThreatBasedSearchTest {
         + "_______________\n"
         + "_______________\n");
 
-    assertNotNull(threatBasedSearch.winningMove(boardClass, StoneType.BLACK));
+    assertNull(threatBasedSearch.winningMove(boardClass, StoneType.BLACK));
   }
 
   private BoardClass<Threat> createBoard(String s) {

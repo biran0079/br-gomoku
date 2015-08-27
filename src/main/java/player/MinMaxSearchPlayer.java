@@ -3,7 +3,7 @@ package player;
 import ai.AI;
 import ai.minmax.MinMaxSearch;
 import ai.minmax.transitiontable.SmartTransitionTable;
-import ai.threatbasedsearch.ThreatBasedAI;
+import ai.threatbasedsearch.CompeleteThreatSearchAI;
 import common.StoneType;
 import model.GameBoard;
 import model.Position;
@@ -12,7 +12,7 @@ public class MinMaxSearchPlayer implements Player {
 
   private final String name;
   private final StoneType stoneType;
-  private final AI minMaxSearch = new ThreatBasedAI(
+  private final AI minMaxSearch = new CompeleteThreatSearchAI(
       MinMaxSearch.defaultBuilderForThreat()
           .withTransitionTableFactory(SmartTransitionTable::new)
           .withAlgorithm(MinMaxSearch.Algorithm.MINMAX)

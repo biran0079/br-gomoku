@@ -32,5 +32,9 @@ public interface Pattern {
     ImmutableSet<T> get(StoneType stoneType, PatternType PatternType);
 
     Set<T> get(int i, int j, StoneType stoneType);
+
+    default Set<T> get(Position p, StoneType stoneType) {
+      return get(p.getRowIndex(), p.getColumnIndex(), stoneType);
+    }
   }
 }

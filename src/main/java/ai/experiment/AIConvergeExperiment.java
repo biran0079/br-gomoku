@@ -1,19 +1,16 @@
 package ai.experiment;
 
 import ai.AI;
-import ai.candidatemoveselector.CandidateMovesSelectors;
 import ai.competition.Competition;
-import ai.evaluator.SimpleThreatEvaluator;
 import ai.minmax.MinMaxSearch;
 import ai.minmax.transitiontable.SmartTransitionTable;
 
-import ai.threatbasedsearch.ThreatBasedAI;
+import ai.threatbasedsearch.CompeleteThreatSearchAI;
+import ai.threatbasedsearch.ThreatBasedSearchAI;
 import com.google.common.collect.Lists;
 import common.StoneType;
 import common.boardclass.BoardClass;
 import common.boardclass.BoardClassGenerator;
-import common.boardclass.BoardFactories;
-import common.pattern.Threat;
 
 import java.util.Collection;
 
@@ -23,7 +20,7 @@ import java.util.Collection;
 class AIConvergeExperiment {
 
   public static void main(String[] args) {
-    AI ai1 = new ThreatBasedAI(
+    AI ai1 = new CompeleteThreatSearchAI(
         MinMaxSearch.defaultBuilderForThreat()
             .withName("d4-minmax")
             .withAlgorithm(MinMaxSearch.Algorithm.MINMAX)
@@ -32,15 +29,14 @@ class AIConvergeExperiment {
             .withMaxDepth(4)
             .build(),
         4);
-    AI ai2 = new ThreatBasedAI(
+    AI ai2 = new ThreatBasedSearchAI(
         MinMaxSearch.defaultBuilderForThreat()
             .withName("d4-minmax")
             .withAlgorithm(MinMaxSearch.Algorithm.MINMAX)
             .withTransitionTableFactory(SmartTransitionTable::new)
             .useKillerHeuristic()
-            .withMaxDepth(3)
-            .build(),
-        5);
+            .withMaxDepth(4)
+            .build());
 
     Collection<BoardClass<?>> games = Lists.newArrayList(
         new BoardClassGenerator().generateBoardWithStones(4));

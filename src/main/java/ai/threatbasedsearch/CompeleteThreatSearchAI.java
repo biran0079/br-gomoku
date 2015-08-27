@@ -11,13 +11,13 @@ import model.Position;
 /**
  * Regular AI backed by complete threat search.
  */
-public class ThreatBasedAI implements AI {
+public class CompeleteThreatSearchAI implements AI {
 
   private final AI delgate;
   private final int threatSearchDepth;
   private final CompleteThreatSearch completeThreatSearch = new CompleteThreatSearch();
 
-  public ThreatBasedAI(AI delgate, int threatSearchDepth) {
+  public CompeleteThreatSearchAI(AI delgate, int threatSearchDepth) {
     this.delgate = delgate;
     this.threatSearchDepth = threatSearchDepth;
   }
