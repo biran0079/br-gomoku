@@ -63,28 +63,6 @@ public class ThreatBasedSearchTest {
     assertNull(threatBasedSearch.winningMove(boardClass, StoneType.BLACK));
   }
 
-  @Test
-  public void testWinningPathExists3() throws Exception {
-    BoardClass<Threat> boardClass = createBoard(""
-        + "X______________\n"
-        + "_X_____________\n"
-        + "__X_________O__\n"
-        + "____________O__\n"
-        + "_______________\n"
-        + "_____________X_\n"
-        + "_____OO__X_____\n"
-        + "_____OXXX_O____\n"
-        + "_____X_O___O___\n"
-        + "_______O_______\n"
-        + "_______________\n"
-        + "_______________\n"
-        + "_______________\n"
-        + "_______________\n"
-        + "_______________\n");
-
-    assertNull(threatBasedSearch.winningMove(boardClass, StoneType.BLACK));
-  }
-
   private BoardClass<Threat> createBoard(String s) {
     return factory.fromGameBoard(BoardClassUtil.fromString(s));
   }

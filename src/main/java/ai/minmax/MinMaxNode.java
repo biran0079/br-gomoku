@@ -1,5 +1,7 @@
 package ai.minmax;
 
+import com.google.auto.value.AutoValue;
+import com.sun.istack.internal.Nullable;
 import common.PositionTransformer;
 import common.Transformable;
 import model.Position;
@@ -9,34 +11,22 @@ import static common.PositionTransformer.IDENTITY;
 /**
  * Node of min-max search tree.
  */
-public class MinMaxNode implements Transformable<MinMaxNode> {
+@AutoValue
+public abstract class MinMaxNode implements Transformable<MinMaxNode> {
 
-  private final Position bestMove;
-  private final int score;
-
-  MinMaxNode(Position bestMove, int score) {
-    this.bestMove = bestMove;
-    this.score = score;
+  public static MinMaxNode create(Position bestMove, int score) {
+    return new AutoValue_MinMaxNode(bestMove, score);
   }
 
-  public Position getBestMove() {
-    return bestMove;
-  }
+  @Nullable public abstract Position getBestMove();
 
-  public int getScore() {
-    return score;
-  }
+  public abstract int getScore();
 
   @Override
   public MinMaxNode transform(PositionTransformer transformer) {
-    if (bestMove == null || transformer == IDENTITY) {
+    if (getBestMove() == null || transformer == IDENTITY) {
       return this;
     }
-    return new MinMaxNode(bestMove.transform(transformer), score);
-  }
-
-  @Override
-  public String toString() {
-    return "position: " + bestMove + ", store: " + score;
+    return create(getBestMove().transform(transformer), getScore());
   }
 }

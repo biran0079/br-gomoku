@@ -1,11 +1,14 @@
 package player;
 
+import com.google.inject.assistedinject.Assisted;
 import common.StoneType;
 import model.GameBoard;
 import model.Position;
 import view.ClickCallbackManager;
 
-class Human implements Player {
+import javax.inject.Inject;
+
+class HumanPlayer implements Player {
 
 	private final String name;
 	private final StoneType stoneType;
@@ -13,7 +16,10 @@ class Human implements Player {
 
 	private Position move;
 
-  Human(String name, StoneType stoneType, ClickCallbackManager clickCallbackManager) {
+  @Inject
+  HumanPlayer(@Assisted String name,
+              @Assisted StoneType stoneType,
+              ClickCallbackManager clickCallbackManager) {
 		this.name = name;
 		this.stoneType = stoneType;
     this.clickCallbackManager = clickCallbackManager;

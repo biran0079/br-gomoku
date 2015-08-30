@@ -17,7 +17,7 @@ public class HistoryImpl implements History {
 
   @Override
   public void recordMove(GameBoard preState, Position lastMove, StoneType stoneType) {
-    historyEntries.add(new HistoryEntry(preState, lastMove, stoneType));
+    historyEntries.add(HistoryEntry.create(preState, lastMove, stoneType));
   }
 
   @Override

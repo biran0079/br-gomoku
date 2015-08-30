@@ -58,8 +58,6 @@ public class CompleteThreatSearchTest {
         "_______________\n" +
         "_______________\n" +
         "_______________");
-    System.err.println(completeThreatSearch.winningMove(boardClass, StoneType.BLACK, 4));
-
     assertNotNull(completeThreatSearch.winningMove(boardClass, StoneType.BLACK, 4));
   }
 

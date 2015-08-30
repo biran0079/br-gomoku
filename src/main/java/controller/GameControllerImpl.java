@@ -10,11 +10,7 @@ import player.PlayerFactory;
 import view.UI;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.swing.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 class GameControllerImpl implements GameController {
 
@@ -107,7 +103,7 @@ class GameControllerImpl implements GameController {
       case HUMAN:
         return playerFactory.createHumanPlayer("Human-" + name, stoneType);
       case AI:
-        return playerFactory.createAlphaBetaSearchPlayer("AI-" + name, stoneType);
+        return playerFactory.createAIPlayer("AI-" + name, stoneType);
       default:
         throw new RuntimeException();
     }

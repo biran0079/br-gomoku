@@ -161,13 +161,13 @@ public class MinMaxSearch<T extends Pattern> implements AI {
       StoneType stoneType) {
     MinMaxNode result = null;
     if (boardClass.wins(StoneType.BLACK)) {
-      result = new MinMaxNode(null, MAX_VALUE);
+      result = MinMaxNode.create(null, MAX_VALUE);
     } else if (boardClass.wins(StoneType.WHITE)) {
-      result = new MinMaxNode(null, MIN_VALUE);
+      result = MinMaxNode.create(null, MIN_VALUE);
     } else if (boardClass.isFull()) {
-      result = new MinMaxNode(null, 0);
+      result = MinMaxNode.create(null, 0);
     } else if (depth == 0) {
-      result = new MinMaxNode(null, eval(boardClass, stoneType));
+      result = MinMaxNode.create(null, eval(boardClass, stoneType));
     }
     return result;
   }
@@ -221,7 +221,7 @@ public class MinMaxSearch<T extends Pattern> implements AI {
           max = v;
         }
         if (res == null || res.getScore() < max) {
-          res = new MinMaxNode(position, max);
+          res = MinMaxNode.create(position, max);
         }
         if (alphaBetaPruning && alpha >= beta) {
           if (useKillerHeuristic) {
@@ -237,7 +237,7 @@ public class MinMaxSearch<T extends Pattern> implements AI {
           min = v;
         }
         if (res == null || res.getScore() > min) {
-          res = new MinMaxNode(position, min);
+          res = MinMaxNode.create(position, min);
         }
         if (alphaBetaPruning && alpha >= beta) {
           if (useKillerHeuristic) {
@@ -266,7 +266,7 @@ public class MinMaxSearch<T extends Pattern> implements AI {
     MinMaxNode res = evaluateTerminalNode(boardClass, depth, stoneType);
     if (res != null) {
       if (minMax.color == -1) {
-        res = new MinMaxNode(res.getBestMove(), -res.getScore());
+        res = MinMaxNode.create(res.getBestMove(), -res.getScore());
       }
       return save(transitionTable, boardClass, res);
     }
@@ -279,7 +279,7 @@ public class MinMaxSearch<T extends Pattern> implements AI {
           minMax.opposite(), stoneType, transitionTable, killers).getScore();
       if (res == null || v > bestScore) {
         bestScore = v;
-        res = new MinMaxNode(position, v);
+        res = MinMaxNode.create(position, v);
       }
       alpha = Math.max(alpha, v);
       if (alphaBetaPruning && alpha >= beta) {
@@ -308,7 +308,7 @@ public class MinMaxSearch<T extends Pattern> implements AI {
     MinMaxNode res = evaluateTerminalNode(boardClass, depth, stoneType);
     if (res != null) {
       if (minMax.color == -1) {
-        res = new MinMaxNode(res.getBestMove(), -res.getScore());
+        res = MinMaxNode.create(res.getBestMove(), -res.getScore());
       }
       return save(transitionTable, boardClass, res);
     }
@@ -333,7 +333,7 @@ public class MinMaxSearch<T extends Pattern> implements AI {
       }
       if (res == null || v > bestScore) {
         bestScore = v;
-        res = new MinMaxNode(position, v);
+        res = MinMaxNode.create(position, v);
       }
       alpha = Math.max(alpha, v);
       if (alphaBetaPruning && alpha >= beta) {

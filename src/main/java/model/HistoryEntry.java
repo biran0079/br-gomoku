@@ -1,31 +1,21 @@
 package model;
 
+import com.google.auto.value.AutoValue;
 import common.StoneType;
 
 /**
  * Entry for a move stored in game history.
  */
-public class HistoryEntry {
+@AutoValue
+public abstract class HistoryEntry {
 
-  private final Position lastMove;
-  private final GameBoard gameBoard;
-  private final StoneType stoneType;
-
-  HistoryEntry(GameBoard gameBoard, Position lastMove, StoneType stoneType) {
-    this.gameBoard = gameBoard;
-    this.lastMove = lastMove;
-    this.stoneType = stoneType;
+  public static HistoryEntry create(GameBoard gameBoard, Position lastMove, StoneType stoneType) {
+    return new AutoValue_HistoryEntry(gameBoard, lastMove, stoneType);
   }
 
-  public Position getLastMove() {
-    return lastMove;
-  }
+  public abstract GameBoard getGameBoard();
 
-  public StoneType getStoneType() {
-    return stoneType;
-  }
+  public abstract Position getLastMove();
 
-  public GameBoard getGameBoard() {
-    return gameBoard;
-  }
+  public abstract StoneType getStoneType();
 }
