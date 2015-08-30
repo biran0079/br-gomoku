@@ -8,7 +8,7 @@ import static common.PositionTransformer.IDENTITY;
 /**
  * Be smart about transition to safe space.
  */
-public class SmartTransitionTable<T extends Transformable<T>> extends TransitionTableImpl<T> {
+public class SmartCompleteTransitionTable<T extends Transformable<T>> extends CompleteTransitionTable<T> {
 
   @Override
   public void put(BoardClass<?> boardClass, T node) {

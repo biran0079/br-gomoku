@@ -121,7 +121,8 @@ class Threats implements Pattern.Corpus<Threat> {
                       MoveType[] movePattern) {
     Threat result = new ThreatImpl(i, pattern, mask, transformer, stoneType,
         getDefensiveMoves(i, j, movePattern, transformer.reverse()),
-        getOffensiveMove(i, j, movePattern, transformer.reverse()));
+        getOffensiveMove(i, j, movePattern, transformer.reverse()),
+        getDependingMoves(i, j, movePattern, transformer.reverse()));
     PositionTransformer reverseTransform = transformer.reverse();
     for (int k = 0; k < movePattern.length; k++) {
       if (movePattern[k] == MoveType.X) {

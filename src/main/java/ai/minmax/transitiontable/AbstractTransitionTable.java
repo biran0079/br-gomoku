@@ -8,26 +8,17 @@ import common.boardclass.BoardClass;
 
 import java.util.Map;
 
-import static common.PositionTransformer.*;
-
 /**
- * Non-thread-safe transition table.
+ * Abstract implementation of transition table.
  */
-public class TransitionTableImpl<T extends Transformable<T>> implements TransitionTable<T> {
-
-  static final PositionTransformer[] IDENTICAL_TRANSFORMERS =
-      new PositionTransformer[] {
-          IDENTITY,
-          IDENTITY_M,
-          CLOCK_90,
-          CLOCK_90_M,
-          CLOCK_180,
-          CLOCK_180_M,
-          CLOCK_270,
-          CLOCK_270_M,
-      };
+abstract class AbstractTransitionTable<T extends Transformable<T>> implements TransitionTable<T> {
 
   final Map<BitBoard, T> cache = Maps.newHashMap();
+  private final PositionTransformer[] transformers;
+
+  AbstractTransitionTable(PositionTransformer[] transformers) {
+    this.transformers = transformers;
+  }
 
   @Override
   public T get(BoardClass<?> boardClass) {
@@ -36,7 +27,7 @@ public class TransitionTableImpl<T extends Transformable<T>> implements Transiti
 
   @Override
   public void put(BoardClass<?> boardClass, T node) {
-    for (PositionTransformer transformer : IDENTICAL_TRANSFORMERS) {
+    for (PositionTransformer transformer : transformers) {
       BitBoard bitBoard = boardClass.getBoard(transformer);
       if (!cache.containsKey(bitBoard)) {
         cache.put(bitBoard, node.transform(transformer));

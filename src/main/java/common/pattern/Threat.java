@@ -8,4 +8,6 @@ import model.Position;
 public interface Threat extends Pattern {
 
   Position getOffensiveMove();
+
+  boolean dependingOn(Threat threat);
 }

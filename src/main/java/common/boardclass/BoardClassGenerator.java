@@ -2,7 +2,7 @@ package common.boardclass;
 
 import ai.candidatemoveselector.CandidateMoveSelectorUtil;
 import ai.minmax.transitiontable.TransitionSet;
-import ai.minmax.transitiontable.TransitionSetImpl;
+import ai.minmax.transitiontable.TransitionSets;
 import com.google.common.collect.Lists;
 import common.Constants;
 import common.StoneType;
@@ -33,7 +33,7 @@ public class BoardClassGenerator {
 
   private class UniqueBoardIterator implements Iterator<BoardClass<?>> {
 
-    private final TransitionSet transitionSet = new TransitionSetImpl();
+    private final TransitionSet transitionSet = TransitionSets.createCompleteTransitionSet();
     private final Iterator<BoardClass<?>> boardIterator;
     private BoardClass<?> nextBoardClass;
 

@@ -1,19 +1,21 @@
 package ai.threatbasedsearch;
 
+import static common.pattern.PatternType.*;
+
+import ai.minmax.transitiontable.TransitionSet;
+import ai.minmax.transitiontable.TransitionSets;
+import com.google.auto.value.AutoValue;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import common.StoneType;
 import common.boardclass.BoardClass;
 import common.pattern.Pattern;
-import common.pattern.PatternType;
 import common.pattern.Threat;
 import model.Position;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import javax.annotation.Nullable;
+import java.util.*;
 
 /**
  * Threat based search.
@@ -25,7 +27,6 @@ public class ThreatBasedSearch {
       StoneType attacker) {
     List<Threat> threats = new ArrayList<>();
     if (search(boardClass, attacker, threats)) {
-      threats = Lists.reverse(threats);
       Set<Position> related = new HashSet<>();
       for (Threat t : threats) {
         related.add(t.getOffensiveMove());
@@ -45,7 +46,7 @@ public class ThreatBasedSearch {
     BoardClass<Threat> current = boardClass;
     for (Threat threat : threats.subList(0, threats.size() - 1)) {
       current = current.withPositionSet(threat.getOffensiveMove(), attacker);
-      if (boardClass.matchesAny(defender, PatternType.FIVE)) {
+      if (boardClass.matchesAny(defender, FIVE)) {
         return true;
       }
       if (threat.getDefensiveMoves().size() >= 2) {
@@ -61,12 +62,12 @@ public class ThreatBasedSearch {
   }
 
   private boolean defendWithFour(BoardClass<Threat> current, StoneType defender, Set<Position> related) {
-    if (current.matchesAny(defender, PatternType.FIVE)) {
+    if (current.matchesAny(defender, FIVE)) {
       return true;
     }
     for (Threat threat : Iterables.concat(
-        current.getMatchingPatterns(defender, PatternType.STRAIT_FOUR),
-        current.getMatchingPatterns(defender, PatternType.FOUR))) {
+        current.getMatchingPatterns(defender, STRAIT_FOUR),
+        current.getMatchingPatterns(defender, FOUR))) {
       if (related.contains(threat.getOffensiveMove())) {
         return true;
       }
@@ -77,12 +78,10 @@ public class ThreatBasedSearch {
     return false;
   }
 
-  private List<Threat> getThreats(BoardClass<Threat> boardClass,
-                                  StoneType attacker) {
+  private ArrayList<Threat> getThreats(BoardClass<Threat> boardClass, StoneType attacker) {
     return Lists.newArrayList(Iterables.concat(
-        boardClass.getMatchingPatterns(attacker, PatternType.STRAIT_FOUR),
-        boardClass.getMatchingPatterns(attacker, PatternType.THREE),
-        boardClass.getMatchingPatterns(attacker, PatternType.FOUR)));
+        boardClass.getMatchingPatterns(attacker, FOUR),
+        boardClass.getMatchingPatterns(attacker, THREE)));
   }
 
   private Set<Threat> intersectThreatsAt(Threat threat, Pattern.Corpus<Threat> corpus,
@@ -91,11 +90,55 @@ public class ThreatBasedSearch {
     return Sets.intersection(intersectWith, threats);
   }
 
+  private List<Threat> bfs(BoardClass<Threat> boardClass, StoneType attacker) {
+    Queue<Node> queue = new LinkedList<>();
+    queue.add(Node.create(boardClass, null, null));
+    while (!queue.isEmpty()) {
+      Node node = queue.poll();
+      BoardClass<Threat> currentBoard = node.getBoardClass();
+      for (Threat threat : currentBoard.getMatchingPatterns(attacker, FIVE)) {
+        List<Threat> result = new LinkedList<>();
+        while (node.getThreat() != null) {
+          result.add(0, node.getThreat());
+          node = node.getPrevious();
+        }
+        result.add(threat);
+        return result;
+      }
+      for (Threat threat : getThreats(currentBoard, attacker)) {
+        if (dependsOnPreviousThreats(threat, node) || largerThanPreviousThreats(threat, node)) {
+          queue.add(Node.create(applyThreat(currentBoard, threat), threat, node));
+        }
+      }
+    }
+    return Collections.emptyList();
+  }
+
+  private boolean largerThanPreviousThreats(Threat threat, Node node) {
+    while (node.getThreat() != null) {
+      if (threat.hashCode() <= node.getThreat().hashCode()) {
+        return false;
+      }
+      node = node.getPrevious();
+    }
+    return true;
+  }
+
+  private boolean dependsOnPreviousThreats(Threat threat, Node node) {
+    while (node.getThreat() != null) {
+      if (threat.dependingOn(node.getThreat())) {
+        return true;
+      }
+      node = node.getPrevious();
+    }
+    return false;
+  }
+
   private boolean search(BoardClass<Threat> boardClass,
                          StoneType attacker,
                          List<Threat> result) {
     List<Threat> threats = getThreats(boardClass, attacker);
-    for (Threat threat : boardClass.getMatchingPatterns(attacker, PatternType.FIVE)) {
+    for (Threat threat : boardClass.getMatchingPatterns(attacker, FIVE)) {
       result.add(threat);
       return true;
     }
@@ -119,9 +162,12 @@ public class ThreatBasedSearch {
                          Set<Threat> candidate,
                          StoneType attacker,
                          List<Threat> result) {
-    for (Threat threat : boardClass.getMatchingPatterns(attacker, PatternType.FIVE)) {
+    for (Threat threat : boardClass.getMatchingPatterns(attacker, FIVE)) {
       result.add(threat);
       return true;
+    }
+    if (candidate.isEmpty()) {
+      return false;
     }
     for (Threat t : boardClass.filterMatching(candidate)) {
       Position p = t.getOffensiveMove();
@@ -164,5 +210,21 @@ public class ThreatBasedSearch {
           def.getRowIndex(), def.getColumnIndex(), opponent);
     }
     return boardClass;
+  }
+
+  @AutoValue
+  static abstract class Node {
+
+    static Node create(BoardClass<Threat> board, Threat threat, Node prev) {
+      return new AutoValue_ThreatBasedSearch_Node(board, threat, prev);
+    }
+
+    abstract BoardClass<Threat> getBoardClass();
+
+    @Nullable
+    abstract Threat getThreat();
+
+    @Nullable
+    abstract Node getPrevious();
   }
 }

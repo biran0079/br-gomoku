@@ -2,7 +2,7 @@ package player;
 
 import ai.AI;
 import ai.minmax.MinMaxSearch;
-import ai.minmax.transitiontable.SmartTransitionTable;
+import ai.minmax.transitiontable.SmartCompleteTransitionTable;
 import ai.threatbasedsearch.CompeleteThreatSearchAI;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
@@ -18,7 +18,7 @@ public class PlayerModule extends AbstractModule {
     bind(AI.class).toInstance(
         new CompeleteThreatSearchAI(
             MinMaxSearch.defaultBuilderForThreat()
-                .withTransitionTableFactory(SmartTransitionTable::new)
+                .withTransitionTableFactory(SmartCompleteTransitionTable::new)
                 .withAlgorithm(MinMaxSearch.Algorithm.MINMAX)
                 .withMaxDepth(7)
                 .useKillerHeuristic()

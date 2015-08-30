@@ -25,10 +25,9 @@ public class PatternsUtil {
     return pattern;
   }
 
-  public static ImmutableSet<Position> getDefensiveMoves(int i,
-                                                  int j,
-                                                  MoveType[] movePattern,
-                                                  PositionTransformer transformer) {
+  public static ImmutableSet<Position> getDefensiveMoves(int i, int j,
+                                                         MoveType[] movePattern,
+                                                         PositionTransformer transformer) {
     ImmutableSet.Builder<Position> builder = ImmutableSet.builder();
     for (int k = 0; k < movePattern.length; k++) {
       if (movePattern[k] == MoveType.D) {
@@ -45,6 +44,18 @@ public class PatternsUtil {
       }
     }
     return null;
+  }
+
+  public static ImmutableSet<Position> getDependingMoves(int i, int j,
+                                                          MoveType[] movePattern,
+                                                          PositionTransformer transformer) {
+    ImmutableSet.Builder<Position> builder = ImmutableSet.builder();
+    for (int k = 0; k < movePattern.length; k++) {
+      if (movePattern[k] == MoveType.X) {
+        builder.add(Position.of(i, j + k).transform(transformer));
+      }
+    }
+    return builder.build();
   }
 
   public static <T> Map<StoneType, Map<Position, Set<T>>> emptyIndex() {

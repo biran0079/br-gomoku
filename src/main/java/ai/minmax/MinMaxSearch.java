@@ -8,7 +8,7 @@ import ai.evaluator.Evaluator;
 import ai.evaluator.SimpleThreatEvaluator;
 import ai.minmax.transitiontable.NoopTransitionTable;
 import ai.minmax.transitiontable.TransitionTable;
-import ai.minmax.transitiontable.TransitionTableImpl;
+import ai.minmax.transitiontable.CompleteTransitionTable;
 
 import common.Constants;
 import common.StoneType;
@@ -351,7 +351,7 @@ public class MinMaxSearch<T extends Pattern> implements AI {
     private int maxDepth = 4;
     private String name = "min_max_search";
     private boolean alphaBetaPruning = true;
-    private TransitionTable.Factory<MinMaxNode> transitionTableFactory = TransitionTableImpl::new;
+    private TransitionTable.Factory<MinMaxNode> transitionTableFactory = CompleteTransitionTable::new;
     private CandidateMovesSelector<T> candidateMoveSelector;
     private BoardClass.Factory<T> boardClassFactory;
     private Evaluator<T> evaluator;

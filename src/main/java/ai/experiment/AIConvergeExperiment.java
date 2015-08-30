@@ -3,7 +3,7 @@ package ai.experiment;
 import ai.AI;
 import ai.competition.Competition;
 import ai.minmax.MinMaxSearch;
-import ai.minmax.transitiontable.SmartTransitionTable;
+import ai.minmax.transitiontable.SmartCompleteTransitionTable;
 
 import ai.threatbasedsearch.CompeleteThreatSearchAI;
 import ai.threatbasedsearch.ThreatBasedSearchAI;
@@ -24,7 +24,7 @@ class AIConvergeExperiment {
         MinMaxSearch.defaultBuilderForThreat()
             .withName("d4-minmax")
             .withAlgorithm(MinMaxSearch.Algorithm.MINMAX)
-            .withTransitionTableFactory(SmartTransitionTable::new)
+            .withTransitionTableFactory(SmartCompleteTransitionTable::new)
             .useKillerHeuristic()
             .withMaxDepth(4)
             .build(),
@@ -33,7 +33,7 @@ class AIConvergeExperiment {
         MinMaxSearch.defaultBuilderForThreat()
             .withName("d4-minmax")
             .withAlgorithm(MinMaxSearch.Algorithm.MINMAX)
-            .withTransitionTableFactory(SmartTransitionTable::new)
+            .withTransitionTableFactory(SmartCompleteTransitionTable::new)
             .useKillerHeuristic()
             .withMaxDepth(4)
             .build());

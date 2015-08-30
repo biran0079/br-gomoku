@@ -2,7 +2,7 @@ package server;
 
 import ai.AI;
 import ai.minmax.MinMaxSearch;
-import ai.minmax.transitiontable.SmartTransitionTable;
+import ai.minmax.transitiontable.SmartCompleteTransitionTable;
 import ai.threatbasedsearch.CompeleteThreatSearchAI;
 import com.google.common.collect.ImmutableMap;
 import com.sun.net.httpserver.HttpExchange;
@@ -43,7 +43,7 @@ class RequestHandler implements HttpHandler {
 
   private final AI novice = new CompeleteThreatSearchAI(
       MinMaxSearch.defaultBuilderForThreat()
-          .withTransitionTableFactory(SmartTransitionTable::new)
+          .withTransitionTableFactory(SmartCompleteTransitionTable::new)
           .withAlgorithm(MinMaxSearch.Algorithm.MINMAX)
           .withMaxDepth(4)
           .useKillerHeuristic()
@@ -52,7 +52,7 @@ class RequestHandler implements HttpHandler {
 
   private final AI medium = new CompeleteThreatSearchAI(
       MinMaxSearch.defaultBuilderForThreat()
-          .withTransitionTableFactory(SmartTransitionTable::new)
+          .withTransitionTableFactory(SmartCompleteTransitionTable::new)
           .withAlgorithm(MinMaxSearch.Algorithm.MINMAX)
           .withMaxDepth(6)
           .useKillerHeuristic()
@@ -61,7 +61,7 @@ class RequestHandler implements HttpHandler {
 
   private final AI expert = new CompeleteThreatSearchAI(
       MinMaxSearch.defaultBuilderForThreat()
-          .withTransitionTableFactory(SmartTransitionTable::new)
+          .withTransitionTableFactory(SmartCompleteTransitionTable::new)
           .withAlgorithm(MinMaxSearch.Algorithm.MINMAX)
           .withMaxDepth(7)
           .useKillerHeuristic()

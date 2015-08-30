@@ -5,15 +5,11 @@ import common.PositionTransformer;
 import common.Transformable;
 import common.boardclass.BoardClass;
 
-public class TransitionSetImpl implements TransitionSet {
+class TransitionSetImpl implements TransitionSet {
 
   private final TransitionTable<DummyValue> transitionTable;
 
-  public TransitionSetImpl() {
-    this(TransitionTableImpl::new);
-  }
-
-  public TransitionSetImpl(TransitionTable.Factory<DummyValue> factory) {
+  TransitionSetImpl(TransitionTable.Factory<DummyValue> factory) {
     transitionTable = factory.create();
   }
 
@@ -28,7 +24,7 @@ public class TransitionSetImpl implements TransitionSet {
   }
 
 
-  private static class DummyValue implements Transformable<DummyValue> {
+  static class DummyValue implements Transformable<DummyValue> {
 
     private static final DummyValue INSTANCE = new DummyValue();
 

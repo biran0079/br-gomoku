@@ -4,8 +4,8 @@ import ai.AI;
 import ai.competition.Competition;
 import ai.minmax.MinMaxNode;
 import ai.minmax.MinMaxSearch;
-import ai.minmax.transitiontable.SmartTransitionTable;
-import ai.minmax.transitiontable.TransitionTableImpl;
+import ai.minmax.transitiontable.SmartCompleteTransitionTable;
+import ai.minmax.transitiontable.CompleteTransitionTable;
 import ai.minmax.transitiontable.TransitionTableWithStats;
 import common.StoneType;
 import common.boardclass.testing.BoardClassSamples;
@@ -23,14 +23,14 @@ class TransitionTableHitRateExperimentMain {
         .withName("d4-smart-transition")
         .withTransitionTableFactory(
             () -> new TransitionTableWithStats<MinMaxNode>(
-                new SmartTransitionTable<>(), smartStats))
+                new SmartCompleteTransitionTable<>(), smartStats))
         .withMaxDepth(3)
         .build();
     AI ai2 = MinMaxSearch.defaultBuilderForPattern()
         .withName("d4")
         .withTransitionTableFactory(
             () -> new TransitionTableWithStats<MinMaxNode>(
-                new TransitionTableImpl<>(), defaultStats))
+                new CompleteTransitionTable<>(), defaultStats))
         .withMaxDepth(3)
         .build();
       new Competition(BoardClassSamples.INITIAL_10).competeParallel(ai1, ai2, StoneType.BLACK);

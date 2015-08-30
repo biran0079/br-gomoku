@@ -61,8 +61,8 @@ class GameControllerImpl implements GameController {
     if (sessionController.isHumanVsComputer()) {
       historyEntry = history.popLastEntry();
       ui.removePieceOn(historyEntry.getLastMove());
-      gameBoard = historyEntry.getGameBoard();
     }
+    gameBoard = historyEntry.getGameBoard();
 	}
 
   @Override
