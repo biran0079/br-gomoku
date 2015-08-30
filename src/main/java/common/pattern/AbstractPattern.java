@@ -5,6 +5,7 @@ import common.Constants;
 import common.PositionTransformer;
 import common.StoneType;
 import common.boardclass.BoardClass;
+import common.boardclass.testing.BoardClassUtil;
 import model.Position;
 
 /**
@@ -18,19 +19,27 @@ public abstract class AbstractPattern implements Pattern {
   private final PositionTransformer transformer;
   private final StoneType stoneType;
   private final ImmutableSet<Position> defensiveMoves;
+  private final PatternType patternType;
 
   protected AbstractPattern(int rowIndex,
               int pattern,
               int mask,
               PositionTransformer transformer,
               StoneType stoneType,
-              ImmutableSet<Position> defensiveMoves) {
+              ImmutableSet<Position> defensiveMoves,
+              PatternType patternType) {
     this.rowIndex = rowIndex;
     this.pattern = pattern;
     this.mask = mask;
     this.transformer = transformer;
     this.stoneType = stoneType;
     this.defensiveMoves = defensiveMoves;
+    this.patternType = patternType;
+  }
+
+  @Override
+  public PatternType getPatternType() {
+    return patternType;
   }
 
   @Override
@@ -53,7 +62,7 @@ public abstract class AbstractPattern implements Pattern {
         if (ti == rowIndex && ((mask >> (2 * tj)) & 3) == 3) {
           sb.append(StoneType.fromBits((pattern >> (tj * 2)) & 3));
         } else {
-          sb.append(".");
+          sb.append(BoardClassUtil.EMPTY_CHAR);
         }
       }
       sb.append("\n");

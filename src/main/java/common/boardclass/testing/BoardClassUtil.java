@@ -12,6 +12,10 @@ import model.GameBoard;
  */
 public class BoardClassUtil {
 
+  public static final char EMPTY_CHAR = '\u253C';
+  public static final char BLACK_CHAR = '\u25CF';
+  public static final char WHITE_CHAR = '\u25CB';
+
   public static final StoneType E = StoneType.NOTHING;
   public static final StoneType W = StoneType.WHITE;
   public static final StoneType B = StoneType.BLACK;
@@ -57,9 +61,11 @@ public class BoardClassUtil {
         switch (b[i].charAt(j)) {
           case 'O':
           case 'B':
+          case BLACK_CHAR:
             return StoneType.BLACK;
           case 'X':
           case 'W':
+          case WHITE_CHAR:
             return StoneType.WHITE;
           default:
             return StoneType.NOTHING;

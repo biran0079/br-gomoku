@@ -75,6 +75,7 @@ public class PatternsUtil {
   public static <T extends Pattern> Iterable<T> createPatterns(
       StoneType stoneType,
       MoveType[] movePattern,
+      PatternType patternType,
       Pattern.Factory<T> factory) {
     int originalPattern = PatternsUtil.generatePattern(movePattern, stoneType.getBits());
     int patternLength = movePattern.length;
@@ -84,9 +85,9 @@ public class PatternsUtil {
       int pattern = originalPattern;
       for (int j = 0; j <= Constants.BOARD_SIZE - patternLength; j++) {
         result.add(factory.create(i, j, pattern, mask, PositionTransformer.IDENTITY,
-            stoneType, movePattern));
+            stoneType, movePattern, patternType));
         result.add(factory.create(i, j, pattern, mask, PositionTransformer.CLOCK_90,
-            stoneType, movePattern));
+            stoneType, movePattern, patternType));
         mask <<= 2;
         pattern <<= 2;
       }
@@ -98,9 +99,9 @@ public class PatternsUtil {
       int mask = ((1 << (2 * patternLength)) - 1) << (2 * start);
       for (int j = start; j <= maxCol - patternLength; j++) {
         result.add(factory.create(i, j, pattern, mask, PositionTransformer.RIGHT_DIAGONAL,
-            stoneType, movePattern));
+            stoneType, movePattern, patternType));
         result.add(factory.create(i, j, pattern, mask, PositionTransformer.LEFT_DIAGONAL,
-            stoneType, movePattern));
+            stoneType, movePattern, patternType));
         mask <<= 2;
         pattern <<= 2;
       }

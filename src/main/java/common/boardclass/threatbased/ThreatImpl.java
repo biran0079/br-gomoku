@@ -4,7 +4,10 @@ import com.google.common.collect.ImmutableSet;
 import common.Constants;
 import common.PositionTransformer;
 import common.StoneType;
+import common.boardclass.testing.BoardClassUtil;
 import common.pattern.AbstractPattern;
+import common.pattern.Pattern;
+import common.pattern.PatternType;
 import common.pattern.Threat;
 import model.Position;
 
@@ -23,9 +26,10 @@ class ThreatImpl extends AbstractPattern implements Threat {
              StoneType stoneType,
              ImmutableSet<Position> defensiveMoves,
              Position offensiveMove,
-             ImmutableSet<Position> dependingMoves) {
+             ImmutableSet<Position> dependingMoves,
+             PatternType patternType) {
     super(rowIndex, pattern, mask, transformer,
-        stoneType, defensiveMoves);
+        stoneType, defensiveMoves, patternType);
     this.offensiveMove = offensiveMove;
     this.dependingMoves = dependingMoves;
   }
@@ -45,14 +49,16 @@ class ThreatImpl extends AbstractPattern implements Threat {
     char[][] chars = new char[Constants.BOARD_SIZE][Constants.BOARD_SIZE];
     for (int i = 0; i < Constants.BOARD_SIZE; i++)
       for (int j = 0; j < Constants.BOARD_SIZE; j++) {
-        chars[i][j] = '_';
+        chars[i][j] = BoardClassUtil.EMPTY_CHAR;
       }
     for (Position dep : dependingMoves) {
-      chars[dep.getRowIndex()][dep.getColumnIndex()] = 'X';
+      chars[dep.getRowIndex()][dep.getColumnIndex()] = BoardClassUtil.BLACK_CHAR;
     }
-    chars[offensiveMove.getRowIndex()][offensiveMove.getColumnIndex()] = 'O';
+    if (offensiveMove != null) {
+      chars[offensiveMove.getRowIndex()][offensiveMove.getColumnIndex()] = '\uFF38';
+    }
     for (Position dep : getDefensiveMoves()) {
-      chars[dep.getRowIndex()][dep.getColumnIndex()] = 'D';
+      chars[dep.getRowIndex()][dep.getColumnIndex()] = '\uFF24';
     }
     StringBuilder sb = new StringBuilder();
     for (char[] s : chars) {

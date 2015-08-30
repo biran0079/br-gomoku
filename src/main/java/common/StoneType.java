@@ -1,9 +1,11 @@
 package common;
 
+import common.boardclass.testing.BoardClassUtil;
+
 public enum StoneType {
-	NOTHING(0, "_"),
-  BLACK(1, "O"),
-  WHITE(2, "X");
+	NOTHING(0, "" + BoardClassUtil.EMPTY_CHAR),
+  BLACK(1, "" + BoardClassUtil.BLACK_CHAR),
+  WHITE(2, "" + BoardClassUtil.WHITE_CHAR);
 
   private final int bits;
   private final String symbol;

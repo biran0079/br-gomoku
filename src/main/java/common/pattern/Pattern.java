@@ -17,6 +17,8 @@ public interface Pattern {
 
   StoneType getStoneType();
 
+  PatternType getPatternType();
+
   boolean matches(BoardClass<?> boardClass);
 
   interface Factory<T extends Pattern> {
@@ -24,7 +26,8 @@ public interface Pattern {
     T create(int i, int j, int pattern, int mask,
              PositionTransformer transformer,
              StoneType stoneType,
-             MoveType[] movePattern);
+             MoveType[] movePattern,
+             PatternType patternType);
   }
 
   interface Corpus<T extends Pattern> {

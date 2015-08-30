@@ -1,5 +1,7 @@
 package common.boardclass.threatbased;
 
+import static common.pattern.PatternType.*;
+
 import com.google.common.collect.ImmutableSet;
 import common.PositionTransformer;
 import common.StoneType;
@@ -54,7 +56,7 @@ class Threats implements Pattern.Corpus<Threat> {
 
   private ImmutableSet<Threat> createGoalThreats(StoneType stoneType) {
     return ImmutableSet.<Threat>builder()
-      .addAll(createPatterns(stoneType, new MoveType[] {X, X, X, X, X}, this::createThreat))
+      .addAll(createPatterns(stoneType, new MoveType[]{X, X, X, X, X}, GOAL, this::createThreat))
       .build();
   }
 
@@ -63,7 +65,7 @@ class Threats implements Pattern.Corpus<Threat> {
     for (int i = 0; i < 5; i++) {
       MoveType[] moves = new MoveType[] {X, X, X, X, X};
       moves[i] = O;
-      builder.addAll(createPatterns(stoneType, moves, this::createThreat));
+      builder.addAll(createPatterns(stoneType, moves, FIVE, this::createThreat));
     }
     return builder.build();
   }
@@ -73,7 +75,7 @@ class Threats implements Pattern.Corpus<Threat> {
     for (int i = 1; i < 5; i++) {
       MoveType[] moves = new MoveType[] {E, X, X, X, X, E};
       moves[i] = O;
-      builder.addAll(createPatterns(stoneType, moves, this::createThreat));
+      builder.addAll(createPatterns(stoneType, moves, STRAIT_FOUR, this::createThreat));
     }
     return builder.build();
   }
@@ -85,10 +87,10 @@ class Threats implements Pattern.Corpus<Threat> {
         MoveType[] moves = new MoveType[] {X, X, X, X, X};
         moves[i] = D;
         moves[j] = O;
-        builder.addAll(createPatterns(stoneType, moves, this::createThreat));
+        builder.addAll(createPatterns(stoneType, moves, FOUR, this::createThreat));
         moves[i] = O;
         moves[j] = D;
-        builder.addAll(createPatterns(stoneType, moves, this::createThreat));
+        builder.addAll(createPatterns(stoneType, moves, FOUR, this::createThreat));
       }
     }
     return builder.build();
@@ -101,28 +103,30 @@ class Threats implements Pattern.Corpus<Threat> {
         MoveType[] moves = new MoveType[] {D, X, X, X, X, D};
         moves[i] = D;
         moves[j] = O;
-        builder.addAll(createPatterns(stoneType, moves, this::createThreat));
+        builder.addAll(createPatterns(stoneType, moves, THREE, this::createThreat));
 
         moves[i] = O;
         moves[j] = D;
-        builder.addAll(createPatterns(stoneType, moves, this::createThreat));
+        builder.addAll(createPatterns(stoneType, moves, THREE, this::createThreat));
       }
     }
     for (int i = 2; i < 5; i++) {
       MoveType[] moves = new MoveType[] {E, D, X, X, X, D, E};
       moves[i] = O;
-      builder.addAll(createPatterns(stoneType, moves, this::createThreat));
+      builder.addAll(createPatterns(stoneType, moves, THREE, this::createThreat));
     }
     return builder.build();
   }
 
   private Threat createThreat(int i, int j, int pattern, int mask,
-                      PositionTransformer transformer, StoneType stoneType,
-                      MoveType[] movePattern) {
+                              PositionTransformer transformer, StoneType stoneType,
+                              MoveType[] movePattern,
+                              PatternType patternType) {
     Threat result = new ThreatImpl(i, pattern, mask, transformer, stoneType,
         getDefensiveMoves(i, j, movePattern, transformer.reverse()),
         getOffensiveMove(i, j, movePattern, transformer.reverse()),
-        getDependingMoves(i, j, movePattern, transformer.reverse()));
+        getDependingMoves(i, j, movePattern, transformer.reverse()),
+        patternType);
     PositionTransformer reverseTransform = transformer.reverse();
     for (int k = 0; k < movePattern.length; k++) {
       if (movePattern[k] == MoveType.X) {
