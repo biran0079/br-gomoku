@@ -14,10 +14,9 @@ import java.util.concurrent.Future;
 class SessionController {
 
   private final ExecutorService gameSessionExecutor = Executors.newSingleThreadExecutor();
+  private final Provider<GameSession> gameSessionProvider;
   private volatile GameSession currentSession;
   private volatile Future<?> currentGameSessionFuture;
-
-  private final Provider<GameSession> gameSessionProvider;
 
   @Inject
   SessionController(Provider<GameSession> gameSessionProvider) {
@@ -26,6 +25,7 @@ class SessionController {
 
   void startGame(Player[] players) {
     if (currentGameSessionFuture != null) {
+      // kill earlier session
       currentGameSessionFuture.cancel(true);
     }
     currentGameSessionFuture = gameSessionExecutor.submit(() -> {
@@ -41,5 +41,9 @@ class SessionController {
 
   boolean isWaitingForHumanMove() {
     return currentSession != null && currentSession.isWaitingForHumanMove();
+  }
+
+  boolean isHumanVsComputer() {
+    return currentSession.isHumanVsComputer();
   }
 }

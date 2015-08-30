@@ -12,6 +12,7 @@ class GameSession {
 
   private final GameController gameController;
   private boolean sessionSopped = false;
+  private boolean humanVsComputer;
   private volatile boolean waitingForHumanMove = false;
 
   @Inject
@@ -20,15 +21,21 @@ class GameSession {
   }
 
   public void newGameStart(Player[] players) {
+    humanVsComputer = players.length == 2
+        && players[0].isHuman() != players[1].isHuman();
     int idx = 0;
     while (!sessionSopped && !Thread.currentThread().isInterrupted()) {
       makeMove(players[idx]);
-      idx = 1 - idx;
+      idx = (idx + 1) % players.length;
     }
   }
 
   public boolean isWaitingForHumanMove() {
     return waitingForHumanMove;
+  }
+
+  public boolean isHumanVsComputer() {
+    return humanVsComputer;
   }
 
   private void makeMove(Player player) {

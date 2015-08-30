@@ -1,7 +1,11 @@
 package view;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Provides;
 import com.google.inject.Singleton;
+import common.StoneType;
+
+import java.util.function.Supplier;
 
 /**
  * Module for view.
@@ -20,5 +24,11 @@ public class ViewModule extends AbstractModule {
     bind(ClickCallbackManager.class).to(ClickCallbackManagerImpl.class);
 
     bind(GameSquareFactory.class).in(Singleton.class);
+  }
+
+  @Provides
+  @Singleton
+  Supplier<StoneType> providesSelectedStoneTypeSupplier(ControlPanel controlPanel) {
+    return () -> controlPanel.getSelectedStoneType();
   }
 }

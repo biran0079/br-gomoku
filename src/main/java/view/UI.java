@@ -47,6 +47,14 @@ public class UI {
     controlPanel.addNewGameActionListener(actionListener);
   }
 
+  public void addPrintListener(ActionListener actionListener) {
+    controlPanel.addPrintActionListener(actionListener);
+  }
+
+  public void addTestModeListener(ActionListener actionListener) {
+    controlPanel.addTestModeListener(actionListener);
+  }
+
   public void draw(Runnable restart) {
     String title = "Draw!";
     String message = "Do you want to start a new game?";

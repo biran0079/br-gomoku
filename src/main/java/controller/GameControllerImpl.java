@@ -11,6 +11,7 @@ import view.UI;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import javax.swing.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -37,7 +38,14 @@ class GameControllerImpl implements GameController {
     this.sessionController = sessionController;
     this.playerFactory = playerFactory;
 		ui.addUndoActionListener((e) -> undo());
-		ui.addNewGameActionListener((e) -> sessionController.startGame(initializeGame()));
+    ui.addNewGameActionListener((e) -> sessionController.startGame(initializeGame()));
+    ui.addPrintListener((e) -> System.out.println(gameBoard));
+    ui.addTestModeListener((e) -> {
+      JToggleButton tBtn = (JToggleButton)e.getSource();
+      if (tBtn.isSelected()) {
+        sessionController.startGame(new Player[] {playerFactory.createTestModePlayer()});
+      }
+    });
 	}
 
   @Override
@@ -47,16 +55,18 @@ class GameControllerImpl implements GameController {
 
   @Override
   public void undo() {
-    if (history.size() < 2
+    if (history.size() < 1
         || !sessionController.isWaitingForHumanMove()) {
       return;
     }
     HistoryEntry historyEntry;
     historyEntry = history.popLastEntry();
     ui.removePieceOn(historyEntry.getLastMove());
-    historyEntry = history.popLastEntry();
-    ui.removePieceOn(historyEntry.getLastMove());
-    gameBoard = historyEntry.getGameBoard();
+    if (sessionController.isHumanVsComputer()) {
+      historyEntry = history.popLastEntry();
+      ui.removePieceOn(historyEntry.getLastMove());
+      gameBoard = historyEntry.getGameBoard();
+    }
 	}
 
   @Override
