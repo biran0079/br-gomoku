@@ -13,6 +13,8 @@ import model.Position;
  */
 public abstract class AbstractPattern implements Pattern {
 
+  private static int COUNTER = 0;
+
   private final int rowIndex;
   private final int pattern;
   private final int mask;
@@ -20,14 +22,15 @@ public abstract class AbstractPattern implements Pattern {
   private final StoneType stoneType;
   private final ImmutableSet<Position> defensiveMoves;
   private final PatternType patternType;
+  private final int index;
 
   protected AbstractPattern(int rowIndex,
-              int pattern,
-              int mask,
-              PositionTransformer transformer,
-              StoneType stoneType,
-              ImmutableSet<Position> defensiveMoves,
-              PatternType patternType) {
+                            int pattern,
+                            int mask,
+                            PositionTransformer transformer,
+                            StoneType stoneType,
+                            ImmutableSet<Position> defensiveMoves,
+                            PatternType patternType) {
     this.rowIndex = rowIndex;
     this.pattern = pattern;
     this.mask = mask;
@@ -35,6 +38,17 @@ public abstract class AbstractPattern implements Pattern {
     this.stoneType = stoneType;
     this.defensiveMoves = defensiveMoves;
     this.patternType = patternType;
+    this.index = COUNTER++;
+  }
+
+  @Override
+  public int hashCode() {
+    return index;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    return o instanceof AbstractPattern && hashCode() == o.hashCode();
   }
 
   @Override

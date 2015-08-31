@@ -59,11 +59,11 @@ public class ThreatBasedSearch {
     do {
       context.level++;
       Node goal = addDependencyStage(context.root(), context);
-      if (context.refutedCount > 10) {
-        return null;
-      }
       if (goal != null) {
         return goal;
+      }
+      if (context.refutedCount >= 10) {
+        return null;
       }
     } while (addCombinationStage(context));
     return null;
@@ -83,6 +83,9 @@ public class ThreatBasedSearch {
   }
 
   private boolean anyGlobalDefend(Context context, Node goal) {
+    if (!context.defensiveCheck()) {
+      return false;
+    }
     BoardClass<Threat> current = context.root().getBoard();
     List<BoardClass<Threat>> intermediate = new ArrayList<>();
     Set<Position> relatedMoves = goal.getRelatedMoves();
@@ -100,6 +103,7 @@ public class ThreatBasedSearch {
           .defensiveCheck(false)
           .build();
       if (DBS(newContext) != null) {
+        context.refutedCount++;
         return true;
       }
       findAllDependencyBoards(newContext.root(), intermediate);
@@ -108,6 +112,7 @@ public class ThreatBasedSearch {
         for (int i = 0; i < intermediate.size(); i++) {
           intermediate.set(i, intermediate.get(i).withPositionSet(def, context.defender()));
           if (intermediate.get(i).matchesAny(context.defender(), FIVE)) {
+            context.refutedCount++;
             return true;
           }
         }
@@ -224,21 +229,12 @@ public class ThreatBasedSearch {
   }
 
   private Node addDependencyStage(Node node, Context context) {
-    if (context.refutedCount > 10) {
+    if (context.refutedCount >= 10) {
       return null;
     }
     if ((node instanceof RootNode || node instanceof CombinationNode)
         && context.level == node.getLevel() + 1) {
-      Node goal = addDependentChildren(node, context);
-      if (goal != null) {
-        if (context.defensiveCheck()) {
-          if (anyGlobalDefend(context, goal)) {
-            goal = null;
-            context.refutedCount++;
-          }
-        }
-      }
-      return goal;
+      return addDependentChildren(node, context);
     }
     for (Node child : node.getChildren()) {
       Node goal = addDependencyStage(child, context);
@@ -251,6 +247,9 @@ public class ThreatBasedSearch {
 
   private Node addDependentChildren(Node node, Context context) {
     if (node.getBoard().matchesAny(context.attacker(), GOAL)) {
+      if (anyGlobalDefend(context, node)) {
+        return null;
+      }
       return node;
     }
     Queue<Node> queue = new LinkedList<>();
@@ -273,6 +272,9 @@ public class ThreatBasedSearch {
         BoardClass<Threat> board = child.getBoard();
         if (board.matchesAny(context.attacker(), GOAL)
             || context.relatedMoves().contains(threat.getOffensiveMove())) {
+          if (anyGlobalDefend(context, child)) {
+            continue;
+          }
           return child;
         }
         if (!board.matchesAny(context.attacker(), FIVE)) {

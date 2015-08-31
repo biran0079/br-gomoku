@@ -82,7 +82,7 @@ public class ThreatBasedSearchTest {
         "_______________\n" +
         "_______________");
 
-    assertNull(threatBasedSearch.winningMove(boardClass, StoneType.BLACK));
+    assertNotNull(threatBasedSearch.winningMove(boardClass, StoneType.BLACK));
   }
 
 

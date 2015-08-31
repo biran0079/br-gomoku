@@ -17,6 +17,7 @@ import model.Position;
  */
 class ThreatImpl extends AbstractPattern implements Threat {
 
+
   private final Position offensiveMove;
   private final ImmutableSet<Position> dependingMoves;
 
