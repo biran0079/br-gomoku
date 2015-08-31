@@ -89,7 +89,7 @@ public class MinMaxSearch<T extends Pattern> implements AI {
       throw new IllegalStateException("Already won.");
     }
     MinMax minMax = stoneType == StoneType.BLACK ? MinMax.MAX : MinMax.MIN;
-    MinMaxNode result;
+    MinMaxNode result = null;
     try {
       switch (algorithm) {
         case MINMAX:

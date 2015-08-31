@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * Performs complete threat search with all moves.
  */
-class CompleteThreatSearch {
+class AggresiveThreatSearch {
 
   Position winningMove(BoardClass<Threat> boardClass, StoneType attacker, int depth) {
     for (int i = 0; i <= depth; i++) {

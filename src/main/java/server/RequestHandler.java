@@ -3,7 +3,7 @@ package server;
 import ai.AI;
 import ai.minmax.MinMaxSearch;
 import ai.minmax.transitiontable.SmartCompleteTransitionTable;
-import ai.threatbasedsearch.CompeleteThreatSearchAI;
+import ai.threatbasedsearch.AggresiveThreatSearchAI;
 import com.google.common.collect.ImmutableMap;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -41,7 +41,7 @@ class RequestHandler implements HttpHandler {
     return s1.toLowerCase().equals(s2.toLowerCase());
   }
 
-  private final AI novice = new CompeleteThreatSearchAI(
+  private final AI novice = new AggresiveThreatSearchAI(
       MinMaxSearch.defaultBuilderForThreat()
           .withTransitionTableFactory(SmartCompleteTransitionTable::new)
           .withAlgorithm(MinMaxSearch.Algorithm.MINMAX)
@@ -50,7 +50,7 @@ class RequestHandler implements HttpHandler {
           .build(),
       3);
 
-  private final AI medium = new CompeleteThreatSearchAI(
+  private final AI medium = new AggresiveThreatSearchAI(
       MinMaxSearch.defaultBuilderForThreat()
           .withTransitionTableFactory(SmartCompleteTransitionTable::new)
           .withAlgorithm(MinMaxSearch.Algorithm.MINMAX)
@@ -59,7 +59,7 @@ class RequestHandler implements HttpHandler {
           .build(),
       4);
 
-  private final AI expert = new CompeleteThreatSearchAI(
+  private final AI expert = new AggresiveThreatSearchAI(
       MinMaxSearch.defaultBuilderForThreat()
           .withTransitionTableFactory(SmartCompleteTransitionTable::new)
           .withAlgorithm(MinMaxSearch.Algorithm.MINMAX)

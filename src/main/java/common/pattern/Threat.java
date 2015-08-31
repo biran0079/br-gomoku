@@ -1,5 +1,6 @@
 package common.pattern;
 
+import com.google.common.collect.ImmutableSet;
 import model.Position;
 
 /**

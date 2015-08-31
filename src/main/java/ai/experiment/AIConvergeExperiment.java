@@ -5,7 +5,7 @@ import ai.competition.Competition;
 import ai.minmax.MinMaxSearch;
 import ai.minmax.transitiontable.SmartCompleteTransitionTable;
 
-import ai.threatbasedsearch.CompeleteThreatSearchAI;
+import ai.threatbasedsearch.AggresiveThreatSearchAI;
 import ai.threatbasedsearch.ThreatBasedSearchAI;
 import com.google.common.collect.Lists;
 import common.StoneType;
@@ -20,7 +20,7 @@ import java.util.Collection;
 class AIConvergeExperiment {
 
   public static void main(String[] args) {
-    AI ai1 = new CompeleteThreatSearchAI(
+    AI ai1 = new AggresiveThreatSearchAI(
         MinMaxSearch.defaultBuilderForThreat()
             .withName("d4-minmax")
             .withAlgorithm(MinMaxSearch.Algorithm.MINMAX)

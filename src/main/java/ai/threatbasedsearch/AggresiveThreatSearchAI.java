@@ -11,13 +11,13 @@ import model.Position;
 /**
  * Regular AI backed by complete threat search.
  */
-public class CompeleteThreatSearchAI implements AI {
+public class AggresiveThreatSearchAI implements AI {
 
   private final AI delgate;
   private final int threatSearchDepth;
-  private final CompleteThreatSearch completeThreatSearch = new CompleteThreatSearch();
+  private final AggresiveThreatSearch aggresiveThreatSearch = new AggresiveThreatSearch();
 
-  public CompeleteThreatSearchAI(AI delgate, int threatSearchDepth) {
+  public AggresiveThreatSearchAI(AI delgate, int threatSearchDepth) {
     this.delgate = delgate;
     this.threatSearchDepth = threatSearchDepth;
   }
@@ -25,7 +25,7 @@ public class CompeleteThreatSearchAI implements AI {
   @Override
   public Position nextMove(GameBoard gameBoard, StoneType stoneType) {
     BoardClass<Threat> boardClass = BoardFactories.FOR_THREAT.fromGameBoard(gameBoard);
-    Position move = completeThreatSearch.winningMove(boardClass, stoneType, threatSearchDepth);
+    Position move = aggresiveThreatSearch.winningMove(boardClass, stoneType, threatSearchDepth);
     if (move != null) {
       return move;
     }

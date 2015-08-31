@@ -12,11 +12,11 @@ import static org.junit.Assert.*;
 /**
  * Unit test for CompleteThreatSearch.
  */
-public class CompleteThreatSearchTest {
+public class AggresiveThreatSearchTest {
 
   private final  BoardClass.Factory<Threat> factory =
       BoardFactories.FOR_THREAT;
-  private final CompleteThreatSearch completeThreatSearch = new CompleteThreatSearch();
+  private final AggresiveThreatSearch aggresiveThreatSearch = new AggresiveThreatSearch();
 
   @Test
   public void testWinningMove() throws Exception {
@@ -37,7 +37,7 @@ public class CompleteThreatSearchTest {
         + "_______________\n"
         + "_______________\n");
 
-    assertNotNull(completeThreatSearch.winningMove(boardClass, StoneType.BLACK, 6));
+    assertNotNull(aggresiveThreatSearch.winningMove(boardClass, StoneType.BLACK, 6));
   }
 
   @Test
@@ -58,7 +58,7 @@ public class CompleteThreatSearchTest {
         "_______________\n" +
         "_______________\n" +
         "_______________");
-    assertNotNull(completeThreatSearch.winningMove(boardClass, StoneType.BLACK, 4));
+    assertNotNull(aggresiveThreatSearch.winningMove(boardClass, StoneType.BLACK, 4));
   }
 
   private BoardClass<Threat> createBoard(String s) {
