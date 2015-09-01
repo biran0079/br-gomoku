@@ -259,7 +259,7 @@ public class ThreatBasedSearch {
         applicableThreats = node.getBoard().filterMatching(
             ((NodeWithCandidates) node).getCandidateThreats());
       }
-      for (Threat threat : sortedByThreatLevel(applicableThreats)) {
+      for (Threat threat : restrictedThreats(applicableThreats)) {
         if (threat.getPatternType().getThreatLevel() > context.maxThreatLevel()) {
           continue;
         }
@@ -288,9 +288,21 @@ public class ThreatBasedSearch {
     return null;
   }
 
-  private List<Threat> sortedByThreatLevel(Set<Threat> applicableThreats) {
+  private List<Threat> restrictedThreats(Set<Threat> applicableThreats) {
+    List<Threat> a = Lists.newArrayList(applicableThreats);
     List<Threat> result = Lists.newArrayList(applicableThreats);
-    Collections.sort(result, (a, b) -> a.getPatternType().getThreatLevel() - b.getPatternType().getThreatLevel());
+    Collections.sort(result, (x, y) -> x.getPatternType().getThreatLevel() - y.getPatternType().getThreatLevel());
+    for (int i = 0; i < a.size(); i++) {
+      for (int j = 0; j < a.size(); j++) {
+        if (i == j) {
+          continue;
+        }
+        if (a.get(j).covers(a.get(i))) {
+          result.remove(a.get(i));
+          break;
+        }
+      }
+    }
     return result;
   }
 

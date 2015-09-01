@@ -11,4 +11,8 @@ public interface Threat extends Pattern {
   Position getOffensiveMove();
 
   boolean dependingOn(Threat threat);
+
+  boolean covers(Threat threat);
+
+  ImmutableSet<Position> getDependingMoves();
 }

@@ -17,7 +17,6 @@ import model.Position;
  */
 class ThreatImpl extends AbstractPattern implements Threat {
 
-
   private final Position offensiveMove;
   private final ImmutableSet<Position> dependingMoves;
 
@@ -44,6 +43,31 @@ class ThreatImpl extends AbstractPattern implements Threat {
   @Override
   public boolean dependingOn(Threat threat) {
     return threat.getStoneType() == getStoneType() && dependingMoves.contains(threat.getOffensiveMove());
+  }
+
+  @Override
+  public boolean covers(Threat threat) {
+    switch (getPatternType()) {
+      case FIVE:
+        return threat.getPatternType() == PatternType.FOUR
+            && threat.getDependingMoves().contains(dependingMoves);
+      case STRAIT_FOUR:
+        return threat.getPatternType() == PatternType.FOUR
+            && threat.getDependingMoves().equals(dependingMoves);
+      case THREE:
+        return getDefensiveMoves().size() == 2
+            && threat.getPatternType() == PatternType.THREE
+            && threat.getOffensiveMove().equals(offensiveMove)
+            && threat.getDefensiveMoves().size() == 3
+            && threat.getDependingMoves().equals(dependingMoves);
+      default:
+        return false;
+    }
+  }
+
+  @Override
+  public ImmutableSet<Position> getDependingMoves() {
+    return dependingMoves;
   }
 
   @Override
