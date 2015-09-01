@@ -5,13 +5,11 @@ import static common.pattern.PatternType.*;
 import autovalue.shaded.com.google.common.common.collect.ImmutableSet;
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.*;
-import common.Constants;
 import common.StoneType;
 import common.boardclass.BoardClass;
 import common.pattern.Threat;
 import model.Position;
 
-import javax.annotation.Nullable;
 import java.util.*;
 
 /**
@@ -56,16 +54,17 @@ public class ThreatBasedSearch {
   }
 
   private Node DBS(Context context) {
-    do {
-      context.level++;
-      Node goal = addDependencyStage(context.root(), context);
-      if (goal != null) {
-        return goal;
-      }
-      if (context.refutedCount >= 10) {
-        return null;
-      }
-    } while (addCombinationStage(context));
+    try {
+      do {
+        context.level++;
+        Node goal = addDependencyStage(context.root(), context);
+        if (goal != null) {
+          return goal;
+        }
+      } while (addCombinationStage(context));
+    } catch (TooManyRefutationException e) {
+      System.err.println("Too many refutations for:\n" + context.root().getBoard());
+    }
     return null;
   }
 
@@ -103,7 +102,7 @@ public class ThreatBasedSearch {
           .defensiveCheck(false)
           .build();
       if (DBS(newContext) != null) {
-        context.refutedCount++;
+        context.threatSequenceRefuted();
         return true;
       }
       findAllDependencyBoards(newContext.root(), intermediate);
@@ -112,7 +111,7 @@ public class ThreatBasedSearch {
         for (int i = 0; i < intermediate.size(); i++) {
           intermediate.set(i, intermediate.get(i).withPositionSet(def, context.defender()));
           if (intermediate.get(i).matchesAny(context.defender(), FIVE)) {
-            context.refutedCount++;
+            context.threatSequenceRefuted();
             return true;
           }
         }
@@ -229,9 +228,6 @@ public class ThreatBasedSearch {
   }
 
   private Node addDependencyStage(Node node, Context context) {
-    if (context.refutedCount >= 10) {
-      return null;
-    }
     if ((node instanceof RootNode || node instanceof CombinationNode)
         && context.level == node.getLevel() + 1) {
       return addDependentChildren(node, context);
@@ -372,6 +368,13 @@ public class ThreatBasedSearch {
     abstract StoneType attacker();
     abstract Node root();
 
+    void threatSequenceRefuted() {
+      refutedCount++;
+      if (refutedCount >= 20) {
+        throw new TooManyRefutationException();
+      }
+    }
+
     StoneType defender() {
       return attacker().getOpponent();
     }
@@ -392,4 +395,6 @@ public class ThreatBasedSearch {
       abstract Context build();
     }
   }
+
+  private static class TooManyRefutationException extends RuntimeException {}
 }
