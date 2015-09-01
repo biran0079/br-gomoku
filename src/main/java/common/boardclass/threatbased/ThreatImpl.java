@@ -50,7 +50,7 @@ class ThreatImpl extends AbstractPattern implements Threat {
     switch (getPatternType()) {
       case FIVE:
         return threat.getPatternType() == PatternType.FOUR
-            && threat.getDependingMoves().contains(dependingMoves);
+            && dependingMoves.containsAll(threat.getDependingMoves());
       case STRAIT_FOUR:
         return threat.getPatternType() == PatternType.FOUR
             && threat.getDependingMoves().equals(dependingMoves);

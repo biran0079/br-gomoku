@@ -11,11 +11,14 @@ import common.pattern.Threat;
 import model.Position;
 
 import java.util.*;
+import java.util.logging.Logger;
 
 /**
  * Threat based search.
  */
 public class ThreatBasedSearch {
+
+  private static final Logger logger = Logger.getLogger(ThreatBasedSearch.class.getName());
 
   public Position winningMove(
       BoardClass<Threat> boardClass,
@@ -38,6 +41,7 @@ public class ThreatBasedSearch {
     return ImmutableSet.<Threat>builder()
         .addAll(boardClass.getMatchingPatterns(attacker, FIVE))
         .addAll(boardClass.getMatchingPatterns(attacker, FOUR))
+        .addAll(boardClass.getMatchingPatterns(attacker, STRAIT_FOUR))
         .addAll(boardClass.getMatchingPatterns(attacker, THREE))
         .build();
   }
@@ -63,7 +67,7 @@ public class ThreatBasedSearch {
         }
       } while (addCombinationStage(context));
     } catch (TooManyRefutationException e) {
-      System.err.println("Too many refutations for:\n" + context.root().getBoard());
+      // logger.info("Too many refutations for:\n" + context.root().getBoard());
     }
     return null;
   }
