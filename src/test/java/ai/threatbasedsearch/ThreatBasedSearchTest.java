@@ -42,7 +42,7 @@ public class ThreatBasedSearchTest {
 
   @Test
   public void testWinningPathExists2() throws Exception {
-    BoardClass<Threat> boardClass = createBoard( "_______________\n"
+    BoardClass<Threat> boardClass = createBoard("_______________\n"
         + "_______________\n"
         + "_______________\n"
         + "_______________\n"

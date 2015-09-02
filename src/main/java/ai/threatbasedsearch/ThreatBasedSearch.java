@@ -5,6 +5,7 @@ import static common.pattern.PatternType.*;
 import autovalue.shaded.com.google.common.common.collect.ImmutableSet;
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.*;
+import common.Constants;
 import common.StoneType;
 import common.boardclass.BoardClass;
 import common.pattern.Threat;
@@ -18,6 +19,10 @@ import java.util.logging.Logger;
  */
 public class ThreatBasedSearch {
 
+  private static final TooManyRefutation TOO_MANY_REFUTATION = new TooManyRefutation();
+  private static final GoalFound GOAL_FOUND = new GoalFound();
+  private static final HitRelatedPosition HIT_RELATED_POSITION = new HitRelatedPosition();
+
   private static final Logger logger = Logger.getLogger(ThreatBasedSearch.class.getName());
 
   public Position winningMove(
@@ -30,11 +35,41 @@ public class ThreatBasedSearch {
         .relatedMoves(ImmutableSet.<Position>of())
         .root(Node.createRootNode(boardClass))
         .build();
-    Node goal = DBS(context);
-    if (goal != null) {
-        return findAllParentsThreats(goal).get(0).getOffensiveMove();
+    DBS(context);
+    if (context.goal != null) {
+      Node goal = context.goal;
+      return findAllParentsThreats(goal).get(0).getOffensiveMove();
     }
     return null;
+  }
+
+  public Set<Position> findImplicitThreats(
+      BoardClass<Threat> boardClass,
+      StoneType attacker) {
+    Context context = Context.builder()
+        .attacker(attacker)
+        .maxThreatLevel(2)
+        .defensiveCheck(true)
+        .relatedMoves(ImmutableSet.<Position>of())
+        .root(Node.createRootNode(boardClass))
+        .build();
+    DBS(context);
+    Set<Position> result = new HashSet<>();
+    result.addAll(context.goal.getRelatedMoves());
+    for (int i = 0; i < Constants.BOARD_SIZE; i++) {
+      for (int j = 0; j < Constants.BOARD_SIZE; j++) {
+        Position p = Position.of(i, j);
+        Context newContext = context.toBuilder()
+            .root(Node.createRootNode(boardClass.withPositionSet(p, context.defender())))
+            .build();
+        if (!result.contains(p)
+            && boardClass.get(p) == StoneType.NOTHING
+            && anyGlobalDefend(newContext, context.goal)){
+          result.add(p);
+        }
+      }
+    }
+    return result;
   }
 
   private Set<Threat> getThreatsSet(BoardClass<Threat> boardClass, StoneType attacker) {
@@ -57,19 +92,17 @@ public class ThreatBasedSearch {
     return boardClass;
   }
 
-  private Node DBS(Context context) {
+  private void DBS(Context context) {
     try {
       do {
         context.level++;
-        Node goal = addDependencyStage(context.root(), context);
-        if (goal != null) {
-          return goal;
-        }
+        addDependencyStage(context.root(), context);
       } while (addCombinationStage(context));
-    } catch (TooManyRefutationException e) {
+    } catch (TooManyRefutation e) {
       // logger.info("Too many refutations for:\n" + context.root().getBoard());
+    } catch (GoalFound e) {
+      // quick termination when goal is found
     }
-    return null;
   }
 
   private int getMinThreatLevel(BoardClass<Threat> boardClass, StoneType stoneType) {
@@ -105,7 +138,12 @@ public class ThreatBasedSearch {
           .relatedMoves(relatedMoves)
           .defensiveCheck(false)
           .build();
-      if (DBS(newContext) != null) {
+      try {
+        DBS(newContext);
+      } catch (HitRelatedPosition e) {
+        return true;
+      }
+      if (newContext.goal != null) {
         context.threatSequenceRefuted();
         return true;
       }
@@ -231,26 +269,24 @@ public class ThreatBasedSearch {
     return result;
   }
 
-  private Node addDependencyStage(Node node, Context context) {
+  private void addDependencyStage(Node node, Context context) {
     if ((node instanceof RootNode || node instanceof CombinationNode)
         && context.level == node.getLevel() + 1) {
-      return addDependentChildren(node, context);
-    }
-    for (Node child : node.getChildren()) {
-      Node goal = addDependencyStage(child, context);
-      if (goal != null) {
-        return goal;
+      addDependentChildren(node, context);
+    } else {
+      for (Node child : node.getChildren()) {
+        addDependencyStage(child, context);
       }
     }
-    return null;
   }
 
-  private Node addDependentChildren(Node node, Context context) {
+  private void addDependentChildren(Node node, Context context) {
     if (node.getBoard().matchesAny(context.attacker(), GOAL)) {
-      if (anyGlobalDefend(context, node)) {
-        return null;
+      if (!anyGlobalDefend(context, node)) {
+        context.goal = node;
+        throw GOAL_FOUND;
       }
-      return node;
+      return;
     }
     Queue<Node> queue = new LinkedList<>();
     queue.add(node);
@@ -263,46 +299,51 @@ public class ThreatBasedSearch {
         applicableThreats = node.getBoard().filterMatching(
             ((NodeWithCandidates) node).getCandidateThreats());
       }
-      for (Threat threat : restrictedThreats(applicableThreats)) {
-        if (threat.getPatternType().getThreatLevel() > context.maxThreatLevel()) {
-          continue;
+      for (Threat threat : restrictedThreats(applicableThreats, context.maxThreatLevel())) {
+        if (context.relatedMoves().contains(threat.getOffensiveMove())) {
+          throw HIT_RELATED_POSITION;
         }
         Node child = Node.createDependencyNode(threat, node, context.level);
         node.getChildren().add(child);
         BoardClass<Threat> board = child.getBoard();
-        if (board.matchesAny(context.attacker(), GOAL)
-            || context.relatedMoves().contains(threat.getOffensiveMove())) {
-          if (anyGlobalDefend(context, child)) {
-            continue;
+        if (board.matchesAny(context.attacker(), GOAL)) {
+          if (!anyGlobalDefend(context, node)) {
+            context.goal = node;
+            throw GOAL_FOUND;
           }
-          return child;
+          continue;
         }
-        if (!board.matchesAny(context.attacker(), FIVE)) {
-          if (board.matchesAny(context.defender(), FIVE)) {
-            continue;
-          }
-          if (!board.matchesAny(context.attacker(), FOUR)
-              && board.matchesAny(context.defender(), STRAIT_FOUR)) {
-            continue;
+        if (context.defensiveCheck()) {
+          // don't do this optimization for global defense search.
+          if (!board.matchesAny(context.attacker(), FIVE)) {
+            if (board.matchesAny(context.defender(), FIVE)) {
+              continue;
+            }
+            if (!board.matchesAny(context.attacker(), FOUR)
+                && board.matchesAny(context.defender(), STRAIT_FOUR)) {
+              continue;
+            }
           }
         }
         queue.add(child);
       }
     }
-    return null;
   }
 
-  private List<Threat> restrictedThreats(Set<Threat> applicableThreats) {
-    List<Threat> a = Lists.newArrayList(applicableThreats);
-    List<Threat> result = Lists.newArrayList(applicableThreats);
-    Collections.sort(result, (x, y) -> x.getPatternType().getThreatLevel() - y.getPatternType().getThreatLevel());
-    for (int i = 0; i < a.size(); i++) {
-      for (int j = 0; j < a.size(); j++) {
+  private List<Threat> restrictedThreats(Set<Threat> applicableThreats, int maxThreatLevel) {
+    List<Threat> threats = Lists.newArrayList(
+        Iterables.filter(applicableThreats,
+            (t) -> t.getPatternType().getThreatLevel() <= maxThreatLevel));
+    List<Threat> result = Lists.newArrayList(threats);
+    Collections.sort(result,
+        (x, y) -> x.getPatternType().getThreatLevel() - y.getPatternType().getThreatLevel());
+    for (int i = 0; i < threats.size(); i++) {
+      for (int j = 0; j < threats.size(); j++) {
         if (i == j) {
           continue;
         }
-        if (a.get(j).covers(a.get(i))) {
-          result.remove(a.get(i));
+        if (threats.get(j).covers(threats.get(i))) {
+          result.remove(threats.get(i));
           break;
         }
       }
@@ -377,6 +418,7 @@ public class ThreatBasedSearch {
 
     private int refutedCount = 0;
     private int level = 0;
+    private Node goal = null;
 
     abstract Set<Position> relatedMoves();
     abstract boolean defensiveCheck();
@@ -384,10 +426,12 @@ public class ThreatBasedSearch {
     abstract StoneType attacker();
     abstract Node root();
 
+    abstract Builder toBuilder();
+
     void threatSequenceRefuted() {
       refutedCount++;
       if (refutedCount >= 20) {
-        throw new TooManyRefutationException();
+        throw TOO_MANY_REFUTATION;
       }
     }
 
@@ -412,5 +456,12 @@ public class ThreatBasedSearch {
     }
   }
 
-  private static class TooManyRefutationException extends RuntimeException {}
+  private static class TooManyRefutation extends RuntimeException {
+  }
+
+  private static class GoalFound extends RuntimeException {
+  }
+
+  private static class HitRelatedPosition extends RuntimeException {
+  }
 }

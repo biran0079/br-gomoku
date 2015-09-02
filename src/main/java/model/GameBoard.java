@@ -9,6 +9,10 @@ public interface GameBoard {
 
   StoneType get(int i, int j);
 
+  default StoneType get(Position p) {
+    return get(p.getRowIndex(), p.getColumnIndex());
+  }
+
   boolean isFull();
 
   boolean isEmpty();
