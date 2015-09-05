@@ -1,6 +1,7 @@
 package ai.candidatemoveselector;
 
 import ai.threatbasedsearch.ThreatBasedSearch;
+import autovalue.shaded.com.google.common.common.collect.Lists;
 import com.google.common.collect.Sets;
 import common.Constants;
 import common.PositionTransformer;
@@ -157,6 +158,19 @@ public class CandidateMoveSelectorUtil {
       }
     }
     return result;
+  }
+
+  public static Collection<Position> getAllEmpty(BoardClass<?> boardClass) {
+    List<Position> res = Lists.newArrayListWithCapacity(
+        Constants.BOARD_SIZE * Constants.BOARD_SIZE - boardClass.getStoneCount());
+    for (int i = 0; i < Constants.BOARD_SIZE; i++) {
+      for (int j = 0; j < Constants.BOARD_SIZE; j++) {
+        if (boardClass.get(i, j) == StoneType.NOTHING) {
+          res.add(Position.of(i, j));
+        }
+      }
+    }
+    return res;
   }
 
   private static Collection<Position> min(Collection<Position> candidates) {

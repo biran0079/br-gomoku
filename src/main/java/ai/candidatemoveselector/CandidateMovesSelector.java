@@ -12,6 +12,6 @@ import java.util.Collection;
  */
 public interface CandidateMovesSelector<T extends Pattern> {
 
-  Collection<Position> getCandidateMoves(BoardClass<T> boardClass, StoneType stoneType);
+  Collection<Position> getCandidateMoves(BoardClass<T> boardClass, StoneType nextToMove);
 
 }

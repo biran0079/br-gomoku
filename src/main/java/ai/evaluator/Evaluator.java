@@ -8,7 +8,7 @@ import common.pattern.Pattern;
  * Evaluates game board status into an int.
  * Larger value indicates black is more likely to win, smaller value indicates white is more likely to win.
  */
-public interface Evaluator<T extends Pattern> {
+public interface Evaluator<T extends Pattern, V> {
 
-  int eval(BoardClass<T> boardClass, StoneType nextToMove);
+  V eval(BoardClass<T> boardClass, StoneType nextToMove);
 }

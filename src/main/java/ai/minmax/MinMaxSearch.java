@@ -33,7 +33,7 @@ public class MinMaxSearch<T extends Pattern> implements AI {
   private final TransitionTable.Factory<MinMaxNode> transitionTableFactory;
   private final String name;
   private final boolean alphaBetaPruning;
-  private final Evaluator<T> evaluator;
+  private final Evaluator<T, Integer> evaluator;
   private final CandidateMovesSelector<T> candidateMovesSelector;
   private final BoardClass.Factory<T> boardClassFactory;
   private final boolean useKillerHeuristic;
@@ -354,7 +354,7 @@ public class MinMaxSearch<T extends Pattern> implements AI {
     private TransitionTable.Factory<MinMaxNode> transitionTableFactory = CompleteTransitionTable::new;
     private CandidateMovesSelector<T> candidateMoveSelector;
     private BoardClass.Factory<T> boardClassFactory;
-    private Evaluator<T> evaluator;
+    private Evaluator<T, Integer> evaluator;
     private boolean useKillerHeuristic = false;
     private Algorithm algorithm = Algorithm.MINMAX;
 
@@ -380,7 +380,7 @@ public class MinMaxSearch<T extends Pattern> implements AI {
       return this;
     }
 
-    public Builder<T> withEvaluator(Evaluator<T> evaluator) {
+    public Builder<T> withEvaluator(Evaluator<T, Integer> evaluator) {
       this.evaluator = evaluator;
       return this;
     }

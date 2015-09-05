@@ -8,6 +8,7 @@ import com.google.common.collect.*;
 import common.Constants;
 import common.StoneType;
 import common.boardclass.BoardClass;
+import common.boardclass.threatbased.ThreatUtil;
 import common.pattern.Threat;
 import model.Position;
 
@@ -54,31 +55,25 @@ public class ThreatBasedSearch {
         .root(Node.createRootNode(boardClass))
         .build();
     DBS(context);
-    Set<Position> result = new HashSet<>();
-    result.addAll(context.goal.getRelatedMoves());
-    for (int i = 0; i < Constants.BOARD_SIZE; i++) {
-      for (int j = 0; j < Constants.BOARD_SIZE; j++) {
-        Position p = Position.of(i, j);
-        Context newContext = context.toBuilder()
-            .root(Node.createRootNode(boardClass.withPositionSet(p, context.defender())))
-            .build();
-        if (!result.contains(p)
-            && boardClass.get(p) == StoneType.NOTHING
-            && anyGlobalDefend(newContext, context.goal)){
-          result.add(p);
+    if (context.goal != null) {
+      Set<Position> result = new HashSet<>();
+      result.addAll(context.goal.getRelatedMoves());
+      for (int i = 0; i < Constants.BOARD_SIZE; i++) {
+        for (int j = 0; j < Constants.BOARD_SIZE; j++) {
+          Position p = Position.of(i, j);
+          Context newContext = context.toBuilder()
+              .root(Node.createRootNode(boardClass.withPositionSet(p, context.defender())))
+              .build();
+          if (!result.contains(p)
+              && boardClass.get(p) == StoneType.NOTHING
+              && anyGlobalDefend(newContext, context.goal)){
+            result.add(p);
+          }
         }
       }
+      return result;
     }
-    return result;
-  }
-
-  private Set<Threat> getThreatsSet(BoardClass<Threat> boardClass, StoneType attacker) {
-    return ImmutableSet.<Threat>builder()
-        .addAll(boardClass.getMatchingPatterns(attacker, FIVE))
-        .addAll(boardClass.getMatchingPatterns(attacker, FOUR))
-        .addAll(boardClass.getMatchingPatterns(attacker, STRAIT_FOUR))
-        .addAll(boardClass.getMatchingPatterns(attacker, THREE))
-        .build();
+    return Collections.emptySet();
   }
 
   private static BoardClass<Threat> applyThreat(
@@ -294,12 +289,12 @@ public class ThreatBasedSearch {
       node = queue.poll();
       Set<Threat> applicableThreats;
       if (node instanceof RootNode) {
-        applicableThreats = getThreatsSet(node.getBoard(), context.attacker());
+        applicableThreats = ThreatUtil.getThreatsSet(node.getBoard(), context.attacker());
       } else {
         applicableThreats = node.getBoard().filterMatching(
             ((NodeWithCandidates) node).getCandidateThreats());
       }
-      for (Threat threat : restrictedThreats(applicableThreats, context.maxThreatLevel())) {
+      for (Threat threat : ThreatUtil.restrictedThreats(applicableThreats, context.maxThreatLevel())) {
         if (context.relatedMoves().contains(threat.getOffensiveMove())) {
           throw HIT_RELATED_POSITION;
         }
@@ -308,7 +303,7 @@ public class ThreatBasedSearch {
         BoardClass<Threat> board = child.getBoard();
         if (board.matchesAny(context.attacker(), GOAL)) {
           if (!anyGlobalDefend(context, node)) {
-            context.goal = node;
+            context.goal = child;
             throw GOAL_FOUND;
           }
           continue;
@@ -328,27 +323,6 @@ public class ThreatBasedSearch {
         queue.add(child);
       }
     }
-  }
-
-  private List<Threat> restrictedThreats(Set<Threat> applicableThreats, int maxThreatLevel) {
-    List<Threat> threats = Lists.newArrayList(
-        Iterables.filter(applicableThreats,
-            (t) -> t.getPatternType().getThreatLevel() <= maxThreatLevel));
-    List<Threat> result = Lists.newArrayList(threats);
-    Collections.sort(result,
-        (x, y) -> x.getPatternType().getThreatLevel() - y.getPatternType().getThreatLevel());
-    for (int i = 0; i < threats.size(); i++) {
-      for (int j = 0; j < threats.size(); j++) {
-        if (i == j) {
-          continue;
-        }
-        if (threats.get(j).covers(threats.get(i))) {
-          result.remove(threats.get(i));
-          break;
-        }
-      }
-    }
-    return result;
   }
 
   interface Node {
@@ -397,6 +371,11 @@ public class ThreatBasedSearch {
 
   @AutoValue
   abstract static class RootNode implements Node {
+
+    @Override
+    public final String toString() {
+      return getBoard().toString();
+    }
   }
 
   @AutoValue
@@ -405,12 +384,22 @@ public class ThreatBasedSearch {
     abstract Threat getThreat();
 
     abstract Node getParent();
+
+    @Override
+    public final String toString() {
+      return getBoard().toString();
+    }
   }
 
   @AutoValue
   abstract static class CombinationNode implements NodeWithCandidates {
 
     abstract ImmutableList<DependencyNode> getParents();
+
+    @Override
+    public final String toString() {
+      return getBoard().toString();
+    }
   }
 
   @AutoValue

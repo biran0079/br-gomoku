@@ -9,10 +9,10 @@ import common.pattern.PatternType;
 /**
  * Simple implementation of evaluator.
  */
-public class SimplePatternEvaluator implements Evaluator<Pattern> {
+public class SimplePatternEvaluator implements Evaluator<Pattern, Integer> {
 
   @Override
-  public int eval(BoardClass<Pattern> boardClass, StoneType nextToMove) {
+  public Integer eval(BoardClass<Pattern> boardClass, StoneType nextToMove) {
     if (boardClass.matchesAny(nextToMove, PatternType.FOUR)
         || boardClass.matchesAny(nextToMove, PatternType.THREE)) {
       return nextToMove == StoneType.BLACK ? 10 : -10;

@@ -9,10 +9,10 @@ import common.pattern.Threat;
 /**
  * Simple evaluator for threat based board class.
  */
-public class SimpleThreatEvaluator implements Evaluator<Threat> {
+public class SimpleThreatEvaluator implements Evaluator<Threat, Integer> {
 
   @Override
-  public int eval(BoardClass<Threat> boardClass, StoneType nextToMove) {
+  public Integer eval(BoardClass<Threat> boardClass, StoneType nextToMove) {
     StoneType opponent = nextToMove.getOpponent();
     int a5 = Iterables.size(boardClass.getMatchingPatterns(nextToMove, PatternType.FIVE));
     if (a5 > 0) {

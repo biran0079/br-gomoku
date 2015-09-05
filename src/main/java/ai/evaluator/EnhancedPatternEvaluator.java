@@ -9,10 +9,10 @@ import common.pattern.PatternType;
 /**
  * Better evaluator than default evaluator.
  */
-public class EnhancedPatternEvaluator implements Evaluator<Pattern> {
+public class EnhancedPatternEvaluator implements Evaluator<Pattern, Integer> {
 
   @Override
-  public int eval(BoardClass<Pattern> boardClass, StoneType nextToMove) {
+  public Integer eval(BoardClass<Pattern> boardClass, StoneType nextToMove) {
     StoneType opponent = nextToMove.getOpponent();
     int a4 = Iterables.size(boardClass.getMatchingPatterns(nextToMove, PatternType.FOUR));
     if (a4 > 0) {
