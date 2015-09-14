@@ -4,3 +4,4 @@ bin/
 .classpath
 *.iml
 target/
+gomoku.db

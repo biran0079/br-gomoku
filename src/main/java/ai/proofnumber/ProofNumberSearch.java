@@ -8,6 +8,7 @@ import common.pattern.Pattern;
 import model.Position;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -17,6 +18,7 @@ public class ProofNumberSearch<T extends Pattern> {
 
   private static final int MAX = Integer.MAX_VALUE;
 
+  private int evalCount;
   private final CandidateMovesSelector<T> candidateMovesSelector;
   private final Evaluator<T, Result> evaluator;
 
@@ -27,10 +29,11 @@ public class ProofNumberSearch<T extends Pattern> {
   }
 
   public Result search(BoardClass<T> boardClass, StoneType nextToMove) {
-    Node root = new Node(null, boardClass, nextToMove);
-    Node current = root;
+    Node<T> root = new Node<>(null, boardClass, nextToMove, evaluator.eval(boardClass, nextToMove));
+    Node<T> current = root;
+    evalCount = 1;
     while (root.result == Result.UNKNOWN) {
-      Node mostProvingNode = selectMostProovingNode(current);
+      Node<T> mostProvingNode = selectMostProovingNode(current);
       developNode(mostProvingNode);
       current = updateAncestors(mostProvingNode);
       if (root.proof == 0) {
@@ -39,29 +42,39 @@ public class ProofNumberSearch<T extends Pattern> {
         root.result = Result.FALSE;
       }
     }
-    System.err.printf("%d nodes created\n", root.count());
+    System.err.printf("%d nodes created\n", evalCount);
     return root.result;
   }
 
-  private boolean setProofDisproofNumber(Node node) {
+  private boolean setProofDisproofNumber(Node<T> node) {
     int proof = 0, disproof = 0;
     if (!node.children.isEmpty()) {
       switch (node.type) {
         case AND: {
           proof = 0;
           disproof = MAX;
-          for (Node child : node.children) {
-            proof += child.proof;
-            disproof = Math.min(disproof, child.disproof);
+          for (Iterator<Node<T>> it = node.children.iterator(); it.hasNext();) {
+            Node<T> child = it.next();
+            if (child.proof == 0) {
+              it.remove();
+            } else {
+              proof += child.proof;
+              disproof = Math.min(disproof, child.disproof);
+            }
           }
           break;
         }
         case OR: {
-          proof = MAX;
           disproof = 0;
-          for (Node child : node.children) {
-            disproof += child.disproof;
-            proof = Math.min(proof, child.proof);
+          proof = MAX;
+          for (Iterator<Node<T>> it = node.children.iterator(); it.hasNext();) {
+            Node<T> child = it.next();
+            if (child.disproof == 0) {
+              it.remove();
+            } else {
+              disproof += child.disproof;
+              proof = Math.min(proof, child.proof);
+            }
           }
           break;
         }
@@ -86,13 +99,13 @@ public class ProofNumberSearch<T extends Pattern> {
     }
     node.proof = proof;
     node.disproof = disproof;
-    if ((proof == 0 || disproof == 0) && node.level <= 2) {
-      System.err.println("Node at levelt " + node.level + (proof == 0 ? " proved" : " disproved"));
+    if ((proof == 0 || disproof == 0)) {
+      System.err.println("Node at level " + node.level + (proof == 0 ? " proved" : " disproved"));
     }
     return true;
   }
 
-  private Node updateAncestors(Node node) {
+  private Node<T> updateAncestors(Node<T> node) {
     while (true) {
       if (!setProofDisproofNumber(node)) {
         return node;
@@ -104,24 +117,26 @@ public class ProofNumberSearch<T extends Pattern> {
     }
   }
 
-  private void developNode(Node node) {
+  private void developNode(Node<T> node) {
     BoardClass<T> boardClass = node.boardClass;
     for (Position p : candidateMovesSelector.getCandidateMoves(
         boardClass, node.nextToMove)) {
-      Node child = new Node(node,
-          boardClass.withPositionSet(p, node.nextToMove),
-          node.nextToMove.getOpponent());
+      BoardClass<T> newBoardClass = boardClass.withPositionSet(p, node.nextToMove);
+      StoneType newNext = node.nextToMove.getOpponent();
+      Result result = evaluator.eval(newBoardClass, newNext);
+      evalCount++;
+      Node<T> child = new Node<>(node, newBoardClass, newNext, result);
       setProofDisproofNumber(child);
       node.children.add(child);
     }
 
   }
 
-  private Node selectMostProovingNode(Node node) {
+  private Node<T> selectMostProovingNode(Node<T> node) {
     while (!node.children.isEmpty()) {
       switch (node.type) {
         case OR:
-          for (Node child : node.children) {
+          for (Node<T> child : node.children) {
             if (child.proof == node.proof) {
               node = child;
               break;
@@ -129,7 +144,7 @@ public class ProofNumberSearch<T extends Pattern> {
           }
           break;
         case AND:
-          for (Node child : node.children) {
+          for (Node<T> child : node.children) {
             if (child.disproof == node.disproof) {
               node = child;
               break;
@@ -146,35 +161,32 @@ public class ProofNumberSearch<T extends Pattern> {
     OR
   }
 
-  class Node {
+  static class Node<T extends Pattern> {
 
     private int proof;
     private int disproof;
     private Result result;
 
-    private final List<Node> children = new ArrayList<>();
-    private final Node parent;
+    private final List<Node<T>> children = new ArrayList<>();
+    private final Node<T> parent;
     private final Type type;
     private final BoardClass<T> boardClass;
     private final StoneType nextToMove;
     private final int level;
 
-    Node(Node parent, BoardClass<T> boardClass, StoneType nextToMove) {
+    Node(Node<T> parent, BoardClass<T> boardClass, StoneType nextToMove, Result result) {
       this.parent = parent;
       this.boardClass = boardClass;
       this.nextToMove = nextToMove;
       this.type = nextToMove == StoneType.BLACK ? Type.OR : Type.AND;
-      this.result = evaluator.eval(boardClass, nextToMove);
+      this.result = result;
       this.level = parent == null ? 0 : parent.level + 1;
       this.proof = this.disproof = level;
     }
 
-    public int count() {
-      int res = 1;
-      for (Node child : children) {
-        res += child.count();
-      }
-      return res;
+    @Override
+    public String toString() {
+      return result.toString();
     }
   }
 }

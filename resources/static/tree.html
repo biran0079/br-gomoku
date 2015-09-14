@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<!-- saved from url=(0045)http://charts.animateddata.co.uk/datavistree/ -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <link type="text/css" rel="stylesheet" href="css/style.css">
+    <script src="js/d3.v3.min.js"> </script>
+  </head>
+  <body>
+  <ul id='trees'>
+  </ul>
+<script>
+d3.json('/trees', function(tids) {
+  d3.select('#trees')
+      .select('li')
+      .data(tids)
+      .enter()
+      .append('li')
+      .append('a')
+      .text(function(d) {return d;})
+      .attr('href', function(d) {return '/static/render_tree.html?id=' + d;});
+      });
+</script>
+  </body></html>

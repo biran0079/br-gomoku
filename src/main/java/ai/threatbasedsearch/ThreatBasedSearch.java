@@ -12,6 +12,7 @@ import common.boardclass.threatbased.ThreatUtil;
 import common.pattern.Threat;
 import model.Position;
 
+import java.sql.SQLException;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -23,20 +24,20 @@ public class ThreatBasedSearch {
   private static final TooManyRefutation TOO_MANY_REFUTATION = new TooManyRefutation();
   private static final GoalFound GOAL_FOUND = new GoalFound();
   private static final HitRelatedPosition HIT_RELATED_POSITION = new HitRelatedPosition();
+  private final DatabaseManager databaseManager;
 
-  private static final Logger logger = Logger.getLogger(ThreatBasedSearch.class.getName());
+  public ThreatBasedSearch(DatabaseManager databaseManager) {
+    this.databaseManager = databaseManager;
+  }
+
+  public ThreatBasedSearch() {
+    this(null);
+  }
 
   public Position winningMove(
       BoardClass<Threat> boardClass,
       StoneType attacker) {
-    Context context = Context.builder()
-        .attacker(attacker)
-        .maxThreatLevel(2)
-        .defensiveCheck(true)
-        .relatedMoves(ImmutableSet.<Position>of())
-        .root(Node.createRootNode(boardClass))
-        .build();
-    DBS(context);
+    Context context = search(boardClass, attacker);
     if (context.goal != null) {
       Node goal = context.goal;
       return findAllParentsThreats(goal).get(0).getOffensiveMove();
@@ -44,7 +45,13 @@ public class ThreatBasedSearch {
     return null;
   }
 
-  public Set<Position> findImplicitThreats(
+  public Node threatBasedTree(
+      BoardClass<Threat> boardClass,
+      StoneType attacker) {
+    return search(boardClass, attacker).root();
+  }
+
+  public Context search(
       BoardClass<Threat> boardClass,
       StoneType attacker) {
     Context context = Context.builder()
@@ -55,6 +62,20 @@ public class ThreatBasedSearch {
         .root(Node.createRootNode(boardClass))
         .build();
     DBS(context);
+    if (databaseManager != null && context.goal != null) {
+      try {
+        databaseManager.saveTree(context.root());
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+    }
+    return context;
+  }
+
+  public Set<Position> findImplicitThreats(
+      BoardClass<Threat> boardClass,
+      StoneType attacker) {
+    Context context = search(boardClass, attacker);
     if (context.goal != null) {
       Set<Position> result = new HashSet<>();
       result.addAll(context.goal.getRelatedMoves());
@@ -113,10 +134,7 @@ public class ThreatBasedSearch {
     return 3;
   }
 
-  private boolean anyGlobalDefend(Context context, Node goal) {
-    if (!context.defensiveCheck()) {
-      return false;
-    }
+  private boolean anyGlobalDefendInternal(Context context, Node goal) {
     BoardClass<Threat> current = context.root().getBoard();
     List<BoardClass<Threat>> intermediate = new ArrayList<>();
     Set<Position> relatedMoves = goal.getRelatedMoves();
@@ -155,6 +173,15 @@ public class ThreatBasedSearch {
       }
     }
     return false;
+  }
+
+  private boolean anyGlobalDefend(Context context, Node goal) {
+    if (!context.defensiveCheck()) {
+      return false;
+    }
+    goal.isGoal = true;
+    goal.isRefuted = anyGlobalDefendInternal(context, goal);
+    return goal.isRefuted;
   }
 
   private void findAllDependencyBoards(Node node, List<BoardClass<Threat>> dependencyBoards) {
@@ -302,7 +329,7 @@ public class ThreatBasedSearch {
         node.getChildren().add(child);
         BoardClass<Threat> board = child.getBoard();
         if (board.matchesAny(context.attacker(), GOAL)) {
-          if (!anyGlobalDefend(context, node)) {
+          if (!anyGlobalDefend(context, child)) {
             context.goal = child;
             throw GOAL_FOUND;
           }
@@ -325,15 +352,36 @@ public class ThreatBasedSearch {
     }
   }
 
-  interface Node {
+  abstract static class Node {
 
-    BoardClass<Threat> getBoard();
+    private boolean isGoal = false;
+    private boolean isRefuted = false;
 
-    int getLevel();
+    public boolean isGoal() {
+      return isGoal;
+    }
 
-    List<Node> getChildren();
+    public boolean isRefuted() {
+      return isRefuted;
+    }
 
-    ImmutableSet<Position> getRelatedMoves();
+    @Override
+    public final int hashCode() {
+      return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      return super.equals(o);
+    }
+
+    abstract BoardClass<Threat> getBoard();
+
+    abstract int getLevel();
+
+    abstract List<Node> getChildren();
+
+    abstract ImmutableSet<Position> getRelatedMoves();
 
     static RootNode createRootNode(BoardClass<Threat> boardClass) {
       return new AutoValue_ThreatBasedSearch_RootNode(boardClass, 0, new ArrayList<>(), ImmutableSet.of());
@@ -364,13 +412,13 @@ public class ThreatBasedSearch {
     }
   }
 
-  interface NodeWithCandidates extends Node {
+  abstract static class NodeWithCandidates extends Node {
 
-    Set<Threat> getCandidateThreats();
+    abstract Set<Threat> getCandidateThreats();
   }
 
   @AutoValue
-  abstract static class RootNode implements Node {
+  abstract static class RootNode extends Node {
 
     @Override
     public final String toString() {
@@ -379,7 +427,7 @@ public class ThreatBasedSearch {
   }
 
   @AutoValue
-  abstract static class DependencyNode implements NodeWithCandidates {
+  abstract static class DependencyNode extends NodeWithCandidates {
 
     abstract Threat getThreat();
 
@@ -392,7 +440,7 @@ public class ThreatBasedSearch {
   }
 
   @AutoValue
-  abstract static class CombinationNode implements NodeWithCandidates {
+  abstract static class CombinationNode extends NodeWithCandidates {
 
     abstract ImmutableList<DependencyNode> getParents();
 
@@ -408,6 +456,10 @@ public class ThreatBasedSearch {
     private int refutedCount = 0;
     private int level = 0;
     private Node goal = null;
+
+    Node getGoal() {
+      return goal;
+    }
 
     abstract Set<Position> relatedMoves();
     abstract boolean defensiveCheck();

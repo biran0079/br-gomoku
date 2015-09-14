@@ -29,8 +29,8 @@ public class TBSEvaluator implements Evaluator<Threat, Result> {
     if (tbs.winningMove(boardClass, nextToMove) != null) {
       return nextToMove == StoneType.BLACK ? Result.TRUE : Result.FALSE;
     }
-    if (boardClass.getStoneCount() > 10 && nextToMove == StoneType.WHITE &&
-        tbs.winningMove(boardClass, StoneType.BLACK) == null) {
+    if (boardClass.getStoneCount() > 10 && nextToMove == StoneType.WHITE
+        && tbs.winningMove(boardClass, StoneType.BLACK) == null) {
       // bad game for black
       return Result.FALSE;
     }

@@ -17,9 +17,9 @@ import static java.util.Collections.singleton;
 /**
  * Candidate selector for threat based BoardClass.
  */
-class ThreatCandidateMoveSelectorUtil {
+public class ThreatCandidateMoveSelectorUtil {
 
-  static Collection<Position> anyOffendFiveThreat(
+  public static Collection<Position> anyOffendFiveThreat(
       BoardClass<Threat> boardClass, StoneType stoneType) {
     for (Threat p : boardClass.getMatchingPatterns(stoneType,
         PatternType.FIVE)) {
@@ -28,7 +28,7 @@ class ThreatCandidateMoveSelectorUtil {
     return emptyList();
   }
 
-  static Collection<Position> anyDefendFiveThreat(
+  public static Collection<Position> anyDefendFiveThreat(
       BoardClass<Threat> boardClass, StoneType stoneType) {
     for (Threat p : boardClass.getMatchingPatterns(stoneType.getOpponent(),
         PatternType.FIVE)) {
@@ -37,7 +37,7 @@ class ThreatCandidateMoveSelectorUtil {
     return emptyList();
   }
 
-  static Collection<Position> anyOffendStraitFour(
+  public static Collection<Position> anyOffendStraitFour(
       BoardClass<Threat> boardClass, StoneType stoneType) {
     for (Threat p : boardClass.getMatchingPatterns(stoneType,
         PatternType.STRAIT_FOUR)) {
@@ -46,7 +46,7 @@ class ThreatCandidateMoveSelectorUtil {
     return emptyList();
   }
 
-  static Collection<Position> allDefendStraitFour(
+  public static Collection<Position> allDefendStraitFour(
       BoardClass<Threat> boardClass, StoneType stoneType) {
     Set<Position> moves = new HashSet<>();
     for (Threat p : boardClass.getMatchingPatterns(stoneType.getOpponent(),
@@ -57,7 +57,7 @@ class ThreatCandidateMoveSelectorUtil {
     return moves;
   }
 
-  static Collection<Position> allOffendAndDefendFourAndThree(
+  public static Collection<Position> allOffendAndDefendFourAndThree(
       BoardClass<Threat> boardClass, StoneType stoneType) {
     Set<Position> moves = new HashSet<>();
     for (Threat p : Iterables.concat(

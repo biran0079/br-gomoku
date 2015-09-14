@@ -1,33 +1,26 @@
 package ai.proofnumber;
 
 import ai.candidatemoveselector.CandidateMovesSelector;
-import ai.evaluator.Evaluator;
-import ai.evaluator.SimpleThreatEvaluator;
+import ai.candidatemoveselector.CandidateMovesSelectorBuilder;
+import ai.candidatemoveselector.CandidateMovesSelectors;
 import ai.threatbasedsearch.ThreatBasedSearch;
-import autovalue.shaded.com.google.common.common.collect.Lists;
-import autovalue.shaded.com.google.common.common.collect.Sets;
 import com.google.auto.value.AutoValue;
 import common.StoneType;
 import common.boardclass.BoardClass;
-
-import static ai.candidatemoveselector.CandidateMoveSelectorUtil.*;
-import static common.boardclass.threatbased.ThreatUtil.getThreatsSet;
-import static common.boardclass.threatbased.ThreatUtil.restrictedThreats;
-
 import common.boardclass.threatbased.ThreatUtil;
 import common.pattern.Threat;
 import model.Position;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
+import static ai.candidatemoveselector.CandidateMoveSelectorUtil.getAllEmpty;
+import static ai.candidatemoveselector.CandidateMoveSelectorUtil.getNeighboringMoves;
+
 /**
- * Created by biran on 9/3/2015.
+ * Candidate move selector for PNS.
  */
-public class PNSCandidateSelector implements CandidateMovesSelector<Threat> {
+public class PNSCandidateSelector implements CandidateMovesSelectorBuilder.MoveSelector<Threat> {
 
   private final ThreatBasedSearch tbs;
 
@@ -36,31 +29,27 @@ public class PNSCandidateSelector implements CandidateMovesSelector<Threat> {
   }
 
   @Override
-  public Collection<Position> getCandidateMoves(BoardClass<Threat> boardClass, StoneType nextToMove) {
-    if (boardClass.isEmpty()) {
-      return centerIfEmptyBoard(boardClass, nextToMove);
-    }
+  public Collection<Position> select(BoardClass<Threat> boardClass, StoneType nextToMove) {
+    Collection<Position> result;
     if (nextToMove == StoneType.BLACK) {
-      Collection<Position> result = getNeighboringMoves(boardClass).stream()
+      result = getNeighboringMoves(boardClass).stream()
           .filter(p -> tbs.winningMove(boardClass.withPositionSet(p, StoneType.BLACK), StoneType.BLACK) != null)
           .collect(Collectors.toList());
-      if (!result.isEmpty()) {
-        return result;
+      if (result.isEmpty()) {
+        result = getNeighboringMoves(boardClass).stream()
+            .map(p -> Move.create(p, evaluate(boardClass, p, nextToMove)))
+            .sorted()
+            .limit(10)
+            .map(Move::getPosition)
+            .collect(Collectors.toList());
       }
-      result = getNeighboringMoves(boardClass).stream()
-          .map(p -> Move.create(p, evaluate(boardClass, p, nextToMove)))
-          .sorted()
-          .limit(10)
-          .map(Move::getPosition)
-          .collect(Collectors.toList());
-      return result;
     } else {
-      Collection<Position> res = tbs.findImplicitThreats(boardClass, StoneType.BLACK);
-      if (res.isEmpty()) {
-        res = getAllEmpty(boardClass);
+      result = tbs.findImplicitThreats(boardClass, StoneType.BLACK);
+      if (result.isEmpty()) {
+        result = getAllEmpty(boardClass);
       }
-      return res;
     }
+    return result;
   }
 
   private int evaluate(BoardClass<Threat> boardClass, Position p, StoneType stoneType) {

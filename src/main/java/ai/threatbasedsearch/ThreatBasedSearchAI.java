@@ -8,16 +8,23 @@ import common.pattern.Threat;
 import model.GameBoard;
 import model.Position;
 
+import javax.xml.crypto.Data;
+
 /**
  * AI based on threat based search.
  */
 public class ThreatBasedSearchAI implements AI {
 
   private final AI delgate;
-  private final ThreatBasedSearch threatBasedSearch = new ThreatBasedSearch();
+  private final ThreatBasedSearch threatBasedSearch;
 
   public ThreatBasedSearchAI(AI delgate) {
+    this(delgate, new ThreatBasedSearch());
+  }
+
+  public ThreatBasedSearchAI(AI delgate, ThreatBasedSearch threatBasedSearch) {
     this.delgate = delgate;
+    this.threatBasedSearch = threatBasedSearch;
   }
 
   @Override

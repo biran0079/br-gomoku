@@ -22,7 +22,7 @@ import java.util.Map;
 /**
  * HTTP request handler.
  */
-class RequestHandler implements HttpHandler {
+class AIRequestHandler implements HttpHandler {
 
   private static JSONObject parseRequest(HttpExchange httpExchange)
       throws IOException {
