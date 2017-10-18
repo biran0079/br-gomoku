@@ -48,7 +48,7 @@ public class DatabaseManagerTest {
             + "_______________\n"
             + "_______________\n"
             + "_______________\n"));
-    long id = databaseManager.saveTree(
+    long id = databaseManager.saveTreeIfNotExist(
         threatBasedSearch.threatBasedTree(boardClass, StoneType.BLACK));
     System.err.println(databaseManager.loadTree(id));
   }

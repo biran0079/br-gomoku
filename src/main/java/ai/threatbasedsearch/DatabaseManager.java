@@ -24,7 +24,8 @@ public class DatabaseManager {
       "CREATE TABLE IF NOT EXISTS node (id INTEGER PRIMARY KEY, treeId INTEGER,  board TEXT," +
           " isGoal INTEGER, isRefuted INTEGER);" +
       "CREATE TABLE IF NOT EXISTS children (parentId INTEGER, childId INTEGER);" +
-      "CREATE TABLE IF NOT EXISTS combination (childId INTEGER, parentId INTEGER);";
+      "CREATE TABLE IF NOT EXISTS combination (childId INTEGER, parentId INTEGER);" +
+      "CREATE INDEX board_index ON node(board);";
 
   private final String dbPath;
   private Connection connection = null;
@@ -58,19 +59,31 @@ public class DatabaseManager {
     return result;
   }
 
-  synchronized long saveTree(Node root) throws SQLException {
-    connection.setAutoCommit(false);
+  boolean trteeExist(Node root) throws SQLException {
     Statement statement = connection.createStatement();
-    Map<Node, Long> nodeToId = new HashMap<>();
-    saveNodes(statement, root, nodeToId);
-    long rootId = nodeToId.get(root);
-    statement.executeUpdate("UPDATE node SET treeId = " + rootId + " WHERE id IN ("
-        + Joiner.on(", ").join(nodeToId.values()) + ")");
-    saveEdges(statement, root, nodeToId);
-    statement.executeUpdate("INSERT INTO tree VALUES (" + rootId + ")");
-    connection.commit();
-    connection.setAutoCommit(true);
-    return rootId;
+    return statement.executeQuery("SELECT * FROM node WHERE board='"
+        + root.getBoard().toString() + "'").next();
+  }
+
+  synchronized long saveTreeIfNotExist(Node root) throws SQLException {
+    connection.setAutoCommit(false);
+    try {
+      if (trteeExist(root)) {
+        return -1;
+      }
+      Statement statement = connection.createStatement();
+      Map<Node, Long> nodeToId = new HashMap<>();
+      saveNodes(statement, root, nodeToId);
+      long rootId = nodeToId.get(root);
+      statement.executeUpdate("UPDATE node SET treeId = " + rootId + " WHERE id IN ("
+          + Joiner.on(", ").join(nodeToId.values()) + ")");
+      saveEdges(statement, root, nodeToId);
+      statement.executeUpdate("INSERT INTO tree VALUES (" + rootId + ")");
+      connection.commit();
+      return rootId;
+    } finally {
+      connection.setAutoCommit(true);
+    }
   }
 
   private void initialize() throws SQLException {

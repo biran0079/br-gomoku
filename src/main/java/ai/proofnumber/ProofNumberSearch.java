@@ -2,6 +2,7 @@ package ai.proofnumber;
 
 import ai.candidatemoveselector.CandidateMovesSelector;
 import ai.evaluator.Evaluator;
+import com.google.common.base.Stopwatch;
 import common.StoneType;
 import common.boardclass.BoardClass;
 import common.pattern.Pattern;
@@ -10,6 +11,8 @@ import model.Position;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * Implement proof number search algorithm.
@@ -18,7 +21,6 @@ public class ProofNumberSearch<T extends Pattern> {
 
   private static final int MAX = Integer.MAX_VALUE;
 
-  private int evalCount;
   private final CandidateMovesSelector<T> candidateMovesSelector;
   private final Evaluator<T, Result> evaluator;
 
@@ -31,7 +33,6 @@ public class ProofNumberSearch<T extends Pattern> {
   public Result search(BoardClass<T> boardClass, StoneType nextToMove) {
     Node<T> root = new Node<>(null, boardClass, nextToMove, evaluator.eval(boardClass, nextToMove));
     Node<T> current = root;
-    evalCount = 1;
     while (root.result == Result.UNKNOWN) {
       Node<T> mostProvingNode = selectMostProovingNode(current);
       developNode(mostProvingNode);
@@ -42,7 +43,6 @@ public class ProofNumberSearch<T extends Pattern> {
         root.result = Result.FALSE;
       }
     }
-    System.err.printf("%d nodes created\n", evalCount);
     return root.result;
   }
 
@@ -100,7 +100,7 @@ public class ProofNumberSearch<T extends Pattern> {
     node.proof = proof;
     node.disproof = disproof;
     if ((proof == 0 || disproof == 0)) {
-      System.err.println("Node at level " + node.level + (proof == 0 ? " proved" : " disproved"));
+      // System.err.println("Node at level " + node.level + (proof == 0 ? " proved" : " disproved"));
     }
     return true;
   }
@@ -119,18 +119,16 @@ public class ProofNumberSearch<T extends Pattern> {
 
   private void developNode(Node<T> node) {
     BoardClass<T> boardClass = node.boardClass;
-    for (Position p : candidateMovesSelector.getCandidateMoves(
-        boardClass, node.nextToMove)) {
+    for(Position p : candidateMovesSelector.getCandidateMoves(boardClass, node.nextToMove)) {
       BoardClass<T> newBoardClass = boardClass.withPositionSet(p, node.nextToMove);
       StoneType newNext = node.nextToMove.getOpponent();
       Result result = evaluator.eval(newBoardClass, newNext);
-      evalCount++;
       Node<T> child = new Node<>(node, newBoardClass, newNext, result);
       setProofDisproofNumber(child);
       node.children.add(child);
     }
-
   }
+
 
   private Node<T> selectMostProovingNode(Node<T> node) {
     while (!node.children.isEmpty()) {
@@ -162,7 +160,8 @@ public class ProofNumberSearch<T extends Pattern> {
   }
 
   static class Node<T extends Pattern> {
-
+    static int ct = 0;
+    static Stopwatch stopwatch = Stopwatch.createStarted();
     private int proof;
     private int disproof;
     private Result result;
@@ -182,6 +181,10 @@ public class ProofNumberSearch<T extends Pattern> {
       this.result = result;
       this.level = parent == null ? 0 : parent.level + 1;
       this.proof = this.disproof = level;
+      ct++;
+      if (ct % 100 == 0) {
+        System.err.println(ct + " in " + stopwatch.elapsed(TimeUnit.MILLISECONDS) + "ms");
+      }
     }
 
     @Override

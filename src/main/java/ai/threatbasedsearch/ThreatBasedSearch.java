@@ -64,7 +64,7 @@ public class ThreatBasedSearch {
     DBS(context);
     if (databaseManager != null && context.goal != null) {
       try {
-        databaseManager.saveTree(context.root());
+        databaseManager.saveTreeIfNotExist(context.root());
       } catch (SQLException e) {
         e.printStackTrace();
       }
